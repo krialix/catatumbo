@@ -16,9 +16,6 @@
 
 package com.jmethods.catatumbo.impl;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import com.google.cloud.datastore.Datastore;
 import com.google.cloud.datastore.DatastoreException;
 import com.google.cloud.datastore.DatastoreReader;
@@ -42,35 +39,29 @@ import com.jmethods.catatumbo.KeyQueryRequest;
 import com.jmethods.catatumbo.ProjectionQueryRequest;
 import com.jmethods.catatumbo.QueryResponse;
 import com.jmethods.catatumbo.QueryResponseMetadata;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Worker class for performing read operations on the Cloud Datastore.
- * 
- * @author Sai Pullabhotla
  *
+ * @author Sai Pullabhotla
  */
 public class DefaultDatastoreReader {
 
-  /**
-   * A reference to the entity manager
-   */
+  /** A reference to the entity manager */
   private DefaultEntityManager entityManager;
 
-  /**
-   * Native datastore reader. This could either be {@link Datastore} or {@link Transaction}.
-   */
+  /** Native datastore reader. This could either be {@link Datastore} or {@link Transaction}. */
   private DatastoreReader nativeReader = null;
 
-  /**
-   * A reference to the Datastore.
-   */
+  /** A reference to the Datastore. */
   private Datastore datastore;
 
   /**
    * Creates a new instance of <code>DefaultDatastoreReader</code>.
-   * 
-   * @param entityManager
-   *          the entity manager that created this reader.
+   *
+   * @param entityManager the entity manager that created this reader.
    */
   public DefaultDatastoreReader(DefaultEntityManager entityManager) {
     this.entityManager = entityManager;
@@ -80,9 +71,8 @@ public class DefaultDatastoreReader {
 
   /**
    * Creates a new instance of <code>DefaultDatastoreReader</code>.
-   * 
-   * @param transaction
-   *          the transaction that created this reader.
+   *
+   * @param transaction the transaction that created this reader.
    */
   public DefaultDatastoreReader(DefaultDatastoreTransaction transaction) {
     this.entityManager = transaction.getEntityManager();
@@ -93,15 +83,12 @@ public class DefaultDatastoreReader {
   /**
    * Loads and returns the entity with the given ID. The entity is assumed to be a root entity (no
    * parent). The entity kind is determined from the supplied class.
-   * 
-   * @param entityClass
-   *          the entity class
-   * @param id
-   *          the ID of the entity
+   *
+   * @param entityClass the entity class
+   * @param id the ID of the entity
    * @return the Entity object or <code>null</code>, if the the entity with the given ID does not
-   *         exist in the Cloud Datastore.
-   * @throws EntityManagerException
-   *           if any error occurs while inserting.
+   *     exist in the Cloud Datastore.
+   * @throws EntityManagerException if any error occurs while inserting.
    */
   public <E> E load(Class<E> entityClass, long id) {
     return load(entityClass, null, id);
@@ -110,17 +97,13 @@ public class DefaultDatastoreReader {
   /**
    * Loads and returns the entity with the given ID. The entity kind is determined from the supplied
    * class.
-   * 
-   * @param entityClass
-   *          the entity class
-   * @param parentKey
-   *          the parent key of the entity.
-   * @param id
-   *          the ID of the entity
+   *
+   * @param entityClass the entity class
+   * @param parentKey the parent key of the entity.
+   * @param id the ID of the entity
    * @return the Entity object or <code>null</code>, if the the entity with the given ID does not
-   *         exist in the Cloud Datastore.
-   * @throws EntityManagerException
-   *           if any error occurs while inserting.
+   *     exist in the Cloud Datastore.
+   * @throws EntityManagerException if any error occurs while inserting.
    */
   public <E> E load(Class<E> entityClass, DatastoreKey parentKey, long id) {
     EntityMetadata entityMetadata = EntityIntrospector.introspect(entityClass);
@@ -136,15 +119,12 @@ public class DefaultDatastoreReader {
   /**
    * Loads and returns the entity with the given ID. The entity is assumed to be a root entity (no
    * parent). The entity kind is determined from the supplied class.
-   * 
-   * @param entityClass
-   *          the entity class
-   * @param id
-   *          the ID of the entity
+   *
+   * @param entityClass the entity class
+   * @param id the ID of the entity
    * @return the Entity object or <code>null</code>, if the the entity with the given ID does not
-   *         exist in the Cloud Datastore.
-   * @throws EntityManagerException
-   *           if any error occurs while inserting.
+   *     exist in the Cloud Datastore.
+   * @throws EntityManagerException if any error occurs while inserting.
    */
   public <E> E load(Class<E> entityClass, String id) {
     return load(entityClass, null, id);
@@ -153,17 +133,13 @@ public class DefaultDatastoreReader {
   /**
    * Loads and returns the entity with the given ID. The entity kind is determined from the supplied
    * class.
-   * 
-   * @param entityClass
-   *          the entity class
-   * @param parentKey
-   *          the parent key of the entity.
-   * @param id
-   *          the ID of the entity
+   *
+   * @param entityClass the entity class
+   * @param parentKey the parent key of the entity.
+   * @param id the ID of the entity
    * @return the Entity object or <code>null</code>, if the the entity with the given ID does not
-   *         exist in the Cloud Datastore.
-   * @throws EntityManagerException
-   *           if any error occurs while inserting.
+   *     exist in the Cloud Datastore.
+   * @throws EntityManagerException if any error occurs while inserting.
    */
   public <E> E load(Class<E> entityClass, DatastoreKey parentKey, String id) {
     EntityMetadata entityMetadata = EntityIntrospector.introspect(entityClass);
@@ -178,15 +154,12 @@ public class DefaultDatastoreReader {
 
   /**
    * Retrieves and returns the entity with the given key.
-   * 
-   * @param entityClass
-   *          the expected result type
-   * @param key
-   *          the entity key
+   *
+   * @param entityClass the expected result type
+   * @param key the entity key
    * @return the entity with the given key, or <code>null</code>, if no entity exists with the given
-   *         key.
-   * @throws EntityManagerException
-   *           if any error occurs while accessing the Datastore.
+   *     key.
+   * @throws EntityManagerException if any error occurs while accessing the Datastore.
    */
   public <E> E load(Class<E> entityClass, DatastoreKey key) {
     return fetch(entityClass, key.nativeKey());
@@ -195,16 +168,13 @@ public class DefaultDatastoreReader {
   /**
    * Loads and returns the entities with the given <b>numeric IDs</b>. The entities are assumed to
    * be a root entities (no parent). The entity kind is determined from the supplied class.
-   * 
-   * @param entityClass
-   *          the entity class
-   * @param identifiers
-   *          the IDs of the entities
+   *
+   * @param entityClass the entity class
+   * @param identifiers the IDs of the entities
    * @return the list of entity objects in the same order as the given list of identifiers. If one
-   *         or more requested IDs do not exist in the Cloud Datastore, the corresponding item in
-   *         the returned list be <code>null</code>.
-   * @throws EntityManagerException
-   *           if any error occurs while inserting.
+   *     or more requested IDs do not exist in the Cloud Datastore, the corresponding item in the
+   *     returned list be <code>null</code>.
+   * @throws EntityManagerException if any error occurs while inserting.
    */
   public <E> List<E> loadById(Class<E> entityClass, List<Long> identifiers) {
     Key[] nativeKeys = longListToNativeKeys(entityClass, identifiers);
@@ -214,16 +184,13 @@ public class DefaultDatastoreReader {
   /**
    * Loads and returns the entities with the given <b>names (a.k.a String IDs)</b>. The entities are
    * assumed to be root entities (no parent). The entity kind is determined from the supplied class.
-   * 
-   * @param entityClass
-   *          the entity class
-   * @param identifiers
-   *          the IDs of the entities
+   *
+   * @param entityClass the entity class
+   * @param identifiers the IDs of the entities
    * @return the list of entity objects in the same order as the given list of identifiers. If one
-   *         or more requested IDs do not exist in the Cloud Datastore, the corresponding item in
-   *         the returned list be <code>null</code>.
-   * @throws EntityManagerException
-   *           if any error occurs while inserting.
+   *     or more requested IDs do not exist in the Cloud Datastore, the corresponding item in the
+   *     returned list be <code>null</code>.
+   * @throws EntityManagerException if any error occurs while inserting.
    */
   public <E> List<E> loadByName(Class<E> entityClass, List<String> identifiers) {
     Key[] nativeKeys = stringListToNativeKeys(entityClass, identifiers);
@@ -232,16 +199,12 @@ public class DefaultDatastoreReader {
 
   /**
    * Retrieves and returns the entities for the given keys.
-   * 
-   * @param entityClass
-   *          the expected result type
-   * @param keys
-   *          the entity keys
+   *
+   * @param entityClass the expected result type
+   * @param keys the entity keys
    * @return the entities for the given keys. If one or more requested keys do not exist in the
-   *         Cloud Datastore, the corresponding item in the returned list be <code>null</code>.
-   * 
-   * @throws EntityManagerException
-   *           if any error occurs while accessing the Datastore.
+   *     Cloud Datastore, the corresponding item in the returned list be <code>null</code>.
+   * @throws EntityManagerException if any error occurs while accessing the Datastore.
    */
   public <E> List<E> loadByKey(Class<E> entityClass, List<DatastoreKey> keys) {
     Key[] nativeKeys = DatastoreUtils.toNativeKeys(keys);
@@ -250,13 +213,11 @@ public class DefaultDatastoreReader {
 
   /**
    * Fetches the entity given the native key.
-   * 
-   * @param entityClass
-   *          the expected result type
-   * @param nativeKey
-   *          the native key
+   *
+   * @param entityClass the expected result type
+   * @param nativeKey the native key
    * @return the entity with the given key, or <code>null</code>, if no entity exists with the given
-   *         key.
+   *     key.
    */
   private <E> E fetch(Class<E> entityClass, Key nativeKey) {
     try {
@@ -271,13 +232,11 @@ public class DefaultDatastoreReader {
 
   /**
    * Fetches a list of entities for the given native keys.
-   * 
-   * @param entityClass
-   *          the expected result type
-   * @param nativeKeys
-   *          the native keys of the entities
+   *
+   * @param entityClass the expected result type
+   * @param nativeKeys the native keys of the entities
    * @return the list of entities. If one or more keys do not exist, the corresponding item in the
-   *         returned list will be <code>null</code>.
+   *     returned list will be <code>null</code>.
    */
   private <E> List<E> fetch(Class<E> entityClass, Key[] nativeKeys) {
     try {
@@ -293,11 +252,10 @@ public class DefaultDatastoreReader {
   /**
    * Creates and returns a new {@link EntityQueryRequest} for the given GQL query string. The
    * returned {@link EntityQueryRequest} can be further customized to set any bindings (positional
-   * or named), and then be executed by calling the <code>execute</code> or
-   * <code>executeEntityQuery</code> methods.
-   * 
-   * @param query
-   *          the GQL query
+   * or named), and then be executed by calling the <code>execute</code> or <code>executeEntityQuery
+   * </code> methods.
+   *
+   * @param query the GQL query
    * @return a new QueryRequest for the given GQL query
    */
   public EntityQueryRequest createEntityQueryRequest(String query) {
@@ -307,11 +265,10 @@ public class DefaultDatastoreReader {
   /**
    * Creates and returns a new {@link ProjectionQueryRequest} for the given GQL query string. The
    * returned {@link ProjectionQueryRequest} can further be customized to set any positional and/or
-   * named bindings, and then be executed by calling the <code>execute</code> or
-   * <code>executeProjectionQuery</code> methods.
-   * 
-   * @param query
-   *          the GQL projection query
+   * named bindings, and then be executed by calling the <code>execute</code> or <code>
+   * executeProjectionQuery</code> methods.
+   *
+   * @param query the GQL projection query
    * @return a new ProjectionQueryRequest for the given query
    */
   public ProjectionQueryRequest createProjectionQueryRequest(String query) {
@@ -320,12 +277,11 @@ public class DefaultDatastoreReader {
 
   /**
    * Creates and returns a new {@link KeyQueryRequest} for the given GQL query string. Key query
-   * requests must only have __key__ in the <code>SELECT</code> list of field. The returned
-   * {@link KeyQueryRequest} can further be customized to set any positional and/or named bindings,
-   * and then be executed by calling the <code>executeKeyQuery</code> method.
-   * 
-   * @param query
-   *          the GQL projection query
+   * requests must only have __key__ in the <code>SELECT</code> list of field. The returned {@link
+   * KeyQueryRequest} can further be customized to set any positional and/or named bindings, and
+   * then be executed by calling the <code>executeKeyQuery</code> method.
+   *
+   * @param query the GQL projection query
    * @return a new ProjectionQueryRequest for the given query
    */
   public KeyQueryRequest createKeyQueryRequest(String query) {
@@ -334,18 +290,16 @@ public class DefaultDatastoreReader {
 
   /**
    * Executes the given {@link EntityQueryRequest} and returns the response.
-   * 
-   * @param expectedResultType
-   *          the expected type of results.
-   * @param request
-   *          the entity query request
+   *
+   * @param expectedResultType the expected type of results.
+   * @param request the entity query request
    * @return the query response
    */
-  public <E> QueryResponse<E> executeEntityQueryRequest(Class<E> expectedResultType,
-      EntityQueryRequest request) {
+  public <E> QueryResponse<E> executeEntityQueryRequest(
+      Class<E> expectedResultType, EntityQueryRequest request) {
     try {
-      GqlQuery.Builder<Entity> queryBuilder = Query.newGqlQueryBuilder(ResultType.ENTITY,
-          request.getQuery());
+      GqlQuery.Builder<Entity> queryBuilder =
+          Query.newGqlQueryBuilder(ResultType.ENTITY, request.getQuery());
       queryBuilder.setNamespace(entityManager.getEffectiveNamespace());
       queryBuilder.setAllowLiteral(request.isAllowLiterals());
       QueryUtils.applyNamedBindings(queryBuilder, request.getNamedBindings());
@@ -374,18 +328,16 @@ public class DefaultDatastoreReader {
 
   /**
    * Executes the given {@link ProjectionQueryRequest} and returns the response.
-   * 
-   * @param expectedResultType
-   *          the expected type of results.
-   * @param request
-   *          the projection query request
+   *
+   * @param expectedResultType the expected type of results.
+   * @param request the projection query request
    * @return the query response
    */
-  public <E> QueryResponse<E> executeProjectionQueryRequest(Class<E> expectedResultType,
-      ProjectionQueryRequest request) {
+  public <E> QueryResponse<E> executeProjectionQueryRequest(
+      Class<E> expectedResultType, ProjectionQueryRequest request) {
     try {
-      GqlQuery.Builder<ProjectionEntity> queryBuilder = Query
-          .newGqlQueryBuilder(ResultType.PROJECTION_ENTITY, request.getQuery());
+      GqlQuery.Builder<ProjectionEntity> queryBuilder =
+          Query.newGqlQueryBuilder(ResultType.PROJECTION_ENTITY, request.getQuery());
       queryBuilder.setNamespace(entityManager.getEffectiveNamespace());
       queryBuilder.setAllowLiteral(request.isAllowLiterals());
       QueryUtils.applyNamedBindings(queryBuilder, request.getNamedBindings());
@@ -414,15 +366,14 @@ public class DefaultDatastoreReader {
 
   /**
    * Executes the given {@link KeyQueryRequest} and returns the response.
-   * 
-   * @param request
-   *          the key query request
+   *
+   * @param request the key query request
    * @return the query response
    */
   public QueryResponse<DatastoreKey> executeKeyQueryRequest(KeyQueryRequest request) {
     try {
-      GqlQuery.Builder<Key> queryBuilder = Query.newGqlQueryBuilder(ResultType.KEY,
-          request.getQuery());
+      GqlQuery.Builder<Key> queryBuilder =
+          Query.newGqlQueryBuilder(ResultType.KEY, request.getQuery());
       queryBuilder.setNamespace(entityManager.getEffectiveNamespace());
       queryBuilder.setAllowLiteral(request.isAllowLiterals());
       QueryUtils.applyNamedBindings(queryBuilder, request.getNamedBindings());
@@ -450,11 +401,9 @@ public class DefaultDatastoreReader {
 
   /**
    * Converts the given list of identifiers into an array of native Key objects.
-   * 
-   * @param entityClass
-   *          the entity class to which these identifiers belong to.
-   * @param identifiers
-   *          the list of identifiers to convert.
+   *
+   * @param entityClass the entity class to which these identifiers belong to.
+   * @param identifiers the list of identifiers to convert.
    * @return an array of Key objects
    */
   private Key[] longListToNativeKeys(Class<?> entityClass, List<Long> identifiers) {
@@ -474,11 +423,9 @@ public class DefaultDatastoreReader {
 
   /**
    * Converts the given list of identifiers into an array of native Key objects.
-   * 
-   * @param entityClass
-   *          the entity class to which these identifiers belong to.
-   * @param identifiers
-   *          the list of identifiers to convert.
+   *
+   * @param entityClass the entity class to which these identifiers belong to.
+   * @param identifiers the list of identifiers to convert.
    * @return an array of Key objects
    */
   private Key[] stringListToNativeKeys(Class<?> entityClass, List<String> identifiers) {
@@ -495,5 +442,4 @@ public class DefaultDatastoreReader {
     }
     return nativeKeys;
   }
-
 }

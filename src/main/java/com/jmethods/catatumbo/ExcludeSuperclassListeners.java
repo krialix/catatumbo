@@ -25,9 +25,8 @@ import java.lang.annotation.Target;
 /**
  * Specifies that the execution of listeners defined in the super class should be excluded. This
  * annotation can be specified on an {@link Entity} or {@link MappedSuperClass}.
- * 
- * @author Sai Pullabhotla
  *
+ * @author Sai Pullabhotla
  */
 @Retention(RUNTIME)
 @Target(TYPE)

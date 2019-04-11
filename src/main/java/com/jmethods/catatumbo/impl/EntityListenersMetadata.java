@@ -23,25 +23,18 @@ import java.util.Map;
 
 /**
  * Objects of this class hold the metadata data of various entity listeners.
- * 
- * @author Sai Pullabhotla
  *
+ * @author Sai Pullabhotla
  */
 public class EntityListenersMetadata {
 
-  /**
-   * The entity class to which this metadata belongs to.
-   */
+  /** The entity class to which this metadata belongs to. */
   private final Class<?> entityClass;
 
-  /**
-   * A map containing all {@link CallbackMetadata} by the callback type, Lazily loaded.
-   */
+  /** A map containing all {@link CallbackMetadata} by the callback type, Lazily loaded. */
   private Map<CallbackType, List<CallbackMetadata>> callbacks;
 
-  /**
-   * Whether or not to exclude global listeners.
-   */
+  /** Whether or not to exclude global listeners. */
   private boolean excludeDefaultListeners;
 
   /**
@@ -52,9 +45,8 @@ public class EntityListenersMetadata {
 
   /**
    * Creates a new instance of <code>EntityListenersMetadata</code>.
-   * 
-   * @param entityClass
-   *          the entity class
+   *
+   * @param entityClass the entity class
    */
   public EntityListenersMetadata(Class<?> entityClass) {
     this.entityClass = entityClass;
@@ -64,7 +56,7 @@ public class EntityListenersMetadata {
 
   /**
    * Returns the entity class to which this metadata belongs.
-   * 
+   *
    * @return the entityClass the entity class to which this metadata belongs.
    */
   public Class<?> getEntityClass() {
@@ -73,9 +65,9 @@ public class EntityListenersMetadata {
 
   /**
    * Tells whether or not the default (aka global) listeners should be excluded.
-   * 
+   *
    * @return <code>true</code>, if global listeners should be excluded; <code>false</code>,
-   *         otherwise.
+   *     otherwise.
    */
   public boolean isExcludeDefaultListeners() {
     return excludeDefaultListeners;
@@ -83,9 +75,8 @@ public class EntityListenersMetadata {
 
   /**
    * Sets whether or not to exclude the default (aka global) listeners.
-   * 
-   * @param excludeGlobalListeners
-   *          whether or not to exclude the global listeners
+   *
+   * @param excludeGlobalListeners whether or not to exclude the global listeners
    */
   public void setExcludeDefaultListeners(boolean excludeGlobalListeners) {
     this.excludeDefaultListeners = excludeGlobalListeners;
@@ -93,9 +84,9 @@ public class EntityListenersMetadata {
 
   /**
    * Tells whether or not to exclude the listeners defined in the super classes of the entity.
-   * 
+   *
    * @return <code>true</code>, if super class listeners should be excluded; <code>false</code>,
-   *         otherwise.
+   *     otherwise.
    */
   public boolean isExcludeSuperClassListeners() {
     return excludeSuperClassListeners;
@@ -103,9 +94,8 @@ public class EntityListenersMetadata {
 
   /**
    * Sets whether or not to exclude the super class listeners.
-   * 
-   * @param excludeSuperClassListeners
-   *          whether or not to exclude the super class listeners
+   *
+   * @param excludeSuperClassListeners whether or not to exclude the super class listeners
    */
   public void setExcludeSuperClassListeners(boolean excludeSuperClassListeners) {
     this.excludeSuperClassListeners = excludeSuperClassListeners;
@@ -113,11 +103,9 @@ public class EntityListenersMetadata {
 
   /**
    * Adds the given CallbackEventMetadata.
-   * 
-   * @param callbackType
-   *          the callback type
-   * @param callbackMetadata
-   *          the metadata of the callback
+   *
+   * @param callbackType the callback type
+   * @param callbackMetadata the metadata of the callback
    */
   public void put(CallbackType callbackType, CallbackMetadata callbackMetadata) {
     if (callbacks == null) {
@@ -133,9 +121,8 @@ public class EntityListenersMetadata {
 
   /**
    * Returns the callbacks for the given callback type.
-   * 
-   * @param callbackType
-   *          the callback type
+   *
+   * @param callbackType the callback type
    * @return the list of callbacks for the given callback type
    */
   public List<CallbackMetadata> getCallbacks(CallbackType callbackType) {
@@ -144,11 +131,10 @@ public class EntityListenersMetadata {
 
   /**
    * Returns all callbacks.
-   * 
+   *
    * @return All call backs.
    */
   public Map<CallbackType, List<CallbackMetadata>> getCallbacks() {
     return callbacks;
   }
-
 }

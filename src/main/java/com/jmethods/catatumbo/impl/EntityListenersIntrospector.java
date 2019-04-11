@@ -16,41 +16,34 @@
 
 package com.jmethods.catatumbo.impl;
 
+import com.jmethods.catatumbo.EntityListeners;
+import com.jmethods.catatumbo.EntityManagerException;
+import com.jmethods.catatumbo.ExcludeDefaultListeners;
+import com.jmethods.catatumbo.ExcludeSuperclassListeners;
+import com.jmethods.catatumbo.MappedSuperClass;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
-import com.jmethods.catatumbo.EntityListeners;
-import com.jmethods.catatumbo.EntityManagerException;
-import com.jmethods.catatumbo.ExcludeDefaultListeners;
-import com.jmethods.catatumbo.ExcludeSuperclassListeners;
-import com.jmethods.catatumbo.MappedSuperClass;
-
 /**
  * Introspects the given entity class to find all listeners that would receive lifecycle callbacks.
- * 
- * @author Sai Pullabhotla
  *
+ * @author Sai Pullabhotla
  */
 public class EntityListenersIntrospector {
 
-  /**
-   * Entity class
-   */
+  /** Entity class */
   private Class<?> entityClass;
 
-  /**
-   * Metadata of various listeners
-   */
+  /** Metadata of various listeners */
   private EntityListenersMetadata metadata;
 
   /**
    * Creates a new instance of <code>EntityListenersMetadata</code>.
-   * 
-   * @param entityClass
-   *          the entity class to introspect
+   *
+   * @param entityClass the entity class to introspect
    */
   private EntityListenersIntrospector(Class<?> entityClass) {
     this.entityClass = entityClass;
@@ -58,9 +51,8 @@ public class EntityListenersIntrospector {
 
   /**
    * Returns the metadata of various registered listeners for the given entity.
-   * 
-   * @param entity
-   *          the entity to introspect
+   *
+   * @param entity the entity to introspect
    * @return the metadata of various listeners.
    */
   public static EntityListenersMetadata introspect(Object entity) {
@@ -69,9 +61,8 @@ public class EntityListenersIntrospector {
 
   /**
    * Returns the metadata of various registered listeners for the given entity class.
-   * 
-   * @param entityClass
-   *          the entity class to introspect
+   *
+   * @param entityClass the entity class to introspect
    * @return the metadata of various listeners.
    */
   public static EntityListenersMetadata introspect(Class<?> entityClass) {
@@ -80,9 +71,7 @@ public class EntityListenersIntrospector {
     return introspector.metadata;
   }
 
-  /**
-   * Introspects the entity class and builds the listeners metadata.
-   */
+  /** Introspects the entity class and builds the listeners metadata. */
   private void introspect() {
     metadata = new EntityListenersMetadata(entityClass);
     processExternalListeners();
@@ -90,8 +79,8 @@ public class EntityListenersIntrospector {
   }
 
   /**
-   * Gathers information about all external listeners (listeners specified with
-   * {@link EntityListeners} annotation) and updates the metadata.
+   * Gathers information about all external listeners (listeners specified with {@link
+   * EntityListeners} annotation) and updates the metadata.
    */
   private void processExternalListeners() {
     List<Class<?>> externalListeners = getAllExternalListeners();
@@ -102,7 +91,7 @@ public class EntityListenersIntrospector {
 
   /**
    * Inspects the entity hierarchy and returns all external listeners.
-   * 
+   *
    * @return list of all external listeners
    */
   private List<Class<?>> getAllExternalListeners() {
@@ -118,8 +107,8 @@ public class EntityListenersIntrospector {
         }
       }
       boolean excludeDefaultListeners = clazz.isAnnotationPresent(ExcludeDefaultListeners.class);
-      boolean excludeSuperClassListeners = clazz
-          .isAnnotationPresent(ExcludeSuperclassListeners.class);
+      boolean excludeSuperClassListeners =
+          clazz.isAnnotationPresent(ExcludeSuperclassListeners.class);
       if (excludeDefaultListeners) {
         metadata.setExcludeDefaultListeners(true);
       }
@@ -127,8 +116,10 @@ public class EntityListenersIntrospector {
         metadata.setExcludeSuperClassListeners(true);
       }
       clazz = clazz.getSuperclass();
-      stop = excludeSuperClassListeners || clazz == null
-          || !clazz.isAnnotationPresent(MappedSuperClass.class);
+      stop =
+          excludeSuperClassListeners
+              || clazz == null
+              || !clazz.isAnnotationPresent(MappedSuperClass.class);
     }
     return allListeners;
   }
@@ -136,13 +127,12 @@ public class EntityListenersIntrospector {
   /**
    * Introspects the given listener class and finds all methods that should receive callback event
    * notifications.
-   * 
-   * @param listenerClass
-   *          the listener class
+   *
+   * @param listenerClass the listener class
    */
   private void processExternalListener(Class<?> listenerClass) {
-    ExternalListenerMetadata listenerMetadata = ExternalListenerIntrospector
-        .introspect(listenerClass);
+    ExternalListenerMetadata listenerMetadata =
+        ExternalListenerIntrospector.introspect(listenerClass);
     Map<CallbackType, Method> callbacks = listenerMetadata.getCallbacks();
     if (callbacks != null) {
       for (Map.Entry<CallbackType, Method> entry : callbacks.entrySet()) {
@@ -153,21 +143,21 @@ public class EntityListenersIntrospector {
 
   /**
    * Validates and registers the given callback method.
-   * 
-   * @param method
-   *          the callback method
-   * @param callbackType
-   *          the callback type
+   *
+   * @param method the callback method
+   * @param callbackType the callback type
    */
   private void validateExternalCallback(Method method, CallbackType callbackType) {
     Class<?>[] parameters = method.getParameterTypes();
     if (!parameters[0].isAssignableFrom(entityClass)) {
-      String message = String.format("Method %s in class %s is not valid for entity %s",
-          method.getName(), method.getDeclaringClass().getName(), entityClass.getName());
+      String message =
+          String.format(
+              "Method %s in class %s is not valid for entity %s",
+              method.getName(), method.getDeclaringClass().getName(), entityClass.getName());
       throw new EntityManagerException(message);
     }
-    CallbackMetadata callbackMetadata = new CallbackMetadata(EntityListenerType.EXTERNAL,
-        callbackType, method);
+    CallbackMetadata callbackMetadata =
+        new CallbackMetadata(EntityListenerType.EXTERNAL, callbackType, method);
     metadata.put(callbackType, callbackMetadata);
   }
 
@@ -185,7 +175,7 @@ public class EntityListenersIntrospector {
   /**
    * Traverses up the entity class hierarchy and returns the list of all classes that may
    * potentially have callback listeners.
-   * 
+   *
    * @return all internal callback listeners
    */
   private List<Class<?>> getAllInternalListeners() {
@@ -194,35 +184,34 @@ public class EntityListenersIntrospector {
     boolean stop = false;
     while (!stop) {
       allListeners.add(0, clazz);
-      boolean excludeSuperClassListeners = clazz
-          .isAnnotationPresent(ExcludeSuperclassListeners.class);
+      boolean excludeSuperClassListeners =
+          clazz.isAnnotationPresent(ExcludeSuperclassListeners.class);
       clazz = clazz.getSuperclass();
-      stop = excludeSuperClassListeners || clazz == null
-          || !clazz.isAnnotationPresent(MappedSuperClass.class);
+      stop =
+          excludeSuperClassListeners
+              || clazz == null
+              || !clazz.isAnnotationPresent(MappedSuperClass.class);
     }
     return allListeners;
-
   }
 
   /**
    * Processes the given class and finds any internal callbacks.
-   * 
-   * @param listenerClass
-   *          the class to introspect
+   *
+   * @param listenerClass the class to introspect
    */
   private void processInternalListener(Class<?> listenerClass) {
-    InternalListenerMetadata listenerMetadata = InternalListenerIntrospector
-        .introspect(listenerClass);
+    InternalListenerMetadata listenerMetadata =
+        InternalListenerIntrospector.introspect(listenerClass);
     Map<CallbackType, Method> callbacks = listenerMetadata.getCallbacks();
     if (callbacks != null) {
       for (Map.Entry<CallbackType, Method> entry : callbacks.entrySet()) {
         CallbackType callbackType = entry.getKey();
         Method callbackMethod = entry.getValue();
-        CallbackMetadata callbackMetadata = new CallbackMetadata(EntityListenerType.INTERNAL,
-            callbackType, callbackMethod);
+        CallbackMetadata callbackMetadata =
+            new CallbackMetadata(EntityListenerType.INTERNAL, callbackType, callbackMethod);
         metadata.put(callbackType, callbackMetadata);
       }
     }
   }
-
 }

@@ -16,22 +16,20 @@
 
 package com.jmethods.catatumbo.indexers;
 
-import java.util.Locale;
-
 import com.google.cloud.datastore.NullValue;
 import com.google.cloud.datastore.StringValue;
 import com.google.cloud.datastore.Value;
 import com.google.cloud.datastore.ValueType;
 import com.jmethods.catatumbo.Indexer;
 import com.jmethods.catatumbo.IndexingException;
+import java.util.Locale;
 
 /**
  * An implementation of {@link Indexer} interface for creating indexes in lower case. This indexer
- * assumes that the value being indexed is of type String. Any other type will result in an
- * {@link IndexingException}.
- * 
- * @author Sai Pullabhotla
+ * assumes that the value being indexed is of type String. Any other type will result in an {@link
+ * IndexingException}.
  *
+ * @author Sai Pullabhotla
  */
 public class LowerCaseStringIndexer implements Indexer {
 
@@ -47,5 +45,4 @@ public class LowerCaseStringIndexer implements Indexer {
       throw new IndexingException(exp);
     }
   }
-
 }

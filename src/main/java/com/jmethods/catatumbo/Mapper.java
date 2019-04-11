@@ -21,32 +21,26 @@ import com.google.cloud.datastore.ValueBuilder;
 
 /**
  * Contract for mapping model values to/from Cloud Datastore.
- * 
- * @author Sai Pullabhotla
  *
+ * @author Sai Pullabhotla
  */
 public interface Mapper {
 
   /**
    * Maps the given Model object to native Cloud Datastore value.
-   * 
-   * @param input
-   *          the input to map
+   *
+   * @param input the input to map
    * @return the equivalent native value
-   * @throws MappingException
-   *           if the input is not compatible.
+   * @throws MappingException if the input is not compatible.
    */
-  public ValueBuilder<?, ?, ?> toDatastore(Object input);
+  ValueBuilder<?, ?, ?> toDatastore(Object input);
 
   /**
    * Maps the given native Cloud Datastore value to equivalent model object.
-   * 
-   * @param input
-   *          the native Cloud Datastore value
+   *
+   * @param input the native Cloud Datastore value
    * @return the equivalent model object
-   * @throws MappingException
-   *           if the input is not compatible.
+   * @throws MappingException if the input is not compatible.
    */
-  public Object toModel(Value<?> input);
-
+  Object toModel(Value<?> input);
 }

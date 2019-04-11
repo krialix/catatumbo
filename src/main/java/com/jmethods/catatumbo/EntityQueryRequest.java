@@ -18,20 +18,17 @@ package com.jmethods.catatumbo;
 
 /**
  * QueryRequest implementation for running full entity queries.
- * 
- * @author Sai Pullabhotla
  *
+ * @author Sai Pullabhotla
  */
 public class EntityQueryRequest extends BaseQueryRequest {
 
   /**
    * Creates a new instance of <code>EntityQueryRequest</code>.
-   * 
-   * @param query
-   *          the GQL query string
+   *
+   * @param query the GQL query string
    */
   public EntityQueryRequest(String query) {
     super(query);
   }
-
 }

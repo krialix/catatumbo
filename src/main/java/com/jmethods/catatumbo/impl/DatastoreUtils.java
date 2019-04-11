@@ -16,10 +16,6 @@
 
 package com.jmethods.catatumbo.impl;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
 import com.google.cloud.datastore.DatastoreException;
 import com.google.cloud.datastore.Entity;
 import com.google.cloud.datastore.FullEntity;
@@ -31,12 +27,14 @@ import com.jmethods.catatumbo.EntityAlreadyExistsException;
 import com.jmethods.catatumbo.EntityManagerException;
 import com.jmethods.catatumbo.EntityNotFoundException;
 import com.jmethods.catatumbo.impl.IdentifierMetadata.DataType;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * Utility methods.
- * 
- * @author Sai Pullabhotla
  *
+ * @author Sai Pullabhotla
  */
 class DatastoreUtils {
 
@@ -52,21 +50,17 @@ class DatastoreUtils {
    */
   private static final int ERROR_CODE_ENTITY_ALREADY_EXISTS = 6;
 
-  /**
-   * Hide the implicit constructor
-   */
+  /** Hide the implicit constructor */
   private DatastoreUtils() {
     // Do nothing.
   }
 
   /**
-   * Converts the given list of native entities to a list of model objects of given type,
-   * <code>entityClass</code>.
-   * 
-   * @param entityClass
-   *          the entity class
-   * @param nativeEntities
-   *          native entities to convert
+   * Converts the given list of native entities to a list of model objects of given type, <code>
+   * entityClass</code>.
+   *
+   * @param entityClass the entity class
+   * @param nativeEntities native entities to convert
    * @return the list of model objects
    */
   static <E> List<E> toEntities(Class<E> entityClass, List<Entity> nativeEntities) {
@@ -82,13 +76,11 @@ class DatastoreUtils {
   }
 
   /**
-   * Converts the given array of native entities to a list of model objects of given type,
-   * <code>entityClass</code>.
-   * 
-   * @param entityClass
-   *          the entity class
-   * @param nativeEntities
-   *          native entities to convert
+   * Converts the given array of native entities to a list of model objects of given type, <code>
+   * entityClass</code>.
+   *
+   * @param entityClass the entity class
+   * @param nativeEntities native entities to convert
    * @return the list of model objects
    */
   static <E> List<E> toEntities(Class<E> entityClass, Entity[] nativeEntities) {
@@ -100,38 +92,32 @@ class DatastoreUtils {
 
   /**
    * Converts the given list of model objects to an array of FullEntity objects.
-   * 
-   * @param entities
-   *          the model objects to convert.
-   * @param entityManager
-   *          the entity manager
-   * @param intent
-   *          the intent of marshalling
+   *
+   * @param entities the model objects to convert.
+   * @param entityManager the entity manager
+   * @param intent the intent of marshalling
    * @return the equivalent FullEntity array
    */
-  static FullEntity<?>[] toNativeFullEntities(List<?> entities, DefaultEntityManager entityManager,
-      Marshaller.Intent intent) {
+  static FullEntity<?>[] toNativeFullEntities(
+      List<?> entities, DefaultEntityManager entityManager, Marshaller.Intent intent) {
     FullEntity<?>[] nativeEntities = new FullEntity[entities.size()];
     for (int i = 0; i < entities.size(); i++) {
-      nativeEntities[i] = (FullEntity<?>) Marshaller.marshal(entityManager, entities.get(i),
-          intent);
+      nativeEntities[i] =
+          (FullEntity<?>) Marshaller.marshal(entityManager, entities.get(i), intent);
     }
     return nativeEntities;
   }
 
   /**
    * Converts the given list of model objects to an array of native Entity objects.
-   * 
-   * @param entities
-   *          the model objects to convert.
-   * @param entityManager
-   *          the entity manager
-   * @param intent
-   *          the intent of marshalling
+   *
+   * @param entities the model objects to convert.
+   * @param entityManager the entity manager
+   * @param intent the intent of marshalling
    * @return the equivalent Entity array
    */
-  static Entity[] toNativeEntities(List<?> entities, DefaultEntityManager entityManager,
-      Marshaller.Intent intent) {
+  static Entity[] toNativeEntities(
+      List<?> entities, DefaultEntityManager entityManager, Marshaller.Intent intent) {
     Entity[] nativeEntities = new Entity[entities.size()];
     for (int i = 0; i < entities.size(); i++) {
       nativeEntities[i] = (Entity) Marshaller.marshal(entityManager, entities.get(i), intent);
@@ -141,11 +127,9 @@ class DatastoreUtils {
 
   /**
    * Increments the version property of the given entity by one.
-   * 
-   * @param nativeEntity
-   *          the target entity
-   * @param versionMetadata
-   *          the metadata of the version property
+   *
+   * @param nativeEntity the target entity
+   * @param versionMetadata the metadata of the version property
    * @return a new entity (copy of the given), but with the incremented version.
    */
   static Entity incrementVersion(Entity nativeEntity, PropertyMetadata versionMetadata) {
@@ -156,9 +140,8 @@ class DatastoreUtils {
 
   /**
    * Rolls back the given transaction, if it is still active.
-   * 
-   * @param transaction
-   *          the transaction to roll back.
+   *
+   * @param transaction the transaction to roll back.
    */
   static void rollbackIfActive(Transaction transaction) {
     try {
@@ -172,9 +155,8 @@ class DatastoreUtils {
 
   /**
    * Converts/wraps the given native keys into a list of {@link DatastoreKey} objects.
-   * 
-   * @param nativeKeys
-   *          the native keys
+   *
+   * @param nativeKeys the native keys
    * @return a list of {@link DatastoreKey} objects.
    */
   static List<DatastoreKey> toDatastoreKeys(List<Key> nativeKeys) {
@@ -189,11 +171,10 @@ class DatastoreUtils {
   }
 
   /**
-   * Converts/Unwraps the given list of {@link DatastoreKey} objects into an array of native
-   * {@link Key}s.
-   * 
-   * @param keys
-   *          the list of {@link DatastoreKey} objects
+   * Converts/Unwraps the given list of {@link DatastoreKey} objects into an array of native {@link
+   * Key}s.
+   *
+   * @param keys the list of {@link DatastoreKey} objects
    * @return the native keys
    */
   static Key[] toNativeKeys(List<DatastoreKey> keys) {
@@ -207,11 +188,9 @@ class DatastoreUtils {
   /**
    * Validates if the given entity is valid for deferred ID allocation. Deferred ID allocation is
    * valid for entities using a numeric ID.
-   * 
-   * @param entity
-   *          the entity to validate
-   * @throws EntityManagerException
-   *           if the given entity does not use a numeric ID
+   *
+   * @param entity the entity to validate
+   * @throws EntityManagerException if the given entity does not use a numeric ID
    */
   static void validateDeferredIdAllocation(Object entity) {
     IdentifierMetadata identifierMetadata = EntityIntrospector.getIdentifierMetadata(entity);
@@ -219,15 +198,13 @@ class DatastoreUtils {
       throw new EntityManagerException(
           "Deferred ID allocation is not applicable for entities with String identifiers. ");
     }
-
   }
 
   /**
    * Wraps the given DatastoreException into an {@link EntityManagerException} or a subclass of
    * {@link EntityManagerException}.
-   * 
-   * @param exp
-   *          the DatastoreException
+   *
+   * @param exp the DatastoreException
    * @return An {@link EntityManagerException} or a subclass of {@link EntityManagerException}.
    */
   static EntityManagerException wrap(DatastoreException exp) {
@@ -238,8 +215,6 @@ class DatastoreUtils {
         return new EntityAlreadyExistsException(exp);
       default:
         return new EntityManagerException(exp);
-
     }
   }
-
 }

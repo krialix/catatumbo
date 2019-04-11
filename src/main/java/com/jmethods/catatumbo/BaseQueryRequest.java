@@ -24,37 +24,27 @@ import java.util.Map;
 
 /**
  * Base implementation of {@link QueryRequest} interface.
- * 
- * @author Sai Pullabhotla
  *
+ * @author Sai Pullabhotla
  */
 public abstract class BaseQueryRequest implements QueryRequest {
 
-  /**
-   * GQL Query
-   */
+  /** GQL Query */
   protected String query = null;
 
-  /**
-   * Named bindings
-   */
+  /** Named bindings */
   protected Map<String, Object> namedBindings = null;
 
-  /**
-   * Positional bindings
-   */
+  /** Positional bindings */
   protected List<Object> positionalBindings = null;
 
-  /**
-   * Whether or not to allow literals in the query
-   */
+  /** Whether or not to allow literals in the query */
   protected boolean allowLiterals = false;
 
   /**
    * Creates a new instance of <code>BaseQueryRequest</code>.
-   * 
-   * @param query
-   *          the GQL query string
+   *
+   * @param query the GQL query string
    */
   public BaseQueryRequest(String query) {
     this.query = query;
@@ -71,9 +61,8 @@ public abstract class BaseQueryRequest implements QueryRequest {
 
   /**
    * Sets the GQL query to the given value.
-   * 
-   * @param query
-   *          the GQL query
+   *
+   * @param query the GQL query
    */
   public void setQuery(String query) {
     this.query = query;
@@ -86,11 +75,9 @@ public abstract class BaseQueryRequest implements QueryRequest {
 
   /**
    * Sets the named bindings that are needed for any named parameters in the GQL query.
-   * 
-   * @param namedBindings
-   *          the named bindings.
-   * @throws NullPointerException
-   *           if the <code>namedBindings</code> argument is <code>null</code>.
+   *
+   * @param namedBindings the named bindings.
+   * @throws NullPointerException if the <code>namedBindings</code> argument is <code>null</code>.
    */
   public void setNamedBindings(Map<String, Object> namedBindings) {
     if (namedBindings == null) {
@@ -106,11 +93,9 @@ public abstract class BaseQueryRequest implements QueryRequest {
 
   /**
    * Sets the positional bindings that are needed for any positional parameters in the GQL Query.
-   * 
-   * @param positionalBindings
-   *          the positional bindings.
-   * @throws NullPointerException
-   *           if the <code>positionalArguments</code> is <code>null</code>.
+   *
+   * @param positionalBindings the positional bindings.
+   * @throws NullPointerException if the <code>positionalArguments</code> is <code>null</code>.
    */
   public void setPositionalBindings(List<Object> positionalBindings) {
     if (positionalBindings == null) {
@@ -121,11 +106,9 @@ public abstract class BaseQueryRequest implements QueryRequest {
 
   /**
    * Adds or replaces the given named binding to the list of named bindings.
-   * 
-   * @param bindingName
-   *          the binding name
-   * @param bindingValue
-   *          the binding value
+   *
+   * @param bindingName the binding name
+   * @param bindingValue the binding value
    */
   public void setNamedBinding(String bindingName, Object bindingValue) {
     namedBindings.put(bindingName, bindingValue);
@@ -133,9 +116,8 @@ public abstract class BaseQueryRequest implements QueryRequest {
 
   /**
    * Adds the given value to the list of positional bindings.
-   * 
-   * @param bindingValue
-   *          the binding value
+   *
+   * @param bindingValue the binding value
    */
   public void addPositionalBinding(Object bindingValue) {
     positionalBindings.add(bindingValue);
@@ -143,34 +125,26 @@ public abstract class BaseQueryRequest implements QueryRequest {
 
   /**
    * Adds the positional bindings that are needed for any positional parameters in the GQL query.
-   * 
-   * @param first
-   *          the first positional binding
-   * @param others
-   *          subsequent positional bindings, if any
+   *
+   * @param first the first positional binding
+   * @param others subsequent positional bindings, if any
    */
   public void addPositionalBindings(Object first, Object... others) {
     positionalBindings.add(first);
     positionalBindings.addAll(Arrays.asList(others));
   }
 
-  /**
-   * Clears the positional bindings, if any.
-   */
+  /** Clears the positional bindings, if any. */
   public void clearPositionalBindings() {
     positionalBindings.clear();
   }
 
-  /**
-   * Clears the named bindings, if any.
-   */
+  /** Clears the named bindings, if any. */
   public void clearNamedBindings() {
     namedBindings.clear();
   }
 
-  /**
-   * Clears all bindings (positional and named), if any.
-   */
+  /** Clears all bindings (positional and named), if any. */
   public void clearBindings() {
     clearPositionalBindings();
     clearNamedBindings();
@@ -183,12 +157,10 @@ public abstract class BaseQueryRequest implements QueryRequest {
 
   /**
    * Allows or disallows presence of any literals (constants or synthetic literals) in the query.
-   * 
-   * @param allowLiterals
-   *          whether or not to allow literals in the query.
+   *
+   * @param allowLiterals whether or not to allow literals in the query.
    */
   public void setAllowLiterals(boolean allowLiterals) {
     this.allowLiterals = allowLiterals;
   }
-
 }

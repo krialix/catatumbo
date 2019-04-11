@@ -16,24 +16,6 @@
 
 package com.jmethods.catatumbo;
 
-import java.lang.reflect.Constructor;
-import java.lang.reflect.Field;
-import java.lang.reflect.ParameterizedType;
-import java.lang.reflect.Type;
-import java.math.BigDecimal;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
-import java.time.OffsetDateTime;
-import java.time.ZonedDateTime;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReentrantLock;
-
 import com.jmethods.catatumbo.impl.Cache;
 import com.jmethods.catatumbo.impl.IntrospectionUtils;
 import com.jmethods.catatumbo.mappers.BigDecimalMapper;
@@ -61,34 +43,42 @@ import com.jmethods.catatumbo.mappers.OffsetDateTimeMapper;
 import com.jmethods.catatumbo.mappers.ShortMapper;
 import com.jmethods.catatumbo.mappers.StringMapper;
 import com.jmethods.catatumbo.mappers.ZonedDateTimeMapper;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.Field;
+import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
+import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.OffsetDateTime;
+import java.time.ZonedDateTime;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 /**
  * A factory for producing data mappers that are used for mapping fields of model class to/from the
  * Cloud Datastore.
- * 
- * @author Sai Pullabhotla
  *
+ * @author Sai Pullabhotla
  */
 public class MapperFactory {
 
-  /**
-   * Singleton instance
-   */
+  /** Singleton instance */
   private static final MapperFactory INSTANCE = new MapperFactory();
 
-  /**
-   * Cache of mappers by Type
-   */
+  /** Cache of mappers by Type */
   private Cache<Type, Mapper> cache = null;
 
-  /**
-   * A lock for preventing multiple threads creating Mappers simultaneously
-   */
+  /** A lock for preventing multiple threads creating Mappers simultaneously */
   private Lock lock;
 
-  /**
-   * Creates a new instance of <code>MapperFactory</code>.
-   */
+  /** Creates a new instance of <code>MapperFactory</code>. */
   private MapperFactory() {
     cache = new Cache<>();
     lock = new ReentrantLock();
@@ -97,7 +87,7 @@ public class MapperFactory {
 
   /**
    * Returns the singleton instance of this <code>MapperFactory</code>.
-   * 
+   *
    * @return the singleton instance of this <code>MapperFactory</code>.
    */
   public static MapperFactory getInstance() {
@@ -108,9 +98,8 @@ public class MapperFactory {
    * Returns the mapper for the given field. If the field has a custom mapper, a new instance of the
    * specified mapper will be created and returned. Otherwise, one of the built-in mappers will be
    * returned based on the field type.
-   * 
-   * @param field
-   *          the field
+   *
+   * @param field the field
    * @return the mapper for the given field.
    */
   public Mapper getMapper(Field field) {
@@ -134,9 +123,8 @@ public class MapperFactory {
   /**
    * Returns a mapper for the given type. If a mapper that can handle given type exists in the
    * cache, it will be returned. Otherwise, a new mapper will be created.
-   * 
-   * @param type
-   *          the type of field in the model class
+   *
+   * @param type the type of field in the model class
    * @return a {@link Mapper} that is capable of mapping the given type.
    */
   public Mapper getMapper(Type type) {
@@ -151,11 +139,9 @@ public class MapperFactory {
    * Sets or registers the given mapper for the given type. This method must be called before
    * performing any persistence operations, preferably, during application startup. Entities that
    * were introspected before calling this method will NOT use the new mapper.
-   * 
-   * @param type
-   *          the type
-   * @param mapper
-   *          the mapper to use for the given type
+   *
+   * @param type the type
+   * @param mapper the mapper to use for the given type
    */
   public void setDefaultMapper(Type type, Mapper mapper) {
     if (mapper == null) {
@@ -171,9 +157,8 @@ public class MapperFactory {
 
   /**
    * Creates a new mapper for the given type.
-   * 
-   * @param type
-   *          the type for which a mapper is to be created
+   *
+   * @param type the type for which a mapper is to be created
    * @return a mapper that can handle the mapping of given type to/from the Cloud Datastore.
    */
   private Mapper createMapper(Type type) {
@@ -200,9 +185,8 @@ public class MapperFactory {
 
   /**
    * Creates a mapper for the given class.
-   * 
-   * @param clazz
-   *          the class
+   *
+   * @param clazz the class
    * @return the mapper for the given class.
    */
   private Mapper createMapper(Class<?> clazz) {
@@ -222,9 +206,8 @@ public class MapperFactory {
 
   /**
    * Creates a {@link Mapper} for the given class/type.
-   * 
-   * @param type
-   *          the type
+   *
+   * @param type the type
    * @return a {@link Mapper} for the given class/type.
    */
   private Mapper createMapper(ParameterizedType type) {
@@ -244,9 +227,7 @@ public class MapperFactory {
     return mapper;
   }
 
-  /**
-   * Creates and assigns default Mappers various common types.
-   */
+  /** Creates and assigns default Mappers various common types. */
   private void createDefaultMappers() {
     BooleanMapper booleanMapper = new BooleanMapper();
     CharMapper charMapper = new CharMapper();
@@ -287,17 +268,15 @@ public class MapperFactory {
 
   /**
    * Creates and returns a custom mapper for the given field.
-   * 
-   * @param field
-   *          the field
-   * @param propertyMapperAnnotation
-   *          property mapper annotation that specifies the mapper class
+   *
+   * @param field the field
+   * @param propertyMapperAnnotation property mapper annotation that specifies the mapper class
    * @return custom mapper for the given field
    */
   private Mapper createCustomMapper(Field field, PropertyMapper propertyMapperAnnotation) {
     Class<? extends Mapper> mapperClass = propertyMapperAnnotation.value();
-    Constructor<? extends Mapper> constructor = IntrospectionUtils.getConstructor(mapperClass,
-        Field.class);
+    Constructor<? extends Mapper> constructor =
+        IntrospectionUtils.getConstructor(mapperClass, Field.class);
     if (constructor != null) {
       try {
         return constructor.newInstance(field);
@@ -306,9 +285,8 @@ public class MapperFactory {
       }
     }
     throw new EntityManagerException(
-        String.format("Mapper class %s must have a public constructor with a parameter type of %s",
+        String.format(
+            "Mapper class %s must have a public constructor with a parameter type of %s",
             mapperClass.getName(), Field.class.getName()));
-
   }
-
 }

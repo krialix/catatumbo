@@ -16,15 +16,6 @@
 
 package com.jmethods.catatumbo.impl;
 
-import java.time.Instant;
-import java.time.OffsetDateTime;
-import java.time.ZoneId;
-import java.time.ZonedDateTime;
-import java.util.Calendar;
-import java.util.Collection;
-import java.util.Date;
-import java.util.UUID;
-
 import com.google.cloud.datastore.BaseEntity;
 import com.google.cloud.datastore.Entity;
 import com.google.cloud.datastore.EntityValue;
@@ -39,6 +30,14 @@ import com.jmethods.catatumbo.DatastoreKey;
 import com.jmethods.catatumbo.EntityManagerException;
 import com.jmethods.catatumbo.Indexer;
 import com.jmethods.catatumbo.impl.IdentifierMetadata.DataType;
+import java.time.Instant;
+import java.time.OffsetDateTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
+import java.util.Calendar;
+import java.util.Collection;
+import java.util.Date;
+import java.util.UUID;
 
 /**
  * Converts application's entities (POJOs) to the format needed for the underlying Cloud Datastore
@@ -48,123 +47,26 @@ import com.jmethods.catatumbo.impl.IdentifierMetadata.DataType;
  */
 public class Marshaller {
 
-  /**
-   * The intent of marshalling an object. The marshalling may be different depending on the intended
-   * purpose. For example, if marshalling an object for UPDATE operation, the marshaller does not
-   * automatically generate a key.
-   * 
-   * @author Sai Pullabhotla
-   *
-   */
-  public enum Intent {
-    /**
-     * Insert
-     */
-    INSERT(false, false),
-
-    /**
-     * Update
-     */
-    UPDATE(true, false),
-
-    /**
-     * Upsert (Update or Insert)
-     */
-    UPSERT(false, false),
-
-    /**
-     * Delete
-     */
-    DELETE(true, true),
-
-    /**
-     * Batch Update
-     */
-    BATCH_UPDATE(true, false);
-
-    /**
-     * If a complete key is required for this Intent
-     */
-    private boolean keyRequired;
-
-    /**
-     * If this Intent (or operation) is valid on projected entities
-     */
-    private boolean validOnProjectedEntities;
-
-    /**
-     * Creates a new instance of <code>Intent</code>.
-     * 
-     * @param keyRequired
-     *          whether or not a complete key is required.
-     * @param validOnProjectedEntities
-     *          whether or not this intent is valid on projected entities
-     */
-    private Intent(boolean keyRequired, boolean validOnProjectedEntities) {
-      this.keyRequired = keyRequired;
-      this.validOnProjectedEntities = validOnProjectedEntities;
-    }
-
-    /**
-     * Tells whether or not a complete key is required for this Intent.
-     * 
-     * @return <code>true</code>, if a complete key is required; <code>false</code>, otherwise.
-     */
-    public boolean isKeyRequired() {
-      return keyRequired;
-    }
-
-    /**
-     * Tells whether or not this intent is valid on projected entities.
-     * 
-     * @return <code>true</code>, if this intent is valid/supported on projected entities;
-     *         <code>false</code>, otherwise.
-     */
-    public boolean isValidOnProjectedEntities() {
-      return validOnProjectedEntities;
-    }
-
-  }
-
-  /**
-   * Reference to the EntityManager
-   */
-  private DefaultEntityManager entityManager;
-
-  /**
-   * Entity being marshaled
-   */
+  /** Entity being marshaled */
   private final Object entity;
-
-  /**
-   * Metadata of the entity being marshaled
-   */
+  /** Metadata of the entity being marshaled */
   private final EntityMetadata entityMetadata;
-
-  /**
-   * Builder for building the Entity needed for Cloud Datastore
-   */
+  /** The intent of marshalling */
+  private final Intent intent;
+  /** Reference to the EntityManager */
+  private DefaultEntityManager entityManager;
+  /** Builder for building the Entity needed for Cloud Datastore */
   private BaseEntity.Builder<?, ?> entityBuilder;
 
-  /**
-   * Key
-   */
+  /** Key */
   private IncompleteKey key;
-
-  /**
-   * The intent of marshalling
-   */
-  private final Intent intent;
 
   /**
    * Creates a new instance of <code>Marshaller</code>.
    *
-   * @param entityManager
-   *          reference to the entity manager
-   * @param entity
-   *          the Entity to marshal
-   * @param intent
-   *          the intent of marshalling
+   * @param entityManager reference to the entity manager
+   * @param entity the Entity to marshal
+   * @param intent the intent of marshalling
    */
   private Marshaller(DefaultEntityManager entityManager, Object entity, Intent intent) {
     this.entityManager = entityManager;
@@ -175,46 +77,147 @@ public class Marshaller {
   }
 
   /**
-   * Validates if the Intent is legal for the entity being marshalled.
-   * 
-   * @throws EntityManagerException
-   *           if the Intent is not valid for the entity being marshalled
-   */
-  private void validateIntent() {
-    if (entityMetadata.isProjectedEntity() && !intent.isValidOnProjectedEntities()) {
-      String message = String.format("Operation %s is not allowed for ProjectedEntity %s", intent,
-          entity.getClass().getName());
-      throw new EntityManagerException(message);
-    }
-  }
-
-  /**
    * Marshals the given entity (POJO) into the format needed for the low level Cloud Datastore API.
-   * 
-   * @param entityManager
-   *          the entity manager
-   * @param entity
-   *          the entity to marshal
-   * @param intent
-   *          the intent or purpose of marshalling. Marshalling process varies slightly depending on
-   *          the purpose. For example, if the purpose if INSERT or UPSERT, the marshaller would
-   *          auto generate any keys. Where as if the purpose is UPDATE, then then marshaller will
-   *          NOT generate any keys.
+   *
+   * @param entityManager the entity manager
+   * @param entity the entity to marshal
+   * @param intent the intent or purpose of marshalling. Marshalling process varies slightly
+   *     depending on the purpose. For example, if the purpose if INSERT or UPSERT, the marshaller
+   *     would auto generate any keys. Where as if the purpose is UPDATE, then then marshaller will
+   *     NOT generate any keys.
    * @return the marshaled object
    */
   @SuppressWarnings("rawtypes")
-  public static BaseEntity marshal(DefaultEntityManager entityManager, Object entity,
-      Intent intent) {
+  public static BaseEntity marshal(
+      DefaultEntityManager entityManager, Object entity, Intent intent) {
     Marshaller marshaller = new Marshaller(entityManager, entity, intent);
     return marshaller.marshal();
   }
 
   /**
+   * Extracts the key from the given object, entity, and returns it. The entity must have its ID
+   * set.
+   *
+   * @param entityManager the entity manager.
+   * @param entity the entity from which key is to be extracted
+   * @return extracted key.
+   */
+  public static Key marshalKey(DefaultEntityManager entityManager, Object entity) {
+    Marshaller marshaller = new Marshaller(entityManager, entity, Intent.DELETE);
+    marshaller.marshalKey();
+    return (Key) marshaller.key;
+  }
+
+  /**
+   * Checks to see if the given value is a valid identifier for the given ID type.
+   *
+   * @param idValue the ID value
+   * @param identifierType the identifier type
+   * @return <code>true</code>, if the given value is a valid identifier; <code>false</code>,
+   *     otherwise. For STRING type, the ID is valid if it it contains at least one printable
+   *     character. In other words, if ((String) idValue).trim().length() > 0. For numeric types,
+   *     the ID is valid if it is not <code>null</code> or zero.
+   */
+  private static boolean isValidId(Object idValue, DataType identifierType) {
+    boolean validId = false;
+    if (idValue != null) {
+      switch (identifierType) {
+        case LONG:
+        case LONG_OBJECT:
+          validId = (long) idValue != 0;
+          break;
+        case STRING:
+          validId = ((String) idValue).trim().length() > 0;
+          break;
+        default:
+          // we should never get here
+          break;
+      }
+    }
+    return validId;
+  }
+
+  /**
+   * Marshals the field with the given property metadata.
+   *
+   * @param propertyMetadata the metadata of the field to be marshaled.
+   * @param target the object in which the field is defined/accessible from
+   * @param entityBuilder the native entity on which the marshaled field should be set
+   */
+  private static void marshalField(
+      PropertyMetadata propertyMetadata, Object target, BaseEntity.Builder<?, ?> entityBuilder) {
+    Object fieldValue = IntrospectionUtils.getFieldValue(propertyMetadata, target);
+    if (fieldValue == null && propertyMetadata.isOptional()) {
+      return;
+    }
+    ValueBuilder<?, ?, ?> valueBuilder = propertyMetadata.getMapper().toDatastore(fieldValue);
+    // ListValues cannot have indexing turned off. Indexing is turned on by
+    // default, so we don't touch excludeFromIndexes for ListValues.
+    if (valueBuilder.getValueType() != ValueType.LIST) {
+      valueBuilder.setExcludeFromIndexes(!propertyMetadata.isIndexed());
+    }
+    Value<?> datastoreValue = valueBuilder.build();
+    entityBuilder.set(propertyMetadata.getMappedName(), datastoreValue);
+    Indexer indexer = propertyMetadata.getSecondaryIndexer();
+    if (indexer != null) {
+      entityBuilder.set(propertyMetadata.getSecondaryIndexName(), indexer.index(datastoreValue));
+    }
+  }
+
+  /**
+   * Initializes the Embedded object represented by the given metadata.
+   *
+   * @param embeddedMetadata the metadata of the embedded field
+   * @param target the object in which the embedded field is declared/accessible from
+   * @return the initialized object
+   * @throws EntityManagerException if any error occurs during initialization of the embedded object
+   */
+  private static Object initializeEmbedded(EmbeddedMetadata embeddedMetadata, Object target) {
+    try {
+      // If instantiation of Entity instantiated the embeddable, we will
+      // use the pre-initialized embedded object.
+      Object embeddedObject = embeddedMetadata.getReadMethod().invoke(target);
+      if (embeddedObject == null) {
+        // Otherwise, we will instantiate the embedded object, which
+        // could be a Builder
+        embeddedObject = IntrospectionUtils.instantiate(embeddedMetadata);
+        ConstructorMetadata constructorMetadata = embeddedMetadata.getConstructorMetadata();
+        if (constructorMetadata.isBuilderConstructionStrategy()) {
+          // Build the Builder
+          embeddedObject = constructorMetadata.getBuildMethodHandle().invoke(embeddedObject);
+        } else {
+          // TODO we should not be doing this?? There is no equivalent
+          // of this for builder pattern
+          embeddedMetadata.getWriteMethod().invoke(target, embeddedObject);
+        }
+      }
+      return embeddedObject;
+    } catch (Throwable t) {
+      throw new EntityManagerException(t);
+    }
+  }
+
+  /**
+   * Validates if the Intent is legal for the entity being marshalled.
+   *
+   * @throws EntityManagerException if the Intent is not valid for the entity being marshalled
+   */
+  private void validateIntent() {
+    if (entityMetadata.isProjectedEntity() && !intent.isValidOnProjectedEntities()) {
+      String message =
+          String.format(
+              "Operation %s is not allowed for ProjectedEntity %s",
+              intent, entity.getClass().getName());
+      throw new EntityManagerException(message);
+    }
+  }
+
+  /**
    * Marshals the given entity and and returns the equivalent Entity needed for the underlying Cloud
    * Datastore API.
-   * 
+   *
    * @return A native entity that is equivalent to the POJO being marshalled. The returned value
-   *         could either be a FullEntity or Entity.
+   *     could either be a FullEntity or Entity.
    */
   private BaseEntity<?> marshal() {
     marshalKey();
@@ -232,25 +235,7 @@ public class Marshaller {
     return entityBuilder.build();
   }
 
-  /**
-   * Extracts the key from the given object, entity, and returns it. The entity must have its ID
-   * set.
-   *
-   * @param entityManager
-   *          the entity manager.
-   * @param entity
-   *          the entity from which key is to be extracted
-   * @return extracted key.
-   */
-  public static Key marshalKey(DefaultEntityManager entityManager, Object entity) {
-    Marshaller marshaller = new Marshaller(entityManager, entity, Intent.DELETE);
-    marshaller.marshalKey();
-    return (Key) marshaller.key;
-  }
-
-  /**
-   * Marshals the key.
-   */
+  /** Marshals the key. */
   private void marshalKey() {
 
     Key parent = null;
@@ -290,12 +275,14 @@ public class Marshaller {
       }
     } else {
       if (intent.isKeyRequired()) {
-        throw new EntityManagerException(String
-            .format("Identifier is not set or valid for entity of type %s", entity.getClass()));
+        throw new EntityManagerException(
+            String.format(
+                "Identifier is not set or valid for entity of type %s", entity.getClass()));
       }
       if (!autoGenerateId) {
-        String pattern = "Identifier is not set or valid for entity of type %s. Auto generation "
-            + "of ID is explicitly turned off. ";
+        String pattern =
+            "Identifier is not set or valid for entity of type %s. Auto generation "
+                + "of ID is explicitly turned off. ";
         throw new EntityManagerException(String.format(pattern, entity.getClass()));
       } else {
         if (identifierType == DataType.STRING) {
@@ -308,43 +295,10 @@ public class Marshaller {
   }
 
   /**
-   * Checks to see if the given value is a valid identifier for the given ID type.
-   * 
-   * @param idValue
-   *          the ID value
-   * @param identifierType
-   *          the identifier type
-   * @return <code>true</code>, if the given value is a valid identifier; <code>false</code>,
-   *         otherwise. For STRING type, the ID is valid if it it contains at least one printable
-   *         character. In other words, if ((String) idValue).trim().length() > 0. For numeric
-   *         types, the ID is valid if it is not <code>null</code> or zero.
-   */
-  private static boolean isValidId(Object idValue, DataType identifierType) {
-    boolean validId = false;
-    if (idValue != null) {
-      switch (identifierType) {
-        case LONG:
-        case LONG_OBJECT:
-          validId = (long) idValue != 0;
-          break;
-        case STRING:
-          validId = ((String) idValue).trim().length() > 0;
-          break;
-        default:
-          // we should never get here
-          break;
-      }
-    }
-    return validId;
-  }
-
-  /**
    * Creates a complete key using the given parameters.
-   * 
-   * @param parent
-   *          the parent key, may be <code>null</code>.
-   * @param id
-   *          the numeric ID
+   *
+   * @param parent the parent key, may be <code>null</code>.
+   * @param id the numeric ID
    */
   private void createCompleteKey(Key parent, long id) {
     String kind = entityMetadata.getKind();
@@ -357,11 +311,9 @@ public class Marshaller {
 
   /**
    * Creates a complete key using the given parameters.
-   * 
-   * @param parent
-   *          the parent key, may be <code>null</code>.
-   * @param id
-   *          the String ID
+   *
+   * @param parent the parent key, may be <code>null</code>.
+   * @param id the String ID
    */
   private void createCompleteKey(Key parent, String id) {
     String kind = entityMetadata.getKind();
@@ -373,11 +325,10 @@ public class Marshaller {
   }
 
   /**
-   * Creates a CompleteKey using the given parameters. The actual ID is generated using
-   * <code>UUID.randomUUID().toString()</code>.
-   * 
-   * @param parent
-   *          the parent key, may be <code>null</code>.
+   * Creates a CompleteKey using the given parameters. The actual ID is generated using <code>
+   * UUID.randomUUID().toString()</code>.
+   *
+   * @param parent the parent key, may be <code>null</code>.
    */
   private void createCompleteKey(Key parent) {
     String kind = entityMetadata.getKind();
@@ -391,9 +342,8 @@ public class Marshaller {
 
   /**
    * Creates an IncompleteKey.
-   * 
-   * @param parent
-   *          the parent key, may be <code>null</code>.
+   *
+   * @param parent the parent key, may be <code>null</code>.
    */
   private void createIncompleteKey(Key parent) {
     String kind = entityMetadata.getKind();
@@ -404,12 +354,10 @@ public class Marshaller {
     }
   }
 
-  /**
-   * Marshals all the fields.
-   */
+  /** Marshals all the fields. */
   private void marshalFields() {
-    Collection<PropertyMetadata> propertyMetadataCollection = entityMetadata
-        .getPropertyMetadataCollection();
+    Collection<PropertyMetadata> propertyMetadataCollection =
+        entityMetadata.getPropertyMetadataCollection();
     for (PropertyMetadata propertyMetadata : propertyMetadataCollection) {
       marshalField(propertyMetadata, entity);
     }
@@ -417,82 +365,44 @@ public class Marshaller {
 
   /**
    * Marshals the field with the given property metadata.
-   * 
-   * @param propertyMetadata
-   *          the metadata of the field to be marshaled.
-   * @param target
-   *          the object in which the field is defined/accessible from.
+   *
+   * @param propertyMetadata the metadata of the field to be marshaled.
+   * @param target the object in which the field is defined/accessible from.
    */
   private void marshalField(PropertyMetadata propertyMetadata, Object target) {
     marshalField(propertyMetadata, target, entityBuilder);
   }
 
   /**
-   * Marshals the field with the given property metadata.
-   * 
-   * @param propertyMetadata
-   *          the metadata of the field to be marshaled.
-   * @param target
-   *          the object in which the field is defined/accessible from
-   * @param entityBuilder
-   *          the native entity on which the marshaled field should be set
-   */
-  private static void marshalField(PropertyMetadata propertyMetadata, Object target,
-      BaseEntity.Builder<?, ?> entityBuilder) {
-    Object fieldValue = IntrospectionUtils.getFieldValue(propertyMetadata, target);
-    if (fieldValue == null && propertyMetadata.isOptional()) {
-      return;
-    }
-    ValueBuilder<?, ?, ?> valueBuilder = propertyMetadata.getMapper().toDatastore(fieldValue);
-    // ListValues cannot have indexing turned off. Indexing is turned on by
-    // default, so we don't touch excludeFromIndexes for ListValues.
-    if (valueBuilder.getValueType() != ValueType.LIST) {
-      valueBuilder.setExcludeFromIndexes(!propertyMetadata.isIndexed());
-    }
-    Value<?> datastoreValue = valueBuilder.build();
-    entityBuilder.set(propertyMetadata.getMappedName(), datastoreValue);
-    Indexer indexer = propertyMetadata.getSecondaryIndexer();
-    if (indexer != null) {
-      entityBuilder.set(propertyMetadata.getSecondaryIndexName(), indexer.index(datastoreValue));
-    }
-  }
-
-  /**
    * Returns the value for the given field of the entity being marshaled.
    *
-   * @param fieldMetadata
-   *          the field's metadata
+   * @param fieldMetadata the field's metadata
    * @return the field's value
    */
   private Object getFieldValue(FieldMetadata fieldMetadata) {
     return IntrospectionUtils.getFieldValue(fieldMetadata, entity);
   }
 
-  /**
-   * Marshals the embedded fields.
-   */
+  /** Marshals the embedded fields. */
   private void marshalEmbeddedFields() {
     for (EmbeddedMetadata embeddedMetadata : entityMetadata.getEmbeddedMetadataCollection()) {
       if (embeddedMetadata.getStorageStrategy() == StorageStrategy.EXPLODED) {
         marshalWithExplodedStrategy(embeddedMetadata, entity);
       } else {
-        ValueBuilder<?, ?, ?> embeddedEntityBuilder = marshalWithImplodedStrategy(embeddedMetadata,
-            entity);
+        ValueBuilder<?, ?, ?> embeddedEntityBuilder =
+            marshalWithImplodedStrategy(embeddedMetadata, entity);
         if (embeddedEntityBuilder != null) {
           entityBuilder.set(embeddedMetadata.getMappedName(), embeddedEntityBuilder.build());
         }
       }
     }
-
   }
 
   /**
    * Marshals an embedded field represented by the given metadata.
-   * 
-   * @param embeddedMetadata
-   *          the metadata of the embedded field
-   * @param target
-   *          the target object to which the embedded object belongs
+   *
+   * @param embeddedMetadata the metadata of the embedded field
+   * @param target the target object to which the embedded object belongs
    */
   private void marshalWithExplodedStrategy(EmbeddedMetadata embeddedMetadata, Object target) {
     try {
@@ -510,15 +420,13 @@ public class Marshaller {
 
   /**
    * Marshals the embedded field represented by the given metadata.
-   * 
-   * @param embeddedMetadata
-   *          the metadata of the embedded field.
-   * @param target
-   *          the object in which the embedded field is defined/accessible from.
+   *
+   * @param embeddedMetadata the metadata of the embedded field.
+   * @param target the object in which the embedded field is defined/accessible from.
    * @return the ValueBuilder equivalent to embedded object
    */
-  private ValueBuilder<?, ?, ?> marshalWithImplodedStrategy(EmbeddedMetadata embeddedMetadata,
-      Object target) {
+  private ValueBuilder<?, ?, ?> marshalWithImplodedStrategy(
+      EmbeddedMetadata embeddedMetadata, Object target) {
     try {
       Object embeddedObject = embeddedMetadata.getReadMethod().invoke(target);
       if (embeddedObject == null) {
@@ -534,11 +442,11 @@ public class Marshaller {
         marshalField(propertyMetadata, embeddedObject, embeddedEntityBuilder);
       }
       for (EmbeddedMetadata embeddedMetadata2 : embeddedMetadata.getEmbeddedMetadataCollection()) {
-        ValueBuilder<?, ?, ?> embeddedEntityBuilder2 = marshalWithImplodedStrategy(
-            embeddedMetadata2, embeddedObject);
+        ValueBuilder<?, ?, ?> embeddedEntityBuilder2 =
+            marshalWithImplodedStrategy(embeddedMetadata2, embeddedObject);
         if (embeddedEntityBuilder2 != null) {
-          embeddedEntityBuilder.set(embeddedMetadata2.getMappedName(),
-              embeddedEntityBuilder2.build());
+          embeddedEntityBuilder.set(
+              embeddedMetadata2.getMappedName(), embeddedEntityBuilder2.build());
         }
       }
       EntityValue.Builder valueBuilder = EntityValue.newBuilder(embeddedEntityBuilder.build());
@@ -548,12 +456,9 @@ public class Marshaller {
     } catch (Throwable t) {
       throw new EntityManagerException(t);
     }
-
   }
 
-  /**
-   * Marshals the the automatic timestamp fields, if any.
-   */
+  /** Marshals the the automatic timestamp fields, if any. */
   private void marshalAutoTimestampFields() {
     switch (intent) {
       case UPDATE:
@@ -569,9 +474,7 @@ public class Marshaller {
     }
   }
 
-  /**
-   * Marshals the updated timestamp field.
-   */
+  /** Marshals the updated timestamp field. */
   private void marshalUpdatedTimestamp() {
     PropertyMetadata updatedTimestampMetadata = entityMetadata.getUpdatedTimestampMetadata();
     if (updatedTimestampMetadata != null) {
@@ -579,9 +482,7 @@ public class Marshaller {
     }
   }
 
-  /**
-   * Marshals both created and updated timestamp fields.
-   */
+  /** Marshals both created and updated timestamp fields. */
   private void marshalCreatedAndUpdatedTimestamp() {
     PropertyMetadata createdTimestampMetadata = entityMetadata.getCreatedTimestampMetadata();
     PropertyMetadata updatedTimestampMetadata = entityMetadata.getUpdatedTimestampMetadata();
@@ -596,11 +497,9 @@ public class Marshaller {
 
   /**
    * Applies the given time, <code>millis</code>, to the property represented by the given metadata.
-   * 
-   * @param propertyMetadata
-   *          the property metadata of the field
-   * @param millis
-   *          the time in milliseconds
+   *
+   * @param propertyMetadata the property metadata of the field
+   * @param millis the time in milliseconds
    */
   private void applyAutoTimestamp(PropertyMetadata propertyMetadata, long millis) {
     Object timestamp = null;
@@ -637,39 +536,62 @@ public class Marshaller {
   }
 
   /**
-   * Initializes the Embedded object represented by the given metadata.
-   * 
-   * @param embeddedMetadata
-   *          the metadata of the embedded field
-   * @param target
-   *          the object in which the embedded field is declared/accessible from
-   * @return the initialized object
-   * @throws EntityManagerException
-   *           if any error occurs during initialization of the embedded object
+   * The intent of marshalling an object. The marshalling may be different depending on the intended
+   * purpose. For example, if marshalling an object for UPDATE operation, the marshaller does not
+   * automatically generate a key.
+   *
+   * @author Sai Pullabhotla
    */
-  private static Object initializeEmbedded(EmbeddedMetadata embeddedMetadata, Object target) {
-    try {
-      // If instantiation of Entity instantiated the embeddable, we will
-      // use the pre-initialized embedded object.
-      Object embeddedObject = embeddedMetadata.getReadMethod().invoke(target);
-      if (embeddedObject == null) {
-        // Otherwise, we will instantiate the embedded object, which
-        // could be a Builder
-        embeddedObject = IntrospectionUtils.instantiate(embeddedMetadata);
-        ConstructorMetadata constructorMetadata = embeddedMetadata.getConstructorMetadata();
-        if (constructorMetadata.isBuilderConstructionStrategy()) {
-          // Build the Builder
-          embeddedObject = constructorMetadata.getBuildMethodHandle().invoke(embeddedObject);
-        } else {
-          // TODO we should not be doing this?? There is no equivalent
-          // of this for builder pattern
-          embeddedMetadata.getWriteMethod().invoke(target, embeddedObject);
-        }
-      }
-      return embeddedObject;
-    } catch (Throwable t) {
-      throw new EntityManagerException(t);
+  public enum Intent {
+    /** Insert */
+    INSERT(false, false),
+
+    /** Update */
+    UPDATE(true, false),
+
+    /** Upsert (Update or Insert) */
+    UPSERT(false, false),
+
+    /** Delete */
+    DELETE(true, true),
+
+    /** Batch Update */
+    BATCH_UPDATE(true, false);
+
+    /** If a complete key is required for this Intent */
+    private boolean keyRequired;
+
+    /** If this Intent (or operation) is valid on projected entities */
+    private boolean validOnProjectedEntities;
+
+    /**
+     * Creates a new instance of <code>Intent</code>.
+     *
+     * @param keyRequired whether or not a complete key is required.
+     * @param validOnProjectedEntities whether or not this intent is valid on projected entities
+     */
+    Intent(boolean keyRequired, boolean validOnProjectedEntities) {
+      this.keyRequired = keyRequired;
+      this.validOnProjectedEntities = validOnProjectedEntities;
+    }
+
+    /**
+     * Tells whether or not a complete key is required for this Intent.
+     *
+     * @return <code>true</code>, if a complete key is required; <code>false</code>, otherwise.
+     */
+    public boolean isKeyRequired() {
+      return keyRequired;
+    }
+
+    /**
+     * Tells whether or not this intent is valid on projected entities.
+     *
+     * @return <code>true</code>, if this intent is valid/supported on projected entities; <code>
+     *     false</code>, otherwise.
+     */
+    public boolean isValidOnProjectedEntities() {
+      return validOnProjectedEntities;
     }
   }
-
 }

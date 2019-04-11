@@ -21,20 +21,15 @@ import java.util.Objects;
 
 /**
  * Represents an embedded object of an entity or a nested embedded object.
- * 
- * @author Sai Pullabhotla
  *
+ * @author Sai Pullabhotla
  */
 public class EmbeddedField {
 
-  /**
-   * The underlying field
-   */
+  /** The underlying field */
   private Field field;
 
-  /**
-   * Parent embedded field, if any
-   */
+  /** Parent embedded field, if any */
   private EmbeddedField parent;
 
   /**
@@ -46,9 +41,8 @@ public class EmbeddedField {
 
   /**
    * Creates a new instance of <code>EmbeddedField</code>.
-   * 
-   * @param field
-   *          the underlying field
+   *
+   * @param field the underlying field
    */
   public EmbeddedField(Field field) {
     this(field, null);
@@ -56,11 +50,9 @@ public class EmbeddedField {
 
   /**
    * Creates a new instance of <code>EmbeddedField</code>.
-   * 
-   * @param field
-   *          the underlying field
-   * @param parent
-   *          the parent embedded field. May be <code>null</code>.
+   *
+   * @param field the underlying field
+   * @param parent the parent embedded field. May be <code>null</code>.
    */
   public EmbeddedField(Field field, EmbeddedField parent) {
     this.field = field;
@@ -70,7 +62,7 @@ public class EmbeddedField {
 
   /**
    * Returns the underlying field.
-   * 
+   *
    * @return the field the underlying field.
    */
   public Field getField() {
@@ -79,7 +71,7 @@ public class EmbeddedField {
 
   /**
    * Returns the parent field.
-   * 
+   *
    * @return the parent field.
    */
   public EmbeddedField getParent() {
@@ -88,7 +80,7 @@ public class EmbeddedField {
 
   /**
    * Returns the qualified name of this embedded field.
-   * 
+   *
    * @return the qualified name of this embedded field.
    */
   public String getQualifiedName() {
@@ -97,7 +89,7 @@ public class EmbeddedField {
 
   /**
    * Returns the type of this field.
-   * 
+   *
    * @return the type of this field.
    */
   public Class<?> getType() {
@@ -106,7 +98,7 @@ public class EmbeddedField {
 
   /**
    * Returns the name of this field.
-   * 
+   *
    * @return the name of this field.
    */
   public String getName() {
@@ -115,16 +107,14 @@ public class EmbeddedField {
 
   /**
    * Returns the class in which this field is declared.
-   * 
+   *
    * @return the class in which this field is declared.
    */
   public Class<?> getDeclaringClass() {
     return field.getDeclaringClass();
   }
 
-  /**
-   * Computes and sets the qualified name of this field.
-   */
+  /** Computes and sets the qualified name of this field. */
   private void computeQualifiedName() {
     if (parent != null) {
       qualifiedName = parent.qualifiedName + "." + field.getName();
@@ -154,5 +144,4 @@ public class EmbeddedField {
   public int hashCode() {
     return Objects.hash(field, parent);
   }
-
 }

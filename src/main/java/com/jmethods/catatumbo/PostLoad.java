@@ -26,16 +26,12 @@ import java.lang.annotation.Target;
  * Used for annotating a method as an entity listener method. The annotated method will be invoked
  * after loading an entity. This annotation can be applied to a method within an {@link Entity},
  * {@link MappedSuperClass} or an {@link EntityListener}.
- * 
- * <p>
- * Note that PostLoad callback is NOT invoked for projection queries.
- * </p>
- * 
+ *
+ * <p>Note that PostLoad callback is NOT invoked for projection queries.
+ *
  * @see EntityListeners
  * @see EntityListener
- * 
  * @author Sai Pullabhotla
- *
  */
 @Retention(RUNTIME)
 @Target(METHOD)

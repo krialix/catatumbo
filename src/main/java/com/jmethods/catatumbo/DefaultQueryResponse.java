@@ -20,38 +20,25 @@ import java.util.List;
 
 /**
  * Default implementation of {@link QueryResponse} interface.
- * 
- * @param <T>
- *          the expected result type
- * @author Sai Pullabhotla
  *
+ * @param <T> the expected result type
+ * @author Sai Pullabhotla
  */
 public class DefaultQueryResponse<T> implements QueryResponse<T> {
 
-  /**
-   * A list to hold the results of the query
-   */
+  /** A list to hold the results of the query */
   protected List<T> results = null;
 
-  /**
-   * Start cursor
-   */
+  /** Start cursor */
   protected DatastoreCursor startCursor = null;
 
-  /**
-   * End cursor
-   */
+  /** End cursor */
   protected DatastoreCursor endCursor = null;
 
-  /**
-   * Query execution metadata
-   */
+  /** Query execution metadata */
   protected QueryResponseMetadata metadata = null;
 
-  /**
-   * Creates a new instance of <code>BaseQueryResponse</code>.
-   * 
-   */
+  /** Creates a new instance of <code>BaseQueryResponse</code>. */
   public DefaultQueryResponse() {
     // Do nothing
   }
@@ -63,9 +50,8 @@ public class DefaultQueryResponse<T> implements QueryResponse<T> {
 
   /**
    * Sets the results to the given <code>results</code>.
-   * 
-   * @param results
-   *          the results
+   *
+   * @param results the results
    */
   public void setResults(List<T> results) {
     this.results = results;
@@ -78,9 +64,8 @@ public class DefaultQueryResponse<T> implements QueryResponse<T> {
 
   /**
    * Sets the starting cursor to the given value.
-   * 
-   * @param startCursor
-   *          the start cursor
+   *
+   * @param startCursor the start cursor
    */
   public void setStartCursor(DatastoreCursor startCursor) {
     this.startCursor = startCursor;
@@ -93,9 +78,8 @@ public class DefaultQueryResponse<T> implements QueryResponse<T> {
 
   /**
    * Sets the end cursor to the given value.
-   * 
-   * @param endCursor
-   *          the end cursor
+   *
+   * @param endCursor the end cursor
    */
   public void setEndCursor(DatastoreCursor endCursor) {
     this.endCursor = endCursor;
@@ -109,11 +93,9 @@ public class DefaultQueryResponse<T> implements QueryResponse<T> {
   /**
    * Sets the query metadata to the given value.
    *
-   * @param metadata
-   *          the query execution metadata
+   * @param metadata the query execution metadata
    */
   public void setQueryResponseMetadata(QueryResponseMetadata metadata) {
     this.metadata = metadata;
   }
-
 }

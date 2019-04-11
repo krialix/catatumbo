@@ -20,43 +20,41 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * QueryRequest objects hold the necessary information about a query to execute. The
- * {@link EntityManager} executes the QueryRquest and returns the {@link QueryResponse}.
- * 
- * @author Sai Pullabhotla
+ * QueryRequest objects hold the necessary information about a query to execute. The {@link
+ * EntityManager} executes the QueryRquest and returns the {@link QueryResponse}.
  *
+ * @author Sai Pullabhotla
  */
 public interface QueryRequest {
 
   /**
    * Returns the GQL query
-   * 
+   *
    * @return the GQL query
    */
-  public String getQuery();
+  String getQuery();
 
   /**
    * Returns the named bindings for this QueryRequest, if any. Implementations should never return
    * <code>null</code>.
-   * 
+   *
    * @return the named bindings
    */
-  public Map<String, Object> getNamedBindings();
+  Map<String, Object> getNamedBindings();
 
   /**
    * Returns the positional bindings of this QueryRequest, if any, Implementations should never
    * return a <code>null</code>.
-   * 
+   *
    * @return the positional bindings
    */
-  public List<Object> getPositionalBindings();
+  List<Object> getPositionalBindings();
 
   /**
    * Tells whether or not to allow literals (constant values or synthetic literals) in the query.
-   * 
+   *
    * @return <code>true</code>, if literals are to be allowed in the query; <code>false</code>,
-   *         otherwise.
+   *     otherwise.
    */
-  public boolean isAllowLiterals();
-
+  boolean isAllowLiterals();
 }

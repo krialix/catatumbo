@@ -23,16 +23,13 @@ package com.jmethods.catatumbo;
  */
 public class DefaultQueryResponseMetadata implements QueryResponseMetadata {
 
-  /**
-   * The query state metadata value.
-   */
+  /** The query state metadata value. */
   private QueryResponseMetadata.QueryState queryState;
 
   /**
    * Creates a new instance of @code{DefaultQueryResponseMetadata}.
-   * 
-   * @param queryState
-   *          the query execution state
+   *
+   * @param queryState the query execution state
    */
   public DefaultQueryResponseMetadata(QueryResponseMetadata.QueryState queryState) {
     this.queryState = queryState;
@@ -42,5 +39,4 @@ public class DefaultQueryResponseMetadata implements QueryResponseMetadata {
   public QueryResponseMetadata.QueryState getQueryState() {
     return queryState;
   }
-
 }

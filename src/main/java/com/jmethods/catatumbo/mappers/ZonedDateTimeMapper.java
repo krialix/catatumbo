@@ -16,11 +16,6 @@
 
 package com.jmethods.catatumbo.mappers;
 
-import java.time.Instant;
-import java.time.ZoneId;
-import java.time.ZonedDateTime;
-import java.util.concurrent.TimeUnit;
-
 import com.google.cloud.Timestamp;
 import com.google.cloud.datastore.NullValue;
 import com.google.cloud.datastore.TimestampValue;
@@ -28,14 +23,17 @@ import com.google.cloud.datastore.Value;
 import com.google.cloud.datastore.ValueBuilder;
 import com.jmethods.catatumbo.Mapper;
 import com.jmethods.catatumbo.MappingException;
+import java.time.Instant;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
+import java.util.concurrent.TimeUnit;
 
 /**
  * An implementation of {@link Mapper} for mapping {@link ZonedDateTime} to/from Cloud Datastore.
  * {@link ZonedDateTime} types are mapped to DateTime type in the Cloud Datastore. This maximum
  * precision is capped to Microseconds to match with what the Datastore supports.
- * 
- * @author Sai Pullabhotla
  *
+ * @author Sai Pullabhotla
  */
 public class ZonedDateTimeMapper implements Mapper {
 
@@ -67,5 +65,4 @@ public class ZonedDateTimeMapper implements Mapper {
           String.format(pattern, TimestampValue.class.getName(), input.getClass().getName()), exp);
     }
   }
-
 }

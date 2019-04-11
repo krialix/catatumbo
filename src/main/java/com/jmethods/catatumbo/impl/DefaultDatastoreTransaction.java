@@ -18,8 +18,6 @@ package com.jmethods.catatumbo.impl;
 
 import static com.jmethods.catatumbo.impl.DatastoreUtils.toNativeFullEntities;
 
-import java.util.List;
-
 import com.google.cloud.datastore.Datastore;
 import com.google.cloud.datastore.DatastoreException;
 import com.google.cloud.datastore.FullEntity;
@@ -33,61 +31,49 @@ import com.jmethods.catatumbo.ProjectionQueryRequest;
 import com.jmethods.catatumbo.QueryResponse;
 import com.jmethods.catatumbo.TransactionMode;
 import com.jmethods.catatumbo.impl.Marshaller.Intent;
+import java.util.List;
 
 /**
  * Default implementation of the {@link DatastoreTransaction} interface.
- * 
- * @author Sai Pullabhotla
  *
+ * @author Sai Pullabhotla
  */
 public class DefaultDatastoreTransaction implements DatastoreTransaction {
 
-  /**
-   * Entity manager that created this transaction
-   */
+  /** Entity manager that created this transaction */
   private DefaultEntityManager entityManager;
 
-  /**
-   * Native transaction
-   */
+  /** Native transaction */
   private Transaction nativeTransaction;
 
-  /**
-   * Datastore
-   */
+  /** Datastore */
   private Datastore datastore;
 
-  /**
-   * Reader
-   */
+  /** Reader */
   private DefaultDatastoreReader reader;
 
-  /**
-   * Writer
-   */
+  /** Writer */
   private DefaultDatastoreWriter writer;
 
   /**
    * Creates a new instance of <code>DatastoreTransaction</code>.
-   * 
-   * @param entityManager
-   *          the entity manager that created this transaction.
-   * @param transactionMode
-   *          the transaction mode
+   *
+   * @param entityManager the entity manager that created this transaction.
+   * @param transactionMode the transaction mode
    */
-  public DefaultDatastoreTransaction(DefaultEntityManager entityManager,
-      TransactionMode transactionMode) {
+  public DefaultDatastoreTransaction(
+      DefaultEntityManager entityManager, TransactionMode transactionMode) {
     this.entityManager = entityManager;
     this.datastore = entityManager.getDatastore();
-    this.nativeTransaction = datastore
-        .newTransaction(transactionMode.getNativeTransactionOptions());
+    this.nativeTransaction =
+        datastore.newTransaction(transactionMode.getNativeTransactionOptions());
     this.reader = new DefaultDatastoreReader(this);
     this.writer = new TransactionalWriter(this);
   }
 
   /**
    * Returns the entity manager that created this transaction.
-   * 
+   *
    * @return the entity manager that created this transaction.
    */
   public DefaultEntityManager getEntityManager() {
@@ -96,7 +82,7 @@ public class DefaultDatastoreTransaction implements DatastoreTransaction {
 
   /**
    * Returns the native transaction.
-   * 
+   *
    * @return the native transaction.
    */
   public Transaction getNativeTransaction() {
@@ -107,13 +93,12 @@ public class DefaultDatastoreTransaction implements DatastoreTransaction {
   public <E> void insertWithDeferredIdAllocation(E entity) {
     try {
       DatastoreUtils.validateDeferredIdAllocation(entity);
-      FullEntity<?> nativeEntity = (FullEntity<?>) Marshaller.marshal(entityManager, entity,
-          Intent.INSERT);
+      FullEntity<?> nativeEntity =
+          (FullEntity<?>) Marshaller.marshal(entityManager, entity, Intent.INSERT);
       nativeTransaction.addWithDeferredIdAllocation(nativeEntity);
     } catch (DatastoreException exp) {
       throw DatastoreUtils.wrap(exp);
     }
-
   }
 
   @Override
@@ -134,13 +119,12 @@ public class DefaultDatastoreTransaction implements DatastoreTransaction {
   public <E> void upsertWithDeferredIdAllocation(E entity) {
     try {
       DatastoreUtils.validateDeferredIdAllocation(entity);
-      FullEntity<?> nativeEntity = (FullEntity<?>) Marshaller.marshal(entityManager, entity,
-          Intent.UPSERT);
+      FullEntity<?> nativeEntity =
+          (FullEntity<?>) Marshaller.marshal(entityManager, entity, Intent.UPSERT);
       nativeTransaction.putWithDeferredIdAllocation(nativeEntity);
     } catch (DatastoreException exp) {
       throw DatastoreUtils.wrap(exp);
     }
-
   }
 
   @Override
@@ -188,35 +172,6 @@ public class DefaultDatastoreTransaction implements DatastoreTransaction {
       throw DatastoreUtils.wrap(exp);
     } catch (Exception exp) {
       throw new EntityManagerException(exp);
-    }
-  }
-
-  /**
-   * Transaction Response containing the results of a transaction commit.
-   * 
-   * @author Sai Pullabhotla
-   *
-   */
-  static class DefaultResponse implements Response {
-
-    /**
-     * Native response
-     */
-    private final Transaction.Response nativeResponse;
-
-    /**
-     * Creates a new instance of <code>DefaultResponse</code>.
-     * 
-     * @param nativeResponse
-     *          the native transaction response
-     */
-    public DefaultResponse(Transaction.Response nativeResponse) {
-      this.nativeResponse = nativeResponse;
-    }
-
-    @Override
-    public List<DatastoreKey> getGeneratedKeys() {
-      return DatastoreUtils.toDatastoreKeys(nativeResponse.getGeneratedKeys());
     }
   }
 
@@ -346,14 +301,14 @@ public class DefaultDatastoreTransaction implements DatastoreTransaction {
   }
 
   @Override
-  public <E> QueryResponse<E> executeEntityQueryRequest(Class<E> expectedResultType,
-      EntityQueryRequest request) {
+  public <E> QueryResponse<E> executeEntityQueryRequest(
+      Class<E> expectedResultType, EntityQueryRequest request) {
     return reader.executeEntityQueryRequest(expectedResultType, request);
   }
 
   @Override
-  public <E> QueryResponse<E> executeProjectionQueryRequest(Class<E> expectedResultType,
-      ProjectionQueryRequest request) {
+  public <E> QueryResponse<E> executeProjectionQueryRequest(
+      Class<E> expectedResultType, ProjectionQueryRequest request) {
     return reader.executeProjectionQueryRequest(expectedResultType, request);
   }
 
@@ -362,4 +317,28 @@ public class DefaultDatastoreTransaction implements DatastoreTransaction {
     return reader.executeKeyQueryRequest(request);
   }
 
+  /**
+   * Transaction Response containing the results of a transaction commit.
+   *
+   * @author Sai Pullabhotla
+   */
+  static class DefaultResponse implements Response {
+
+    /** Native response */
+    private final Transaction.Response nativeResponse;
+
+    /**
+     * Creates a new instance of <code>DefaultResponse</code>.
+     *
+     * @param nativeResponse the native transaction response
+     */
+    public DefaultResponse(Transaction.Response nativeResponse) {
+      this.nativeResponse = nativeResponse;
+    }
+
+    @Override
+    public List<DatastoreKey> getGeneratedKeys() {
+      return DatastoreUtils.toDatastoreKeys(nativeResponse.getGeneratedKeys());
+    }
+  }
 }

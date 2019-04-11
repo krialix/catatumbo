@@ -16,19 +16,17 @@
 
 package com.jmethods.catatumbo.mappers;
 
-import java.math.BigDecimal;
-
 import com.google.cloud.datastore.DoubleValue;
 import com.google.cloud.datastore.NullValue;
 import com.google.cloud.datastore.Value;
 import com.google.cloud.datastore.ValueBuilder;
 import com.jmethods.catatumbo.Mapper;
+import java.math.BigDecimal;
 
 /**
  * An implementation of {@link Mapper} for mapping BigDecimal types to/from Cloud Datastore.
- * 
- * @author Sai Pullabhotla
  *
+ * @author Sai Pullabhotla
  */
 public class BigDecimalMapper implements Mapper {
 
@@ -47,5 +45,4 @@ public class BigDecimalMapper implements Mapper {
     }
     return BigDecimal.valueOf(((DoubleValue) input).get());
   }
-
 }

@@ -27,9 +27,8 @@ import com.jmethods.catatumbo.Mapper;
 /**
  * An implementation of {@link Mapper} for mapping GeoLocation (a.k.a GeoPoint) type to/from Cloud
  * Datastore.
- * 
- * @author Sai Pullabhotla
  *
+ * @author Sai Pullabhotla
  */
 public class GeoLocationMapper implements Mapper {
 
@@ -51,5 +50,4 @@ public class GeoLocationMapper implements Mapper {
     LatLng coordinates = value.get();
     return new GeoLocation(coordinates.getLatitude(), coordinates.getLongitude());
   }
-
 }

@@ -22,41 +22,30 @@ import java.util.Objects;
 /**
  * Geographical Location data type to store longitude and latitude information in a single property
  * of Cloud Datastore.
- * 
- * @author Sai Pullabhotla
  *
+ * @author Sai Pullabhotla
  */
 public class GeoLocation implements Serializable {
 
-  /**
-   * Serial Version UID
-   */
+  /** Serial Version UID */
   private static final long serialVersionUID = -7448392415206659989L;
 
-  /**
-   * Latitude
-   */
+  /** Latitude */
   private double latitude;
 
-  /**
-   * Longitude
-   */
+  /** Longitude */
   private double longitude;
 
-  /**
-   * Creates a new instance of <code>GeoLocation</code>.
-   */
+  /** Creates a new instance of <code>GeoLocation</code>. */
   public GeoLocation() {
     this(0.0, 0.0);
   }
 
   /**
    * Creates a new instance of <code>GeoLocation</code>.
-   * 
-   * @param latitude
-   *          the latitude
-   * @param longitude
-   *          the longitude
+   *
+   * @param latitude the latitude
+   * @param longitude the longitude
    */
   public GeoLocation(double latitude, double longitude) {
     // Validate the values??
@@ -66,7 +55,7 @@ public class GeoLocation implements Serializable {
 
   /**
    * Returns the latitude.
-   * 
+   *
    * @return the latitude
    */
   public double getLatitude() {
@@ -75,9 +64,8 @@ public class GeoLocation implements Serializable {
 
   /**
    * Sets the latitude to the given value.
-   * 
-   * @param latitude
-   *          the latitude
+   *
+   * @param latitude the latitude
    */
   public void setLatitude(double latitude) {
     this.latitude = latitude;
@@ -85,7 +73,7 @@ public class GeoLocation implements Serializable {
 
   /**
    * Returns the longitude.
-   * 
+   *
    * @return the longitude
    */
   public double getLongitude() {
@@ -94,9 +82,8 @@ public class GeoLocation implements Serializable {
 
   /**
    * Sets the longitude to the given value.
-   * 
-   * @param longitude
-   *          the longitude
+   *
+   * @param longitude the longitude
    */
   public void setLongitude(double longitude) {
     this.longitude = longitude;

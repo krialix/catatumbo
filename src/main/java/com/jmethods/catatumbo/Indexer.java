@@ -21,20 +21,17 @@ import com.google.cloud.datastore.Value;
 /**
  * Contract for building secondary indexes for entity properties. An implementation of Indexer must
  * have a public default (a.k.a no-argument) constructor.
- * 
- * @author Sai Pullabhotla
  *
+ * @author Sai Pullabhotla
  */
 public interface Indexer {
 
   /**
    * Returns indexed value for the given input.
-   * 
-   * @param input
-   *          the input, this is the output from the {@link Mapper} that is associated with the
-   *          entity's field.
+   *
+   * @param input the input, this is the output from the {@link Mapper} that is associated with the
+   *     entity's field.
    * @return the indexed value
    */
   Value<?> index(Value<?> input);
-
 }

@@ -16,8 +16,6 @@
 
 package com.jmethods.catatumbo.indexers;
 
-import java.util.List;
-
 import com.google.cloud.datastore.ListValue;
 import com.google.cloud.datastore.NullValue;
 import com.google.cloud.datastore.Value;
@@ -25,22 +23,20 @@ import com.google.cloud.datastore.ValueType;
 import com.jmethods.catatumbo.Indexer;
 import com.jmethods.catatumbo.IndexerFactory;
 import com.jmethods.catatumbo.IndexingException;
+import java.util.List;
 
 /**
  * An implementation of {@link Indexer} interface to create index on a list of Strings in upper
  * case. Each item in the list will be converted to upper case and then stored as an Array property
  * in the Cloud Datastore.
- * 
- * @author Sai Pullabhotla
  *
+ * @author Sai Pullabhotla
  */
 public class UpperCaseStringListIndexer implements Indexer {
 
-  /**
-   * Indexer for the items in the list
-   */
-  private static final UpperCaseStringIndexer ITEM_INDEXER = IndexerFactory.getInstance()
-      .getIndexer(UpperCaseStringIndexer.class);
+  /** Indexer for the items in the list */
+  private static final UpperCaseStringIndexer ITEM_INDEXER =
+      IndexerFactory.getInstance().getIndexer(UpperCaseStringIndexer.class);
 
   @Override
   public Value<?> index(Value<?> input) {
@@ -58,5 +54,4 @@ public class UpperCaseStringListIndexer implements Indexer {
       throw new IndexingException(exp);
     }
   }
-
 }

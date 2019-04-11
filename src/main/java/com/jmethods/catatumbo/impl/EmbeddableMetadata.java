@@ -20,20 +20,17 @@ import com.jmethods.catatumbo.Embeddable;
 
 /**
  * Objects of this class contain metadata of an {@link Embeddable} class.
- * 
- * @author Sai Pullabhotla
  *
+ * @author Sai Pullabhotla
  */
 public class EmbeddableMetadata extends MetadataBase {
 
   /**
    * Creates a new instance of <code>EmbeddableMetadata</code>.
-   * 
-   * @param clazz
-   *          the Embeddable class
+   *
+   * @param clazz the Embeddable class
    */
   public EmbeddableMetadata(Class<?> clazz) {
     super(clazz);
   }
-
 }

@@ -19,25 +19,20 @@ package com.jmethods.catatumbo;
 /**
  * An exception to indicate that a persistence class does not have a supported
  * construction/instantiation mechanism.
- * 
- * @author Sai Pullabhotla
  *
+ * @author Sai Pullabhotla
  */
 public class UnsupportedConstructionStrategyException extends EntityManagerException {
 
-  /**
-   * Serial version UID
-   */
+  /** Serial version UID */
   private static final long serialVersionUID = -1012347475989414105L;
 
   /**
    * Creates a new instance of {@code UnsupportedConstructionStrategyException}.
-   * 
-   * @param message
-   *          the message
+   *
+   * @param message the message
    */
   public UnsupportedConstructionStrategyException(String message) {
     super(message);
   }
-
 }

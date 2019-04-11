@@ -22,46 +22,31 @@ import java.util.Objects;
 
 /**
  * Objects of this class represent the metadata of a Datastore property.
- * 
- * @author Sai Pullabhotla
  *
+ * @author Sai Pullabhotla
  */
-
 @Entity(kind = "__property__")
 public class DatastoreProperty implements Serializable {
 
-  /**
-   * Serial version UID
-   */
+  /** Serial version UID */
   private static final long serialVersionUID = 6647639868379397875L;
 
-  /**
-   * Property name
-   */
-  @Identifier
-  private String name;
+  /** Property name */
+  @Identifier private String name;
 
-  /**
-   * The full key of this property
-   */
-  @Key
-  private DatastoreKey key;
+  /** The full key of this property */
+  @Key private DatastoreKey key;
 
-  /**
-   * Entity Key
-   */
-  @ParentKey
-  private DatastoreKey entityKey;
+  /** Entity Key */
+  @ParentKey private DatastoreKey entityKey;
 
-  /**
-   * The data types
-   */
+  /** The data types */
   @Property(name = "property_representation")
   private List<String> dataTypes;
 
   /**
    * Returns the name of this Property.
-   * 
+   *
    * @return the name of this Property.
    */
   public String getName() {
@@ -70,9 +55,8 @@ public class DatastoreProperty implements Serializable {
 
   /**
    * Sets the name of this property.
-   * 
-   * @param name
-   *          the property name
+   *
+   * @param name the property name
    */
   public void setName(String name) {
     this.name = name;
@@ -80,7 +64,7 @@ public class DatastoreProperty implements Serializable {
 
   /**
    * Returns the full key of this property.
-   * 
+   *
    * @return the full key of this property.
    */
   public DatastoreKey getKey() {
@@ -89,9 +73,8 @@ public class DatastoreProperty implements Serializable {
 
   /**
    * Sets the full key of this property.
-   * 
-   * @param key
-   *          the full key of this property.
+   *
+   * @param key the full key of this property.
    */
   public void setKey(DatastoreKey key) {
     this.key = key;
@@ -99,7 +82,7 @@ public class DatastoreProperty implements Serializable {
 
   /**
    * Returns the key of the owning entity.
-   * 
+   *
    * @return the key of the owning entity.
    */
   public DatastoreKey getEntityKey() {
@@ -108,9 +91,8 @@ public class DatastoreProperty implements Serializable {
 
   /**
    * Sets the owning entity's key.
-   * 
-   * @param entityKey
-   *          the owning entity's key.
+   *
+   * @param entityKey the owning entity's key.
    */
   public void setEntityKey(DatastoreKey entityKey) {
     this.entityKey = entityKey;
@@ -118,7 +100,7 @@ public class DatastoreProperty implements Serializable {
 
   /**
    * Returns the data types.
-   * 
+   *
    * @return the data types
    */
   public List<String> getDataTypes() {
@@ -127,9 +109,8 @@ public class DatastoreProperty implements Serializable {
 
   /**
    * Sets the data types.
-   * 
-   * @param dataTypes
-   *          the data types
+   *
+   * @param dataTypes the data types
    */
   public void setDataTypes(List<String> dataTypes) {
     this.dataTypes = dataTypes;
@@ -137,7 +118,7 @@ public class DatastoreProperty implements Serializable {
 
   /**
    * Returns the name of the owning entity.
-   * 
+   *
    * @return the name of the owning entity.
    */
   public String getEntityName() {
@@ -169,5 +150,4 @@ public class DatastoreProperty implements Serializable {
   public int hashCode() {
     return Objects.hashCode(key);
   }
-
 }

@@ -16,39 +16,32 @@
 
 package com.jmethods.catatumbo.impl;
 
-import java.lang.reflect.Method;
-import java.util.EnumMap;
-import java.util.Map;
-
 import com.jmethods.catatumbo.Entity;
 import com.jmethods.catatumbo.EntityListener;
 import com.jmethods.catatumbo.EntityManagerException;
 import com.jmethods.catatumbo.MappedSuperClass;
+import java.lang.reflect.Method;
+import java.util.EnumMap;
+import java.util.Map;
 
 /**
- * Base class for holding the metadata of listeners defined in an {@link Entity},
- * {@link MappedSuperClass} or {@link EntityListener}.
- * 
- * @author Sai Pullabhotla
+ * Base class for holding the metadata of listeners defined in an {@link Entity}, {@link
+ * MappedSuperClass} or {@link EntityListener}.
  *
+ * @author Sai Pullabhotla
  */
 public class AbstractListenerMetadata {
 
-  /**
-   * The listener class to which this metadata belongs
-   */
+  /** The listener class to which this metadata belongs */
   private Class<?> listenerClass;
 
-  /**
-   * Mapping of callback type to its callback method. Created lazily, if needed.
-   */
+  /** Mapping of callback type to its callback method. Created lazily, if needed. */
   private Map<CallbackType, Method> callbacks;
 
   /**
    * Creates a new instance of <code>AbstractListenerMetadata</code>.
-   * 
-   * @param listenerClass
-   *          the listener class to which this metadata belongs.
+   *
+   * @param listenerClass the listener class to which this metadata belongs.
    */
   public AbstractListenerMetadata(Class<?> listenerClass) {
     this.listenerClass = listenerClass;
@@ -56,13 +49,10 @@ public class AbstractListenerMetadata {
 
   /**
    * Registers the given method as the callback method for the given event type.
-   * 
-   * @param callbackType
-   *          the callback type
-   * @param method
-   *          the callback method
-   * @throws EntityManagerException
-   *           if there was already a callback method for the given event type.
+   *
+   * @param callbackType the callback type
+   * @param method the callback method
+   * @throws EntityManagerException if there was already a callback method for the given event type.
    */
   public void putListener(CallbackType callbackType, Method method) {
     if (callbacks == null) {
@@ -70,22 +60,27 @@ public class AbstractListenerMetadata {
     }
     Method oldMethod = callbacks.put(callbackType, method);
     if (oldMethod != null) {
-      String format = "Class %s has at least two methods, %s and %s, with annotation of %s. "
-          + "At most one method is allowed for a given callback type. ";
-      String message = String.format(format, listenerClass.getName(), oldMethod.getName(),
-          method.getName(), callbackType.getAnnotationClass().getName());
+      String format =
+          "Class %s has at least two methods, %s and %s, with annotation of %s. "
+              + "At most one method is allowed for a given callback type. ";
+      String message =
+          String.format(
+              format,
+              listenerClass.getName(),
+              oldMethod.getName(),
+              method.getName(),
+              callbackType.getAnnotationClass().getName());
       throw new EntityManagerException(message);
     }
   }
 
   /**
    * Returns all defined callbacks.
-   * 
+   *
    * @return all defined callbacks. Returns <code>null</code>, if there are no callback methods
-   *         defined in the listener class.
+   *     defined in the listener class.
    */
   public Map<CallbackType, Method> getCallbacks() {
     return callbacks;
   }
-
 }

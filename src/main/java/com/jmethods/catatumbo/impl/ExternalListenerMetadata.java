@@ -18,20 +18,17 @@ package com.jmethods.catatumbo.impl;
 
 /**
  * Metadata of an EntityListener.
- * 
- * @author Sai Pullabhotla
  *
+ * @author Sai Pullabhotla
  */
 public class ExternalListenerMetadata extends AbstractListenerMetadata {
 
   /**
    * Creates a new instance of <code>ExternalListenerMetadata</code>.
-   * 
-   * @param listenerClass
-   *          the listener class to which this metadata belongs.
+   *
+   * @param listenerClass the listener class to which this metadata belongs.
    */
   public ExternalListenerMetadata(Class<?> listenerClass) {
     super(listenerClass);
   }
-
 }

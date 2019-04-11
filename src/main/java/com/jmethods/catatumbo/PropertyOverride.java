@@ -25,9 +25,8 @@ import java.lang.annotation.Target;
 /**
  * Used to override mapping of a property. This annotation must be specified on the top-level entity
  * to override any properties of {@link Embedded} objects or a {@link MappedSuperClass}.
- * 
- * @author Sai Pullabhotla
  *
+ * @author Sai Pullabhotla
  */
 @Retention(RUNTIME)
 @Target(TYPE)
@@ -35,16 +34,15 @@ public @interface PropertyOverride {
 
   /**
    * The name of the property whose mapping is to be overridden.
-   * 
+   *
    * @return name of the property whose mapping is to be overridden.
    */
   String name();
 
   /**
    * The override mapping information.
-   * 
+   *
    * @return override mapping information.
    */
   Property property();
-
 }

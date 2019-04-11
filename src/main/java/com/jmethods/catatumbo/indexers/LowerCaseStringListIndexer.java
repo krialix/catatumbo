@@ -16,8 +16,6 @@
 
 package com.jmethods.catatumbo.indexers;
 
-import java.util.List;
-
 import com.google.cloud.datastore.ListValue;
 import com.google.cloud.datastore.NullValue;
 import com.google.cloud.datastore.Value;
@@ -25,21 +23,19 @@ import com.google.cloud.datastore.ValueType;
 import com.jmethods.catatumbo.Indexer;
 import com.jmethods.catatumbo.IndexerFactory;
 import com.jmethods.catatumbo.IndexingException;
+import java.util.List;
 
 /**
  * An implementation of {@link Indexer} interface to index a List of Strings. Each item in the list
  * will be converted to lower case and stored as an Array property in the Cloud Datastore.
- * 
- * @author Sai Pullabhotla
  *
+ * @author Sai Pullabhotla
  */
 public class LowerCaseStringListIndexer implements Indexer {
 
-  /**
-   * Indexer for items in the list.
-   */
-  private static final LowerCaseStringIndexer ITEM_INDEXER = IndexerFactory.getInstance()
-      .getIndexer(LowerCaseStringIndexer.class);
+  /** Indexer for items in the list. */
+  private static final LowerCaseStringIndexer ITEM_INDEXER =
+      IndexerFactory.getInstance().getIndexer(LowerCaseStringIndexer.class);
 
   @Override
   public Value<?> index(Value<?> input) {
@@ -57,5 +53,4 @@ public class LowerCaseStringListIndexer implements Indexer {
       throw new IndexingException(exp);
     }
   }
-
 }

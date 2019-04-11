@@ -26,9 +26,8 @@ import com.jmethods.catatumbo.MappingException;
 /**
  * An implementation of {@link Mapper} for mapping primitive and wrapper Float types to/from Cloud
  * Datastore.
- * 
- * @author Sai Pullabhotla
  *
+ * @author Sai Pullabhotla
  */
 public class FloatMapper implements Mapper {
 
@@ -52,5 +51,4 @@ public class FloatMapper implements Mapper {
     }
     return d.floatValue();
   }
-
 }

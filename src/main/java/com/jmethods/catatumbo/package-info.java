@@ -18,5 +18,4 @@
  * This package contains the public API for mapping and persisting model objects to the Google Cloud
  * Datastore and vice versa.
  */
-
 package com.jmethods.catatumbo;

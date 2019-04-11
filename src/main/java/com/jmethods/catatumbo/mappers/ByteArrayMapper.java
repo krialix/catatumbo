@@ -25,9 +25,8 @@ import com.jmethods.catatumbo.Mapper;
 
 /**
  * An implementation of {@link Mapper} for mapping byte array types to/from Cloud Datastore.
- * 
- * @author Sai Pullabhotla
  *
+ * @author Sai Pullabhotla
  */
 public class ByteArrayMapper implements Mapper {
 
@@ -46,5 +45,4 @@ public class ByteArrayMapper implements Mapper {
     }
     return ((BlobValue) input).get().toByteArray();
   }
-
 }

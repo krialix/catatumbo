@@ -16,22 +16,17 @@
 
 package com.jmethods.catatumbo.stats;
 
-import java.io.Serializable;
-
 import com.jmethods.catatumbo.Entity;
+import java.io.Serializable;
 
 /**
  * Statistic entity for namespace specific composite index.
- * 
- * @author Sai Pullabhotla
  *
+ * @author Sai Pullabhotla
  */
 @Entity(kind = StatConstants.STAT_COMPOSITE_INDEX_NS)
 public class StatCompositeIndexNs extends StatCompositeIndexBase implements Serializable {
 
-  /**
-   * Serial version UID
-   */
+  /** Serial version UID */
   private static final long serialVersionUID = -2593351832953284028L;
-
 }

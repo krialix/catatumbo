@@ -53,21 +53,19 @@ public @interface Property {
    * is <code>null</code>, the property will be completely omitted when saving the Entity to the
    * Datastore. Setting optional to <code>true</code> will not have any effect in the following
    * cases:
+   *
    * <ul>
-   * <li>if the type of field is primitive</li>
-   * <li>the field has annotation of {@link Version}</li>
-   * <li>the field has annotation of {@link CreatedTimestamp}</li>
-   * <li>the field has annotation of {@link UpdatedTimestamp}</li>
+   *   <li>if the type of field is primitive
+   *   <li>the field has annotation of {@link Version}
+   *   <li>the field has annotation of {@link CreatedTimestamp}
+   *   <li>the field has annotation of {@link UpdatedTimestamp}
    * </ul>
-   * 
-   * <p>
-   * If the field has a {@link SecondaryIndex} defined, the corresponding secondary property will
+   *
+   * <p>If the field has a {@link SecondaryIndex} defined, the corresponding secondary property will
    * also be omitted when the primary property is omitted.
-   * </p>
-   * 
+   *
    * @return Whether or not the property is optional, and hence it should not be persisted when the
-   *         corresponding field is <code>null</code>.
+   *     corresponding field is <code>null</code>.
    */
   boolean optional() default false;
-
 }

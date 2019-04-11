@@ -16,13 +16,6 @@
 
 package com.jmethods.catatumbo.impl;
 
-import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.EnumMap;
-import java.util.List;
-import java.util.Map;
-
 import com.google.cloud.datastore.Datastore;
 import com.google.cloud.datastore.DatastoreException;
 import com.google.cloud.datastore.GqlQuery;
@@ -47,47 +40,42 @@ import com.jmethods.catatumbo.TransactionMode;
 import com.jmethods.catatumbo.TransactionalTask;
 import com.jmethods.catatumbo.Utility;
 import com.jmethods.catatumbo.impl.IdentifierMetadata.DataType;
+import java.lang.reflect.Method;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.EnumMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Default implementation of {@link EntityManager} interface. Manages entities in the Cloud
  * Datastore such as inserting entities, updating, deleting, retrieving, etc. In addition to the
  * standard CRUD operations, the EntityManager allows running GQL queries to retrieve multiple
  * entities that match the specified criteria.
- * 
+ *
  * @author Sai Pullabhotla
  */
 public class DefaultEntityManager implements EntityManager {
 
-  /**
-   * Batch size for sending delete requests when using the deleteAll method
-   */
+  /** Batch size for sending delete requests when using the deleteAll method */
   private static final int DEFAULT_DELETE_ALL_BATCH_SIZE = 100;
 
-  /**
-   * Reference to the native Datastore object
-   */
+  /** Reference to the native Datastore object */
   private Datastore datastore;
 
-  /**
-   * Datastore writer
-   */
+  /** Datastore writer */
   private DefaultDatastoreWriter writer;
 
-  /**
-   * Datastore reader
-   */
+  /** Datastore reader */
   private DefaultDatastoreReader reader;
 
-  /**
-   * Metadata of global callbacks
-   */
+  /** Metadata of global callbacks */
   private Map<CallbackType, List<CallbackMetadata>> globalCallbacks;
 
   /**
    * Creates a new instance of <code>DefaultEntityManager</code>.
-   * 
-   * @param datastore
-   *          the Datastore object
+   *
+   * @param datastore the Datastore object
    */
   public DefaultEntityManager(Datastore datastore) {
     this.datastore = datastore;
@@ -96,8 +84,45 @@ public class DefaultEntityManager implements EntityManager {
   }
 
   /**
+   * Invokes the given callback method on the given target object.
+   *
+   * @param callbackMethod the callback method
+   * @param listener the listener object on which to invoke the method
+   * @param entity the entity for which the callback is being invoked.
+   */
+  private static void invokeCallbackMethod(Method callbackMethod, Object listener, Object entity) {
+    try {
+      callbackMethod.invoke(listener, entity);
+    } catch (Exception exp) {
+      String message =
+          String.format(
+              "Failed to execute callback method %s of class %s",
+              callbackMethod.getName(), callbackMethod.getDeclaringClass().getName());
+      throw new EntityManagerException(message, exp);
+    }
+  }
+
+  /**
+   * Invokes the given callback method on the given target object.
+   *
+   * @param callbackMethod the callback method
+   * @param entity the entity for which the callback is being invoked
+   */
+  private static void invokeCallbackMethod(Method callbackMethod, Object entity) {
+    try {
+      callbackMethod.invoke(entity);
+    } catch (Exception exp) {
+      String message =
+          String.format(
+              "Failed to execute callback method %s of class %s",
+              callbackMethod.getName(), callbackMethod.getDeclaringClass().getName());
+      throw new EntityManagerException(message, exp);
+    }
+  }
+
+  /**
    * Returns the underlying Datastore object.
-   * 
+   *
    * @return the underlying Datastore object.
    */
   public Datastore getDatastore() {
@@ -117,8 +142,10 @@ public class DefaultEntityManager implements EntityManager {
     }
     String query = "SELECT __key__ FROM " + kind;
     try {
-      GqlQuery<Key> gqlQuery = Query.newGqlQueryBuilder(Query.ResultType.KEY, query)
-          .setNamespace(getEffectiveNamespace()).build();
+      GqlQuery<Key> gqlQuery =
+          Query.newGqlQueryBuilder(Query.ResultType.KEY, query)
+              .setNamespace(getEffectiveNamespace())
+              .build();
       QueryResults<Key> keys = datastore.run(gqlQuery);
       Key[] nativeKeys = new Key[DEFAULT_DELETE_ALL_BATCH_SIZE];
       long deleteCount = 0;
@@ -313,14 +340,14 @@ public class DefaultEntityManager implements EntityManager {
   }
 
   @Override
-  public <E> QueryResponse<E> executeEntityQueryRequest(Class<E> expectedResultType,
-      EntityQueryRequest request) {
+  public <E> QueryResponse<E> executeEntityQueryRequest(
+      Class<E> expectedResultType, EntityQueryRequest request) {
     return reader.executeEntityQueryRequest(expectedResultType, request);
   }
 
   @Override
-  public <E> QueryResponse<E> executeProjectionQueryRequest(Class<E> expectedResultType,
-      ProjectionQueryRequest request) {
+  public <E> QueryResponse<E> executeProjectionQueryRequest(
+      Class<E> expectedResultType, ProjectionQueryRequest request) {
     return reader.executeProjectionQueryRequest(expectedResultType, request);
   }
 
@@ -341,7 +368,7 @@ public class DefaultEntityManager implements EntityManager {
 
   @Override
   public DatastoreKey allocateId(Object entity) {
-    List<DatastoreKey> keys = allocateId(Arrays.asList(new Object[] { entity }));
+    List<DatastoreKey> keys = allocateId(Arrays.asList(entity));
     return keys.get(0);
   }
 
@@ -370,9 +397,8 @@ public class DefaultEntityManager implements EntityManager {
 
   /**
    * Returns an IncompleteKey of the given entity.
-   * 
-   * @param entity
-   *          the entity
+   *
+   * @param entity the entity
    * @return the incomplete key
    */
   private IncompleteKey getIncompleteKey(Object entity) {
@@ -387,8 +413,10 @@ public class DefaultEntityManager implements EntityManager {
     if (parentKey != null) {
       incompleteKey = IncompleteKey.newBuilder(parentKey.nativeKey(), kind).build();
     } else {
-      incompleteKey = IncompleteKey.newBuilder(datastore.getOptions().getProjectId(), kind)
-          .setNamespace(getEffectiveNamespace()).build();
+      incompleteKey =
+          IncompleteKey.newBuilder(datastore.getOptions().getProjectId(), kind)
+              .setNamespace(getEffectiveNamespace())
+              .build();
     }
     return incompleteKey;
   }
@@ -397,15 +425,15 @@ public class DefaultEntityManager implements EntityManager {
   public void setDefaultListeners(Class<?>... entityListeners) {
     globalCallbacks = new EnumMap<>(CallbackType.class);
     for (Class<?> listenerClass : entityListeners) {
-      ExternalListenerMetadata listenerMetadata = ExternalListenerIntrospector
-          .introspect(listenerClass);
+      ExternalListenerMetadata listenerMetadata =
+          ExternalListenerIntrospector.introspect(listenerClass);
       Map<CallbackType, Method> callbacks = listenerMetadata.getCallbacks();
       if (callbacks != null) {
         for (Map.Entry<CallbackType, Method> entry : callbacks.entrySet()) {
           CallbackType callbackType = entry.getKey();
           Method callbackMethod = entry.getValue();
-          CallbackMetadata callbackMetadata = new CallbackMetadata(EntityListenerType.DEFAULT,
-              callbackType, callbackMethod);
+          CallbackMetadata callbackMetadata =
+              new CallbackMetadata(EntityListenerType.DEFAULT, callbackType, callbackMethod);
           putDefaultCallback(callbackType, callbackMetadata);
         }
       }
@@ -414,11 +442,9 @@ public class DefaultEntityManager implements EntityManager {
 
   /**
    * Puts/adds the given callback type and its metadata to the list of default listeners.
-   * 
-   * @param callbackType
-   *          the event type
-   * @param metadata
-   *          the callback metadata
+   *
+   * @param callbackType the event type
+   * @param metadata the callback metadata
    */
   private void putDefaultCallback(CallbackType callbackType, CallbackMetadata metadata) {
     List<CallbackMetadata> metadataList = globalCallbacks.get(callbackType);
@@ -431,11 +457,9 @@ public class DefaultEntityManager implements EntityManager {
 
   /**
    * Executes the entity listeners associated with the given entity.
-   * 
-   * @param callbackType
-   *          the event type
-   * @param entity
-   *          the entity that produced the event
+   *
+   * @param callbackType the event type
+   * @param entity the entity that produced the event
    */
   public void executeEntityListeners(CallbackType callbackType, Object entity) {
     // We may get null entities here. For example loading a nonexistent ID
@@ -443,8 +467,8 @@ public class DefaultEntityManager implements EntityManager {
     if (entity == null) {
       return;
     }
-    EntityListenersMetadata entityListenersMetadata = EntityIntrospector
-        .getEntityListenersMetadata(entity);
+    EntityListenersMetadata entityListenersMetadata =
+        EntityIntrospector.getEntityListenersMetadata(entity);
     List<CallbackMetadata> callbacks = entityListenersMetadata.getCallbacks(callbackType);
     if (!entityListenersMetadata.isExcludeDefaultListeners()) {
       executeGlobalListeners(callbackType, entity);
@@ -462,8 +486,10 @@ public class DefaultEntityManager implements EntityManager {
           invokeCallbackMethod(callback.getCallbackMethod(), entity);
           break;
         default:
-          String message = String.format("Unknown or unimplemented callback listener type: %s",
-              callback.getListenerType());
+          String message =
+              String.format(
+                  "Unknown or unimplemented callback listener type: %s",
+                  callback.getListenerType());
           throw new EntityManagerException(message);
       }
     }
@@ -471,11 +497,9 @@ public class DefaultEntityManager implements EntityManager {
 
   /**
    * Executes the entity listeners associated with the given list of entities.
-   * 
-   * @param callbackType
-   *          the callback type
-   * @param entities
-   *          the entities
+   *
+   * @param callbackType the callback type
+   * @param entities the entities
    */
   public void executeEntityListeners(CallbackType callbackType, List<?> entities) {
     for (Object entity : entities) {
@@ -485,11 +509,9 @@ public class DefaultEntityManager implements EntityManager {
 
   /**
    * Executes the global listeners for the given event type for the given entity.
-   * 
-   * @param callbackType
-   *          the event type
-   * @param entity
-   *          the entity
+   *
+   * @param callbackType the event type
+   * @param entity the entity
    */
   private void executeGlobalListeners(CallbackType callbackType, Object entity) {
     if (globalCallbacks == null) {
@@ -506,49 +528,9 @@ public class DefaultEntityManager implements EntityManager {
   }
 
   /**
-   * Invokes the given callback method on the given target object.
-   * 
-   * @param callbackMethod
-   *          the callback method
-   * @param listener
-   *          the listener object on which to invoke the method
-   * @param entity
-   *          the entity for which the callback is being invoked.
-   */
-  private static void invokeCallbackMethod(Method callbackMethod, Object listener, Object entity) {
-    try {
-      callbackMethod.invoke(listener, entity);
-    } catch (Exception exp) {
-      String message = String.format("Failed to execute callback method %s of class %s",
-          callbackMethod.getName(), callbackMethod.getDeclaringClass().getName());
-      throw new EntityManagerException(message, exp);
-    }
-
-  }
-
-  /**
-   * Invokes the given callback method on the given target object.
-   * 
-   * @param callbackMethod
-   *          the callback method
-   * @param entity
-   *          the entity for which the callback is being invoked
-   */
-  private static void invokeCallbackMethod(Method callbackMethod, Object entity) {
-    try {
-      callbackMethod.invoke(entity);
-    } catch (Exception exp) {
-      String message = String.format("Failed to execute callback method %s of class %s",
-          callbackMethod.getName(), callbackMethod.getDeclaringClass().getName());
-      throw new EntityManagerException(message, exp);
-    }
-
-  }
-
-  /**
    * Creates and returns a new native KeyFactory. If a namespace was specified using {@link Tenant},
    * the returned KeyFactory will have the specified namespace.
-   * 
+   *
    * @return a {@link KeyFactory}
    */
   KeyFactory newNativeKeyFactory() {
@@ -563,7 +545,7 @@ public class DefaultEntityManager implements EntityManager {
   /**
    * Returns the effective namespace. If a namespace was specified using {@link Tenant}, it will be
    * returned. Otherwise, the namespace of this EntityManager is returned.
-   * 
+   *
    * @return the effective namespace.
    */
   String getEffectiveNamespace() {
@@ -573,5 +555,4 @@ public class DefaultEntityManager implements EntityManager {
     }
     return namespace;
   }
-
 }

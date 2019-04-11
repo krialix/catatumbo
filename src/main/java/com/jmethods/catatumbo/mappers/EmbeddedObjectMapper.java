@@ -33,27 +33,21 @@ import com.jmethods.catatumbo.impl.PropertyMetadata;
 
 /**
  * An implementation of {@link Mapper} interface to map embedded objects.
- * 
- * @author Sai Pullabhotla
  *
+ * @author Sai Pullabhotla
  */
 public class EmbeddedObjectMapper implements Mapper {
 
-  /**
-   * The Embeddable class.
-   */
+  /** The Embeddable class. */
   private final Class<?> clazz;
 
-  /**
-   * Metadata of the Embeddable class.
-   */
+  /** Metadata of the Embeddable class. */
   private final EmbeddableMetadata metadata;
 
   /**
    * Creates a new instance of <code>EmbeddedObjectMapper</code>.
-   * 
-   * @param clazz
-   *          the Embeddable class
+   *
+   * @param clazz the Embeddable class
    */
   public EmbeddedObjectMapper(Class<?> clazz) {
     this.clazz = clazz;
@@ -72,8 +66,8 @@ public class EmbeddedObjectMapper implements Mapper {
         if (propertyValue == null && propertyMetadata.isOptional()) {
           continue;
         }
-        ValueBuilder<?, ?, ?> valueBuilder = propertyMetadata.getMapper()
-            .toDatastore(propertyValue);
+        ValueBuilder<?, ?, ?> valueBuilder =
+            propertyMetadata.getMapper().toDatastore(propertyValue);
         // ListValues cannot have indexing turned off. Indexing is turned on by
         // default, so we don't touch excludeFromIndexes for ListValues.
         if (valueBuilder.getValueType() != ValueType.LIST) {
@@ -110,13 +104,12 @@ public class EmbeddedObjectMapper implements Mapper {
         }
       }
       if (constructorMetadata.isBuilderConstructionStrategy()) {
-        embeddedObject = metadata.getConstructorMetadata().getBuildMethodHandle()
-            .invoke(embeddedObject);
+        embeddedObject =
+            metadata.getConstructorMetadata().getBuildMethodHandle().invoke(embeddedObject);
       }
       return embeddedObject;
     } catch (Throwable exp) {
       throw new MappingException(exp);
     }
   }
-
 }

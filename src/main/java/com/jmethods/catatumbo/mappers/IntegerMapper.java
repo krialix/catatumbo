@@ -26,9 +26,8 @@ import com.jmethods.catatumbo.MappingException;
 /**
  * An implementation of {@link Mapper} for mapping primitive and wrapper integer types to/from Cloud
  * Datastore.
- * 
- * @author Sai Pullabhotla
  *
+ * @author Sai Pullabhotla
  */
 public class IntegerMapper implements Mapper {
 
@@ -51,5 +50,4 @@ public class IntegerMapper implements Mapper {
     }
     return l.intValue();
   }
-
 }

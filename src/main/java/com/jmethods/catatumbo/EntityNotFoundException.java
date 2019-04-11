@@ -20,19 +20,15 @@ package com.jmethods.catatumbo;
  * Exception thrown by EntityManager to indicate that an update operation failed because the entity
  * with the specified key does not exist. This exception may be thrown from variations of UPDATE
  * methods of {@link EntityManager}, {@link DatastoreTransaction} and {@link DatastoreBatch}.
- * 
+ *
  * @author Sai Pullabhotla
  */
 public class EntityNotFoundException extends EntityManagerException {
 
-  /**
-   * Serial version UID
-   */
+  /** Serial version UID */
   private static final long serialVersionUID = -2594975589977183143L;
 
-  /**
-   * Creates a new instance of {@code EntityNotFoundException} without detail message.
-   */
+  /** Creates a new instance of {@code EntityNotFoundException} without detail message. */
   public EntityNotFoundException() {
     super();
   }
@@ -40,8 +36,7 @@ public class EntityNotFoundException extends EntityManagerException {
   /**
    * Constructs an instance of {@code EntityNotFoundException} with the specified detail message.
    *
-   * @param msg
-   *          the detail message.
+   * @param msg the detail message.
    */
   public EntityNotFoundException(String msg) {
     super(msg);
@@ -49,11 +44,9 @@ public class EntityNotFoundException extends EntityManagerException {
 
   /**
    * Creates an instance of {@code EntityNotFoundException} with the given message and cause.
-   * 
-   * @param message
-   *          the message
-   * @param cause
-   *          the cause
+   *
+   * @param message the message
+   * @param cause the cause
    */
   public EntityNotFoundException(String message, Throwable cause) {
     super(message, cause);
@@ -61,12 +54,10 @@ public class EntityNotFoundException extends EntityManagerException {
 
   /**
    * Creates a new instance of {@code EntityNotFoundException} with the given cause.
-   * 
-   * @param cause
-   *          the cause.
+   *
+   * @param cause the cause.
    */
   public EntityNotFoundException(Throwable cause) {
     super(cause);
   }
-
 }

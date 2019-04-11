@@ -26,9 +26,8 @@ import com.jmethods.catatumbo.Mapper;
 
 /**
  * An implementation of {@link Mapper} for mapping Key types to/from the Cloud Datastore.
- * 
- * @author Sai Pullabhotla
  *
+ * @author Sai Pullabhotla
  */
 public class KeyMapper implements Mapper {
 
@@ -49,5 +48,4 @@ public class KeyMapper implements Mapper {
     KeyValue keyValue = (KeyValue) input;
     return new DefaultDatastoreKey(keyValue.get());
   }
-
 }

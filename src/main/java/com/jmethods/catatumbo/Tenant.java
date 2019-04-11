@@ -17,19 +17,17 @@
 package com.jmethods.catatumbo;
 
 /**
- * Used for setting/getting the namespace of current thread. This class maintains a
- * {@link ThreadLocal} to store the current namespace. By default, the namespace is
- * <code>null</code>.
- * <p>
- * A typical use of this class in a web application involves creation of a ServletFilter that sets
- * the namespace on each request processing thread. Below is an example filter that sets the
+ * Used for setting/getting the namespace of current thread. This class maintains a {@link
+ * ThreadLocal} to store the current namespace. By default, the namespace is <code>null</code>.
+ *
+ * <p>A typical use of this class in a web application involves creation of a ServletFilter that
+ * sets the namespace on each request processing thread. Below is an example filter that sets the
  * namespace to the logged in user's name:
- * </p>
- * 
+ *
  * <pre>
  * import java.io.IOException;
  * import java.security.Principal;
- * 
+ *
  * import javax.servlet.Filter;
  * import javax.servlet.FilterChain;
  * import javax.servlet.FilterConfig;
@@ -38,12 +36,12 @@ package com.jmethods.catatumbo;
  * import javax.servlet.ServletResponse;
  * import javax.servlet.annotation.WebFilter;
  * import javax.servlet.http.HttpServletRequest;
- * 
+ *
  * import com.jmethods.catatumbo.Tenant;
- * 
+ *
  * &#64;WebFilter("/*")
  * public class NamespaceFilter implements Filter {
- * 
+ *
  *   &#64;Override
  *   public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
  *       throws IOException, ServletException {
@@ -52,7 +50,7 @@ package com.jmethods.catatumbo;
  *     Tenant.setNamespace(namespace);
  *     chain.doFilter(request, response);
  *   }
- * 
+ *
  *   // Replace the contents of this method to return the appropriate
  *   // namespace. For example, you could use a domain based namespace.
  *   private static String getCurrentUser(HttpServletRequest request) {
@@ -62,32 +60,29 @@ package com.jmethods.catatumbo;
  *     }
  *     return null;
  *   }
- * 
+ *
  *   &#64;Override
  *   public void destroy() {
  *   }
- * 
+ *
  *   &#64;Override
  *   public void init(FilterConfig fConfig) throws ServletException {
  *   }
- * 
- * }
- * 
- * </pre>
- * 
- * @author Sai Pullabhotla
  *
+ * }
+ *
+ * </pre>
+ *
+ * @author Sai Pullabhotla
  */
 public class Tenant {
 
-  /**
-   * ThreadLocal for storing the namespace
-   */
+  /** ThreadLocal for storing the namespace */
   private static ThreadLocal<String> threadNamespace = new ThreadLocal<>();
 
   /**
    * Returns the namespace.
-   * 
+   *
    * @return the namespace. May return <code>null</code>.
    */
   public static String getNamespace() {
@@ -98,12 +93,10 @@ public class Tenant {
    * Sets the namespace to the given value. Set to <code>null</code> to use the namespace with which
    * the {@link EntityManager} was created. An empty string sets the namespace to the default
    * namespace.
-   * 
-   * @param namespace
-   *          the namespace to set.
+   *
+   * @param namespace the namespace to set.
    */
   public static void setNamespace(String namespace) {
     threadNamespace.set(namespace);
   }
-
 }

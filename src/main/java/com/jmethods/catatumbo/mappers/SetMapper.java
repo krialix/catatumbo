@@ -16,14 +16,6 @@
 
 package com.jmethods.catatumbo.mappers;
 
-import java.lang.reflect.Modifier;
-import java.lang.reflect.Type;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-import java.util.SortedSet;
-import java.util.TreeSet;
-
 import com.google.cloud.datastore.ListValue;
 import com.google.cloud.datastore.NullValue;
 import com.google.cloud.datastore.Value;
@@ -32,35 +24,29 @@ import com.jmethods.catatumbo.Mapper;
 import com.jmethods.catatumbo.MapperFactory;
 import com.jmethods.catatumbo.NoSuitableMapperException;
 import com.jmethods.catatumbo.impl.IntrospectionUtils;
+import java.lang.reflect.Modifier;
+import java.lang.reflect.Type;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+import java.util.SortedSet;
+import java.util.TreeSet;
 
 /**
  * An implementation of {@link Mapper} for mapping {@link Set} types to/from Cloud Datastore.
- * 
- * @author Sai Pullabhotla
  *
+ * @author Sai Pullabhotla
  */
 public class SetMapper implements Mapper {
 
-  /**
-   * Set type - could be a Class or a Parameterized type
-   */
-  private Type setType;
-
-  /**
-   * Set class
-   */
-  private Class<?> setClass;
-
-  /**
-   * Class of items in the Set
-   */
-  private Class<?> itemClass;
-
-  /**
-   * Mapper for mapping items in the Set
-   */
+  /** Mapper for mapping items in the Set */
   Mapper itemMapper;
-
+  /** Set type - could be a Class or a Parameterized type */
+  private Type setType;
+  /** Set class */
+  private Class<?> setClass;
+  /** Class of items in the Set */
+  private Class<?> itemClass;
   /**
    * Whether or not the list property should be indexed. While this does not affect the ListProperty
    * itself, it is applied on the items in the list.
@@ -69,11 +55,9 @@ public class SetMapper implements Mapper {
 
   /**
    * Creates a new instance of <code>SetMapper</code>.
-   * 
-   * @param type
-   *          the type of Set
-   * @param indexed
-   *          whether or not the property should be indexed
+   *
+   * @param type the type of Set
+   * @param indexed whether or not the property should be indexed
    */
   public SetMapper(Type type, boolean indexed) {
     this.setType = type;
@@ -84,9 +68,7 @@ public class SetMapper implements Mapper {
     initializeMapper();
   }
 
-  /**
-   * Initializes the mapper for the items in the Set.
-   */
+  /** Initializes the mapper for the items in the Set. */
   private void initializeMapper() {
     if (itemClass == null) {
       itemMapper = CatchAllMapper.getInstance();
@@ -107,8 +89,8 @@ public class SetMapper implements Mapper {
     Set<?> set = (Set<?>) input;
     ListValue.Builder listValueBuilder = ListValue.newBuilder();
     for (Object item : set) {
-      listValueBuilder
-          .addValue(itemMapper.toDatastore(item).setExcludeFromIndexes(!indexed).build());
+      listValueBuilder.addValue(
+          itemMapper.toDatastore(item).setExcludeFromIndexes(!indexed).build());
     }
     return listValueBuilder;
   }
@@ -135,5 +117,4 @@ public class SetMapper implements Mapper {
     }
     return output;
   }
-
 }

@@ -26,9 +26,8 @@ import com.jmethods.catatumbo.MappingException;
 /**
  * An implementation of {@link Mapper} for mapping primitive and wrapper Short types to/from the
  * Cloud Datastore.
- * 
- * @author Sai Pullabhotla
  *
+ * @author Sai Pullabhotla
  */
 public class ShortMapper implements Mapper {
 
@@ -51,5 +50,4 @@ public class ShortMapper implements Mapper {
     }
     return l.shortValue();
   }
-
 }

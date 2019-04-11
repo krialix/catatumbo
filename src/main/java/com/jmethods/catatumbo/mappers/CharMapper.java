@@ -25,9 +25,8 @@ import com.jmethods.catatumbo.MappingException;
 
 /**
  * An implementation of {@link Mapper} for mapping Char type to/from Cloud Datastore.
- * 
- * @author Sai Pullabhotla
  *
+ * @author Sai Pullabhotla
  */
 public class CharMapper implements Mapper {
 
@@ -50,5 +49,4 @@ public class CharMapper implements Mapper {
     }
     return str.charAt(0);
   }
-
 }

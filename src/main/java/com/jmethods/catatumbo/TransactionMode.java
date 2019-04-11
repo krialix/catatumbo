@@ -22,49 +22,32 @@ import com.google.datastore.v1.TransactionOptions.ReadWrite;
 
 /**
  * Supported Transaction modes.
- * 
- * @author Sai Pullabhotla
  *
+ * @author Sai Pullabhotla
  */
 public enum TransactionMode {
 
-  /**
-   * Read-only
-   */
+  /** Read-only */
   READ_ONLY(createReadOnlyTransactionOptions()),
 
-  /**
-   * Read-write
-   */
+  /** Read-write */
   READ_WRITE(createReadWriteTransactionOptions());
 
-  /**
-   * Native transaction options
-   */
+  /** Native transaction options */
   private TransactionOptions nativeTransactionOptions;
 
   /**
    * Creates a new instance of @code{TransactionMode}
-   * 
-   * @param nativeTransactionOptions
-   *          the native transaction options.
+   *
+   * @param nativeTransactionOptions the native transaction options.
    */
-  private TransactionMode(TransactionOptions nativeTransactionOptions) {
+  TransactionMode(TransactionOptions nativeTransactionOptions) {
     this.nativeTransactionOptions = nativeTransactionOptions;
   }
 
   /**
-   * Returns the native transaction options that are equivalent to this {@link TransactionMode}.
-   * 
-   * @return the native transaction options that are equivalent to this {@link TransactionMode}.
-   */
-  public TransactionOptions getNativeTransactionOptions() {
-    return nativeTransactionOptions;
-  }
-
-  /**
    * Creates a TransactionOptions object that represent a read-only option.
-   * 
+   *
    * @return a TransactionOptions object that represent a read-only option.
    */
   private static TransactionOptions createReadOnlyTransactionOptions() {
@@ -74,7 +57,7 @@ public enum TransactionMode {
 
   /**
    * Creates a TransactionOptions object that represent a read-write option.
-   * 
+   *
    * @return a TransactionOptions object that represent a read-write option.
    */
   private static TransactionOptions createReadWriteTransactionOptions() {
@@ -82,4 +65,12 @@ public enum TransactionMode {
     return builder.setReadWrite(ReadWrite.getDefaultInstance()).build();
   }
 
+  /**
+   * Returns the native transaction options that are equivalent to this {@link TransactionMode}.
+   *
+   * @return the native transaction options that are equivalent to this {@link TransactionMode}.
+   */
+  public TransactionOptions getNativeTransactionOptions() {
+    return nativeTransactionOptions;
+  }
 }

@@ -16,22 +16,17 @@
 
 package com.jmethods.catatumbo.stats;
 
-import java.io.Serializable;
-
 import com.jmethods.catatumbo.Entity;
+import java.io.Serializable;
 
 /**
  * Statistic entity that contains summary of the Datastore usage (all namespaces).
- * 
- * @author Sai Pullabhotla
  *
+ * @author Sai Pullabhotla
  */
 @Entity(kind = StatConstants.STAT_TOTAL)
 public class StatTotal extends StatTotalBase implements Serializable {
 
-  /**
-   * Serial version UID
-   */
+  /** Serial version UID */
   private static final long serialVersionUID = -8279421156053694066L;
-
 }

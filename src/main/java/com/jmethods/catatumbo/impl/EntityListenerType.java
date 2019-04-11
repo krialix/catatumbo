@@ -21,16 +21,15 @@ import com.jmethods.catatumbo.EntityManager;
 
 /**
  * Enumeration of entity listener types.
- * 
- * @author Sai Pullabhotla
  *
+ * @author Sai Pullabhotla
  */
 public enum EntityListenerType {
 
   /**
-   * Default (aka Global) Listener. These type of listeners are registered with the
-   * {@link EntityManager} using {@link EntityManager#setDefaultListeners(Class...)} and these
-   * listeners will be executed for all types of Entities managed by the {@link EntityManager}.
+   * Default (aka Global) Listener. These type of listeners are registered with the {@link
+   * EntityManager} using {@link EntityManager#setDefaultListeners(Class...)} and these listeners
+   * will be executed for all types of Entities managed by the {@link EntityManager}.
    */
   DEFAULT,
 
@@ -43,6 +42,5 @@ public enum EntityListenerType {
   /**
    * Internal Listeners. These type of listeners are defined within the Entity or MappedSuperClass.
    */
-  INTERNAL;
-
+  INTERNAL
 }

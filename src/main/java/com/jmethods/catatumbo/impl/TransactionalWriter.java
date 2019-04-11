@@ -16,35 +16,30 @@
 
 package com.jmethods.catatumbo.impl;
 
-import java.util.List;
-
 import com.google.cloud.datastore.DatastoreException;
 import com.google.cloud.datastore.Entity;
 import com.google.cloud.datastore.Key;
 import com.google.cloud.datastore.Transaction;
 import com.jmethods.catatumbo.OptimisticLockException;
 import com.jmethods.catatumbo.impl.Marshaller.Intent;
+import java.util.List;
 
 /**
  * An extension of {@link DefaultDatastoreWriter} for Transactional writes. The primary purpose of
  * this class is to implement optimistic locking using the existing transaction, rather than
  * creating a child transaction.
- * 
- * @author Sai Pullabhotla
  *
+ * @author Sai Pullabhotla
  */
 public class TransactionalWriter extends DefaultDatastoreWriter {
 
-  /**
-   * Reference to the native transaction
-   */
+  /** Reference to the native transaction */
   private Transaction nativeTransaction;
 
   /**
    * Creates a new instance of @code{TransactionalWriter}
-   * 
-   * @param transaction
-   *          the transaction
+   *
+   * @param transaction the transaction
    */
   public TransactionalWriter(DefaultDatastoreTransaction transaction) {
     super(transaction);
@@ -80,12 +75,12 @@ public class TransactionalWriter extends DefaultDatastoreWriter {
 
   @Override
   @SuppressWarnings("unchecked")
-  public <E> List<E> updateWithOptimisticLockInternal(List<E> entities,
-      PropertyMetadata versionMetadata) {
+  public <E> List<E> updateWithOptimisticLockInternal(
+      List<E> entities, PropertyMetadata versionMetadata) {
     try {
       entityManager.executeEntityListeners(CallbackType.PRE_UPDATE, entities);
-      Entity[] nativeEntities = DatastoreUtils.toNativeEntities(entities, entityManager,
-          Intent.UPDATE);
+      Entity[] nativeEntities =
+          DatastoreUtils.toNativeEntities(entities, entityManager, Intent.UPDATE);
       // The above native entities already have the version incremented by
       // the marshalling process
       Key[] nativeKeys = new Key[nativeEntities.length];
@@ -109,15 +104,13 @@ public class TransactionalWriter extends DefaultDatastoreWriter {
         }
       }
       nativeTransaction.update(nativeEntities);
-      List<E> updatedEntities = (List<E>) DatastoreUtils.toEntities(entities.get(0).getClass(),
-          nativeEntities);
+      List<E> updatedEntities =
+          (List<E>) DatastoreUtils.toEntities(entities.get(0).getClass(), nativeEntities);
       entityManager.executeEntityListeners(CallbackType.POST_UPDATE, updatedEntities);
       return updatedEntities;
 
     } catch (DatastoreException exp) {
       throw DatastoreUtils.wrap(exp);
     }
-
   }
-
 }

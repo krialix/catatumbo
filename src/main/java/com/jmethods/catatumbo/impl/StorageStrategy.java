@@ -20,20 +20,16 @@ import com.jmethods.catatumbo.Embedded;
 
 /**
  * Storage strategies for {@link Embedded} fields.
- * 
- * @author Sai Pullabhotla
  *
+ * @author Sai Pullabhotla
  */
 public enum StorageStrategy {
 
-  /**
-   * The object tree of {@link Embedded} field is exploded into individual properties.
-   */
+  /** The object tree of {@link Embedded} field is exploded into individual properties. */
   EXPLODED,
 
   /**
    * The object tree of {@link Embedded} field is stored in a single property as an Embedded Entity.
    */
-  IMPLODED;
-
+  IMPLODED
 }

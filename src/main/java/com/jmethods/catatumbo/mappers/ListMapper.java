@@ -16,11 +16,6 @@
 
 package com.jmethods.catatumbo.mappers;
 
-import java.lang.reflect.Modifier;
-import java.lang.reflect.Type;
-import java.util.ArrayList;
-import java.util.List;
-
 import com.google.cloud.datastore.ListValue;
 import com.google.cloud.datastore.NullValue;
 import com.google.cloud.datastore.Value;
@@ -29,33 +24,28 @@ import com.jmethods.catatumbo.Mapper;
 import com.jmethods.catatumbo.MapperFactory;
 import com.jmethods.catatumbo.NoSuitableMapperException;
 import com.jmethods.catatumbo.impl.IntrospectionUtils;
+import java.lang.reflect.Modifier;
+import java.lang.reflect.Type;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * An implementation of {@link Mapper} for mapping {@link List} types to/from the Cloud Datastore.
- * 
- * @author Sai Pullabhotla
  *
+ * @author Sai Pullabhotla
  */
 public class ListMapper implements Mapper {
 
-  /**
-   * List type - could be a Class or a Parameterized type
-   */
+  /** List type - could be a Class or a Parameterized type */
   private Type listType;
 
-  /**
-   * List class
-   */
+  /** List class */
   private Class<?> listClass;
 
-  /**
-   * Class of items in the list
-   */
+  /** Class of items in the list */
   private Class<?> itemClass;
 
-  /**
-   * Mapper for mapping items in the list
-   */
+  /** Mapper for mapping items in the list */
   private Mapper itemMapper;
 
   /**
@@ -66,11 +56,9 @@ public class ListMapper implements Mapper {
 
   /**
    * Creates a new instance of <code>ListMapper</code>.
-   * 
-   * @param type
-   *          the list type
-   * @param indexed
-   *          whether or not the property should be indexed
+   *
+   * @param type the list type
+   * @param indexed whether or not the property should be indexed
    */
   public ListMapper(Type type, boolean indexed) {
     this.listType = type;
@@ -81,9 +69,7 @@ public class ListMapper implements Mapper {
     initializeMapper();
   }
 
-  /**
-   * Initializes the mapper for items in the List.
-   */
+  /** Initializes the mapper for items in the List. */
   private void initializeMapper() {
     if (itemClass == null) {
       itemMapper = CatchAllMapper.getInstance();
@@ -104,8 +90,8 @@ public class ListMapper implements Mapper {
     List<?> list = (List<?>) input;
     ListValue.Builder listValueBuilder = ListValue.newBuilder();
     for (Object item : list) {
-      listValueBuilder
-          .addValue(itemMapper.toDatastore(item).setExcludeFromIndexes(!indexed).build());
+      listValueBuilder.addValue(
+          itemMapper.toDatastore(item).setExcludeFromIndexes(!indexed).build());
     }
     return listValueBuilder;
   }
@@ -128,5 +114,4 @@ public class ListMapper implements Mapper {
     }
     return output;
   }
-
 }

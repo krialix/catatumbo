@@ -24,11 +24,10 @@ import java.lang.annotation.Target;
 
 /**
  * Used to override mappings of properties. Typically used if the entity contains {@link Embedded}
- * objects or inherits a {@link MappedSuperClass}. This annotation must be applied to an
- * {@link Entity} only.
- * 
- * @author Sai Pullabhotla
+ * objects or inherits a {@link MappedSuperClass}. This annotation must be applied to an {@link
+ * Entity} only.
  *
+ * @author Sai Pullabhotla
  */
 @Retention(RUNTIME)
 @Target(TYPE)
@@ -36,9 +35,8 @@ public @interface PropertyOverrides {
 
   /**
    * One or more property overrides.
-   * 
+   *
    * @return the property overrides
    */
   PropertyOverride[] value();
-
 }

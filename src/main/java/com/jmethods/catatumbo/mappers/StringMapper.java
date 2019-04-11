@@ -24,9 +24,8 @@ import com.jmethods.catatumbo.Mapper;
 
 /**
  * An implementation of {@link Mapper} for mapping String types to/from the Cloud Datastore.
- * 
- * @author Sai Pullabhotla
  *
+ * @author Sai Pullabhotla
  */
 public class StringMapper implements Mapper {
 
@@ -45,5 +44,4 @@ public class StringMapper implements Mapper {
     }
     return ((StringValue) input).get();
   }
-
 }

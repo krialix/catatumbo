@@ -29,44 +29,38 @@ import java.util.Date;
  * Annotation for automatically setting the entity's modification timestamp. This annotation can be
  * applied to a field of an {@link Entity} or {@link MappedSuperClass}. Only one field can have this
  * annotation in a given Entity hierarchy.
- * 
- * <p>
- * Valid data types for the field include -
- * </p>
+ *
+ * <p>Valid data types for the field include -
+ *
  * <ul>
- * <li>{@link Date}</li>
- * <li>{@link Calendar}</li>
- * <li>{@link Long}</li>
- * <li>long</li>
- * <li>{@link OffsetDateTime}}</li>
- * <li>{@link ZonedDateTime}}</li>
- * </ul>
- * 
- * <p>
- * The framework sets the field with this annotation during the following operations:
- * </p>
- * 
- * <ul>
- * <li>INSERT - Any variation of the insert methods automatically set the field with this annotation
- * to the current JVM's timestamp. Furthermore, if the entity also has a field with
- * {@link CreatedTimestamp} annotation, the framework ensures that both creation and modification
- * timestamp are exactly equal.</li>
- * <li>UPDATE - Any variation of the update methods set this field to the current timestamp of the
- * JVM.</li>
- * <li>UPSERT - Any variation of the upsert methods set this field to the current timestamp of the
- * JVM.</li>
+ *   <li>{@link Date}
+ *   <li>{@link Calendar}
+ *   <li>{@link Long}
+ *   <li>long
+ *   <li>{@link OffsetDateTime}}
+ *   <li>{@link ZonedDateTime}}
  * </ul>
  *
- * <p>
- * The field with this annotation is no different than any other property of the entity. This means,
- * this field could also have the {@link Property} annotation and specify the property name to use
- * in the Datastore as well as whether or not the property should be indexed. The field will be
- * mapped using the specified {@link Mapper}, if a {@link PropertyMapper} is specified, otherwise a
- * default mapper for the data type is used.
- * </p>
- * 
+ * <p>The framework sets the field with this annotation during the following operations:
+ *
+ * <ul>
+ *   <li>INSERT - Any variation of the insert methods automatically set the field with this
+ *       annotation to the current JVM's timestamp. Furthermore, if the entity also has a field with
+ *       {@link CreatedTimestamp} annotation, the framework ensures that both creation and
+ *       modification timestamp are exactly equal.
+ *   <li>UPDATE - Any variation of the update methods set this field to the current timestamp of the
+ *       JVM.
+ *   <li>UPSERT - Any variation of the upsert methods set this field to the current timestamp of the
+ *       JVM.
+ * </ul>
+ *
+ * <p>The field with this annotation is no different than any other property of the entity. This
+ * means, this field could also have the {@link Property} annotation and specify the property name
+ * to use in the Datastore as well as whether or not the property should be indexed. The field will
+ * be mapped using the specified {@link Mapper}, if a {@link PropertyMapper} is specified, otherwise
+ * a default mapper for the data type is used.
+ *
  * @author Sai Pullabhotla
- *
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.FIELD)

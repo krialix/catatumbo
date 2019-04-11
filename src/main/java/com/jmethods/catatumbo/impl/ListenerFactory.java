@@ -22,34 +22,34 @@ import com.jmethods.catatumbo.EntityListeners;
  * A factory for creating instances of classes that are marked with {@link EntityListeners}
  * annotation. This factory ensures that there exists only one instance of a given listener.
  * Instance is created the first time it is needed and then cached for subsequent uses.
- * 
- * @author Sai Pullabhotla
  *
+ * @author Sai Pullabhotla
  */
 public class ListenerFactory {
 
-  /**
-   * A cache of listener class and the corresponding listener instance.
-   */
+  /** Singleton instance of this class */
+  private static final ListenerFactory INSTANCE = new ListenerFactory();
+  /** A cache of listener class and the corresponding listener instance. */
   private Cache<Class<?>, Object> listeners;
 
-  /**
-   * Singleton instance of this class
-   */
-  private static final ListenerFactory INSTANCE = new ListenerFactory();
-
-  /**
-   * Creates a new instance of <code>ListenerFactory</code>.
-   */
+  /** Creates a new instance of <code>ListenerFactory</code>. */
   private ListenerFactory() {
     listeners = new Cache<>();
   }
 
   /**
+   * Returns the singleton instance of this class.
+   *
+   * @return the singleton instance of this class.
+   */
+  public static ListenerFactory getInstance() {
+    return INSTANCE;
+  }
+
+  /**
    * Returns the listener object for the given class.
-   * 
-   * @param listenerClass
-   *          the listener class
+   *
+   * @param listenerClass the listener class
    * @return the listener object for the given type
    */
   public Object getListener(Class<?> listenerClass) {
@@ -61,19 +61,9 @@ public class ListenerFactory {
   }
 
   /**
-   * Returns the singleton instance of this class.
-   * 
-   * @return the singleton instance of this class.
-   */
-  public static ListenerFactory getInstance() {
-    return INSTANCE;
-  }
-
-  /**
    * Instantiates the listener of given type and caches it.
-   * 
-   * @param listenerClass
-   *          the listener type
+   *
+   * @param listenerClass the listener type
    * @return the instantiated object
    */
   private Object loadListener(Class<?> listenerClass) {
@@ -86,5 +76,4 @@ public class ListenerFactory {
       return listener;
     }
   }
-
 }

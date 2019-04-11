@@ -24,7 +24,7 @@ import java.lang.annotation.Target;
 /**
  * Fields annotated as <code>ParentKey</code> hold the parent key information, if any. Only one
  * field can be annotated with this annotation in a given Entity.
- * 
+ *
  * @author Sai Pullabhotla
  */
 @Target(ElementType.FIELD)

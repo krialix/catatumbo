@@ -25,9 +25,8 @@ import com.jmethods.catatumbo.Mapper;
 /**
  * An implementation of {@link Mapper} for mapping primitive and wrapper boolean types to/from Cloud
  * Datastore.
- * 
- * @author Sai Pullabhotla
  *
+ * @author Sai Pullabhotla
  */
 public class BooleanMapper implements Mapper {
 
@@ -46,5 +45,4 @@ public class BooleanMapper implements Mapper {
     }
     return ((BooleanValue) input).get();
   }
-
 }

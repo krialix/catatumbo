@@ -16,9 +16,6 @@
 
 package com.jmethods.catatumbo.mappers;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import com.google.cloud.datastore.BooleanValue;
 import com.google.cloud.datastore.DoubleValue;
 import com.google.cloud.datastore.EntityValue;
@@ -37,32 +34,29 @@ import com.jmethods.catatumbo.DefaultDatastoreKey;
 import com.jmethods.catatumbo.GeoLocation;
 import com.jmethods.catatumbo.Mapper;
 import com.jmethods.catatumbo.MappingException;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * An implementation of {@link Mapper} for mapping select set of primitive/wrapper types to the
  * Cloud Datastore. The primary purpose if this mapper is to aid with mapping Lists, Sets and Maps
  * when the collections are not parameterized.
- * 
- * @author Sai Pullabhotla
  *
+ * @author Sai Pullabhotla
  */
 public class CatchAllMapper implements Mapper {
 
-  /**
-   * Singleton instance
-   */
+  /** Singleton instance */
   private static final CatchAllMapper INSTANCE = new CatchAllMapper();
 
-  /**
-   * Creates a new instance of <code>CatchAllMapper</code>.
-   */
+  /** Creates a new instance of <code>CatchAllMapper</code>. */
   private CatchAllMapper() {
     // Do nothing
   }
 
   /**
    * Returns the singleton instance of this mapper.
-   * 
+   *
    * @return the singleton instance of this mapper.
    */
   public static Mapper getInstance() {
@@ -86,8 +80,8 @@ public class CatchAllMapper implements Mapper {
       builder = KeyValue.newBuilder(((DatastoreKey) input).nativeKey());
     } else if (input instanceof GeoLocation) {
       GeoLocation geoLocation = (GeoLocation) input;
-      builder = LatLngValue
-          .newBuilder(LatLng.of(geoLocation.getLatitude(), geoLocation.getLongitude()));
+      builder =
+          LatLngValue.newBuilder(LatLng.of(geoLocation.getLatitude(), geoLocation.getLongitude()));
     } else if (input instanceof Map) {
       @SuppressWarnings("unchecked")
       Map<String, ?> map = (Map<String, ?>) input;
@@ -134,5 +128,4 @@ public class CatchAllMapper implements Mapper {
     }
     return javaValue;
   }
-
 }

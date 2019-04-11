@@ -16,22 +16,17 @@
 
 package com.jmethods.catatumbo.stats;
 
-import java.io.Serializable;
-
 import com.jmethods.catatumbo.Entity;
+import java.io.Serializable;
 
 /**
  * Statistics by Kind, across all namespaces.
- * 
- * @author Sai Pullabhotla
  *
+ * @author Sai Pullabhotla
  */
 @Entity(kind = StatConstants.STAT_KIND)
 public class StatKind extends StatKindBase implements Serializable {
 
-  /**
-   * Serial version UID
-   */
+  /** Serial version UID */
   private static final long serialVersionUID = 2549703734475617627L;
-
 }

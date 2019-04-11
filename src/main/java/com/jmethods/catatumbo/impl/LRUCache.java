@@ -24,45 +24,35 @@ import java.util.Map;
  * capacity. When new entries are placed in the cache, the oldest accessed entry is removed.
  *
  * @author Sai Pullabhotla
- * @param <K>
- *          Key
- * @param <V>
- *          Value
+ * @param <K> Key
+ * @param <V> Value
  */
 public class LRUCache<K, V> {
 
-  /**
-   * Cache store
-   */
+  /** Cache store */
   private LinkedHashMap<K, V> map;
 
-  /**
-   * Maximum capacity
-   */
+  /** Maximum capacity */
   private int maxCapacity;
 
   /**
    * Creates a new instance of <code>LRUCache</code>.
    *
-   * @param initialCapacity
-   *          initial capacity
-   * @param maxCapacity
-   *          maximum capacity
+   * @param initialCapacity initial capacity
+   * @param maxCapacity maximum capacity
    */
   public LRUCache(final int initialCapacity, int maxCapacity) {
     setMaxCapacity(maxCapacity);
-    map = new LinkedHashMap<K, V>(initialCapacity, 0.75f, true) {
-      /**
-       * Serial version UID
-       */
-      private static final long serialVersionUID = 7959078771128286844L;
+    map =
+        new LinkedHashMap<K, V>(initialCapacity, 0.75f, true) {
+          /** Serial version UID */
+          private static final long serialVersionUID = 7959078771128286844L;
 
-      @Override
-      protected boolean removeEldestEntry(Map.Entry<K, V> eldest) {
-        return size() > LRUCache.this.maxCapacity;
-      }
-    };
-
+          @Override
+          protected boolean removeEldestEntry(Map.Entry<K, V> eldest) {
+            return size() > LRUCache.this.maxCapacity;
+          }
+        };
   }
 
   /**
@@ -77,8 +67,7 @@ public class LRUCache<K, V> {
   /**
    * Sets the maximum capacity.
    *
-   * @param maxCapacity
-   *          the maximum capacity
+   * @param maxCapacity the maximum capacity
    */
   public void setMaxCapacity(int maxCapacity) {
     if (maxCapacity < 1) {
@@ -90,8 +79,7 @@ public class LRUCache<K, V> {
   /**
    * Returns the cached object associated the given key.
    *
-   * @param key
-   *          the key
+   * @param key the key
    * @return the cached object associated the given key.
    */
   public synchronized V get(K key) {
@@ -101,10 +89,8 @@ public class LRUCache<K, V> {
   /**
    * Adds the given key and value to this cache.
    *
-   * @param key
-   *          the key
-   * @param value
-   *          the value
+   * @param key the key
+   * @param value the value
    * @return old value associated with the given key, if any.
    */
   public synchronized V put(K key, V value) {
@@ -114,8 +100,7 @@ public class LRUCache<K, V> {
   /**
    * Checks to see if the given key exists in this cache.
    *
-   * @param key
-   *          the key
+   * @param key the key
    * @return true, if the given key exists in this cache; false, otherwise.
    */
   public synchronized boolean containsKey(K key) {
@@ -124,7 +109,7 @@ public class LRUCache<K, V> {
 
   /**
    * Returns the current size of this cache.
-   * 
+   *
    * @return the current size of this cache.
    */
   public int size() {

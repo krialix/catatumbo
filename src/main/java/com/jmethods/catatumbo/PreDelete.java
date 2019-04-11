@@ -26,12 +26,10 @@ import java.lang.annotation.Target;
  * Used for annotating a method as an entity listener method. The annotated method will be invoked
  * before deleting an entity. This annotation can be applied to a method within an {@link Entity},
  * {@link MappedSuperClass} or an {@link EntityListener}.
- * 
+ *
  * @see EntityListeners
  * @see EntityListener
- * 
  * @author Sai Pullabhotla
- *
  */
 @Retention(RUNTIME)
 @Target(METHOD)

@@ -18,31 +18,24 @@ package com.jmethods.catatumbo;
 
 /**
  * An exception thrown by {@link Indexer} to indicate any errors during data indexing.
- * 
- * @author Sai Pullabhotla
  *
+ * @author Sai Pullabhotla
  */
 public class IndexingException extends EntityManagerException {
 
-  /**
-   * Serial version UID
-   */
+  /** Serial version UID */
   private static final long serialVersionUID = 998960795045630795L;
 
-  /**
-   * Creates a new instance of <code>IndexingException</code>.
-   */
+  /** Creates a new instance of <code>IndexingException</code>. */
   public IndexingException() {
     super();
   }
 
   /**
    * Creates a new instance of <code>IndexingException</code>.
-   * 
-   * @param message
-   *          the message
-   * @param cause
-   *          the cause
+   *
+   * @param message the message
+   * @param cause the cause
    */
   public IndexingException(String message, Throwable cause) {
     super(message, cause);
@@ -50,9 +43,8 @@ public class IndexingException extends EntityManagerException {
 
   /**
    * Creates a new instance of <code>IndexingException</code>.
-   * 
-   * @param message
-   *          the message
+   *
+   * @param message the message
    */
   public IndexingException(String message) {
     super(message);
@@ -60,12 +52,10 @@ public class IndexingException extends EntityManagerException {
 
   /**
    * Creates a new instance of <code>IndexingException</code>.
-   * 
-   * @param cause
-   *          the cause
+   *
+   * @param cause the cause
    */
   public IndexingException(Throwable cause) {
     super(cause);
   }
-
 }

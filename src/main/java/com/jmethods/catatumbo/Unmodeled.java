@@ -25,7 +25,7 @@ import java.util.Map;
 /**
  * NOT IMPLEMENTED YET. A {@link Map} field in an entity can be annotated with this annotation to
  * hold all unmodeled (or custom) fields. Only one field can have this annotation in a given entity.
- * 
+ *
  * @author Sai Pullabhotla
  */
 @Retention(RetentionPolicy.RUNTIME)

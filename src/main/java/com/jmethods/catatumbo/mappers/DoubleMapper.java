@@ -25,9 +25,8 @@ import com.jmethods.catatumbo.Mapper;
 /**
  * An implementation of {@link Mapper} for mapping primitive and wrapper double types to/from Cloud
  * Datastore.
- * 
- * @author Sai Pullabhotla
  *
+ * @author Sai Pullabhotla
  */
 public class DoubleMapper implements Mapper {
 
@@ -46,5 +45,4 @@ public class DoubleMapper implements Mapper {
     }
     return ((DoubleValue) input).get();
   }
-
 }

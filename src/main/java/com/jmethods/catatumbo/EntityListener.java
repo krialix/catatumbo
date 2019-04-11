@@ -27,48 +27,40 @@ import java.lang.annotation.Target;
  * one or more callback methods for processing entity lifecycle events. Each callback method must be
  * of the form <code>public void methodName(Object entity)</code>. The parameter type can be more
  * specific type than <code>Object</code>, as needed.
- * 
- * <p>
- * EntityListeners are registered with {@link Entity} classes and/or {@link MappedSuperClass}
+ *
+ * <p>EntityListeners are registered with {@link Entity} classes and/or {@link MappedSuperClass}
  * classes using the {@link EntityListeners} annotation. For each lifecycle event of an entity, the
  * callback methods of the registered listeners will be invoked.
- * </p>
- * 
- * <p>
- * Callback methods must have one or more of these annotations:
- * </p>
- * 
- * <ul>
- * <li>{@link PreInsert}</li>
- * <li>{@link PostInsert}</li>
- * <li>{@link PreUpdate}</li>
- * <li>{@link PostUpdate}</li>
- * <li>{@link PreUpsert}</li>
- * <li>{@link PostUpsert}</li>
- * <li>{@link PreDelete}</li>
- * <li>{@link PostDelete}</li>
- * <li>{@link PostLoad}</li>
- * </ul>
- * 
- * <p>
- * Entity Listener classes must conform to the following specification:
- * </p>
- * 
- * <ul>
- * <li>Must have a default (no-arg) constructor</li>
- * <li>Each callback method must be public, must not be static, abstract or final.</li>
- * <li>The callback method must be of the form <code>public void methodName(Object)</code>. The
- * Object argument is the entity instance for which the callback method is invoked. The type may be
- * more specific type than Object.</li>
- * <li>At most one method can exist for a given type of callback (e.g. PostUpdate)</li>
- * <li>A single method may handle more than one type of callback (e.g. A method can have both
- * {@link PreInsert}, {@link PreUpdate} and {@link PreUpsert} annotations.</li>
- * </ul>
- * 
- * @author Sai Pullabhotla
  *
+ * <p>Callback methods must have one or more of these annotations:
+ *
+ * <ul>
+ *   <li>{@link PreInsert}
+ *   <li>{@link PostInsert}
+ *   <li>{@link PreUpdate}
+ *   <li>{@link PostUpdate}
+ *   <li>{@link PreUpsert}
+ *   <li>{@link PostUpsert}
+ *   <li>{@link PreDelete}
+ *   <li>{@link PostDelete}
+ *   <li>{@link PostLoad}
+ * </ul>
+ *
+ * <p>Entity Listener classes must conform to the following specification:
+ *
+ * <ul>
+ *   <li>Must have a default (no-arg) constructor
+ *   <li>Each callback method must be public, must not be static, abstract or final.
+ *   <li>The callback method must be of the form <code>public void methodName(Object)</code>. The
+ *       Object argument is the entity instance for which the callback method is invoked. The type
+ *       may be more specific type than Object.
+ *   <li>At most one method can exist for a given type of callback (e.g. PostUpdate)
+ *   <li>A single method may handle more than one type of callback (e.g. A method can have both
+ *       {@link PreInsert}, {@link PreUpdate} and {@link PreUpsert} annotations.
+ * </ul>
+ *
+ * @author Sai Pullabhotla
  */
-
 @Retention(RUNTIME)
 @Target(TYPE)
 public @interface EntityListener {

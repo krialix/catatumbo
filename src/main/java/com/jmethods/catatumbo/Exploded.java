@@ -29,9 +29,8 @@ import java.lang.annotation.Target;
  * exist on any {@link Embedded} field of an {@link Entity} or {@link MappedSuperClass}. Annotating
  * a nested Embedded field with this annotation will not have any effect as the storage strategy is
  * enforced at the Entity level.
- * 
- * @author Sai Pullabhotla
  *
+ * @author Sai Pullabhotla
  */
 @Retention(RUNTIME)
 @Target(FIELD)

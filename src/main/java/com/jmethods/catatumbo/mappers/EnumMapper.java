@@ -24,23 +24,19 @@ import com.jmethods.catatumbo.Mapper;
 
 /**
  * An implementation of {@link Mapper} for mapping Enum types to/from Cloud Datastore.
- * 
- * @author Sai Pullabhotla
  *
+ * @author Sai Pullabhotla
  */
 public class EnumMapper implements Mapper {
 
-  /**
-   * Enum class
-   */
+  /** Enum class */
   @SuppressWarnings("rawtypes")
   private Class enumClass;
 
   /**
    * Creates a new instance of <code>EnumMapper</code>.
-   * 
-   * @param enumClass
-   *          the enum class
+   *
+   * @param enumClass the enum class
    */
   @SuppressWarnings("rawtypes")
   public EnumMapper(Class enumClass) {
@@ -64,5 +60,4 @@ public class EnumMapper implements Mapper {
     String value = ((StringValue) input).get();
     return Enum.valueOf(enumClass, value);
   }
-
 }

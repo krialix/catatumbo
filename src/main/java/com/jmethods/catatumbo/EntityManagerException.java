@@ -18,19 +18,15 @@ package com.jmethods.catatumbo;
 
 /**
  * Exception thrown by EntityManager when mapping objects to/from the Cloud Datastore.
- * 
+ *
  * @author Sai Pullabhotla
  */
 public class EntityManagerException extends RuntimeException {
 
-  /**
-   * Serial version UID
-   */
+  /** Serial version UID */
   private static final long serialVersionUID = -4427708611101283783L;
 
-  /**
-   * Creates a new instance of <code>EntityManagerException</code> without detail message.
-   */
+  /** Creates a new instance of <code>EntityManagerException</code> without detail message. */
   public EntityManagerException() {
     super();
   }
@@ -39,8 +35,7 @@ public class EntityManagerException extends RuntimeException {
    * Constructs an instance of <code>EntityManagerException</code> with the specified detail
    * message.
    *
-   * @param msg
-   *          the detail message.
+   * @param msg the detail message.
    */
   public EntityManagerException(String msg) {
     super(msg);
@@ -48,11 +43,9 @@ public class EntityManagerException extends RuntimeException {
 
   /**
    * Creates an instance of <code>EntityManagerException</code> with the given message and cause.
-   * 
-   * @param message
-   *          the message
-   * @param cause
-   *          the cause
+   *
+   * @param message the message
+   * @param cause the cause
    */
   public EntityManagerException(String message, Throwable cause) {
     super(message, cause);
@@ -60,12 +53,10 @@ public class EntityManagerException extends RuntimeException {
 
   /**
    * Creates a new instance of <code>EntityManagerException</code> with the given cause.
-   * 
-   * @param cause
-   *          the cause.
+   *
+   * @param cause the cause.
    */
   public EntityManagerException(Throwable cause) {
     super(cause);
   }
-
 }

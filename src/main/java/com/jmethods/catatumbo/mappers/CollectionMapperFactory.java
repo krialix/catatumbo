@@ -16,6 +16,9 @@
 
 package com.jmethods.catatumbo.mappers;
 
+import com.jmethods.catatumbo.Mapper;
+import com.jmethods.catatumbo.Property;
+import com.jmethods.catatumbo.impl.Cache;
 import java.lang.reflect.Field;
 import java.lang.reflect.Type;
 import java.util.List;
@@ -23,21 +26,14 @@ import java.util.Set;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
-import com.jmethods.catatumbo.Mapper;
-import com.jmethods.catatumbo.Property;
-import com.jmethods.catatumbo.impl.Cache;
-
 /**
  * A factory for producing {@link Mapper} for Collections - {@link List} and {@link Set}.
- * 
- * @author Sai Pullabhotla
  *
+ * @author Sai Pullabhotla
  */
 public class CollectionMapperFactory {
 
-  /**
-   * Singleton instance
-   */
+  /** Singleton instance */
   private static final CollectionMapperFactory INSTANCE = new CollectionMapperFactory();
 
   /**
@@ -46,14 +42,10 @@ public class CollectionMapperFactory {
    */
   private Cache<String, Mapper> cache;
 
-  /**
-   * A lock for preventing multiple threads creating Mappers simultaneously
-   */
+  /** A lock for preventing multiple threads creating Mappers simultaneously */
   private Lock lock;
 
-  /**
-   * Creates a new instance of <code>CollectionMapperFactory</code>.
-   */
+  /** Creates a new instance of <code>CollectionMapperFactory</code>. */
   private CollectionMapperFactory() {
     cache = new Cache<>();
     lock = new ReentrantLock();
@@ -61,7 +53,7 @@ public class CollectionMapperFactory {
 
   /**
    * Returns the singleton instance of this class.
-   * 
+   *
    * @return the singleton instance of this class.
    */
   public static CollectionMapperFactory getInstance() {
@@ -69,11 +61,21 @@ public class CollectionMapperFactory {
   }
 
   /**
+   * Returns the cache key.
+   *
+   * @param type the type
+   * @param indexed whether or not the property is indexed
+   * @return the cache key
+   */
+  private static String computeCacheKey(Type type, boolean indexed) {
+    return type.toString() + "-" + indexed;
+  }
+
+  /**
    * Returns the Mapper for the given field. If a Mapper exists in the cache that can map the given
    * field, the cached Mapper will be returned. Otherwise, a new Mapper is created and returned.
-   * 
-   * @param field
-   *          the field of an entity for which a Mapper is to be produced.
+   *
+   * @param field the field of an entity for which a Mapper is to be produced.
    * @return A Mapper to handle the mapping of the field.
    */
   public Mapper getMapper(Field field) {
@@ -89,16 +91,13 @@ public class CollectionMapperFactory {
       mapper = createMapper(field, indexed);
     }
     return mapper;
-
   }
 
   /**
    * Creates a new Mapper for the given field.
-   * 
-   * @param field
-   *          the field
-   * @param indexed
-   *          whether or not the field is to be indexed
+   *
+   * @param field the field
+   * @param indexed whether or not the field is to be indexed
    * @return the Mapper
    */
   private Mapper createMapper(Field field, boolean indexed) {
@@ -127,18 +126,4 @@ public class CollectionMapperFactory {
       lock.unlock();
     }
   }
-
-  /**
-   * Returns the cache key.
-   * 
-   * @param type
-   *          the type
-   * @param indexed
-   *          whether or not the property is indexed
-   * @return the cache key
-   */
-  private static String computeCacheKey(Type type, boolean indexed) {
-    return type.toString() + "-" + indexed;
-  }
-
 }

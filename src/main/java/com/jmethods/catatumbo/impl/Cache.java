@@ -21,33 +21,25 @@ import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * A simple cache backed by a {@link ConcurrentHashMap}.
- * 
- * @author Sai Pullabhotla
- * @param <K>
- *          Type of keys in the cache
- * @param <V>
- *          Type of values in the cache
  *
+ * @author Sai Pullabhotla
+ * @param <K> Type of keys in the cache
+ * @param <V> Type of values in the cache
  */
 public class Cache<K, V> {
 
-  /**
-   * A map to store the entries in the cache
-   */
+  /** A map to store the entries in the cache */
   private Map<K, V> map;
 
-  /**
-   * Creates a new instance of <code>Cache</code>.
-   */
+  /** Creates a new instance of <code>Cache</code>. */
   public Cache() {
     this(16, 0.75f);
   }
 
   /**
    * Creates a new instance of <code>Cache</code>.
-   * 
-   * @param initialSize
-   *          initial size
+   *
+   * @param initialSize initial size
    */
   public Cache(int initialSize) {
     this(initialSize, 0.75f);
@@ -55,11 +47,9 @@ public class Cache<K, V> {
 
   /**
    * Creates a new instance of <code>Cache</code>.
-   * 
-   * @param initialSize
-   *          initial size
-   * @param loadFactor
-   *          load factor
+   *
+   * @param initialSize initial size
+   * @param loadFactor load factor
    */
   public Cache(int initialSize, float loadFactor) {
     map = new ConcurrentHashMap<>(initialSize, loadFactor);
@@ -67,11 +57,10 @@ public class Cache<K, V> {
 
   /**
    * Returns the cached value for the given key.
-   * 
-   * @param key
-   *          the key
+   *
+   * @param key the key
    * @return the cached value of the given key. Returns <code>null</code>, if the given key does not
-   *         exist in this cache.
+   *     exist in this cache.
    */
   public V get(K key) {
     return map.get(key);
@@ -79,11 +68,9 @@ public class Cache<K, V> {
 
   /**
    * Puts the given entry into this cache.
-   * 
-   * @param key
-   *          the key
-   * @param value
-   *          the value
+   *
+   * @param key the key
+   * @param value the value
    * @return previous value, if any, for the given key.
    */
   public V put(K key, V value) {
@@ -92,9 +79,8 @@ public class Cache<K, V> {
 
   /**
    * Checks if the give key is in this cache.
-   * 
-   * @param key
-   *          the key
+   *
+   * @param key the key
    * @return <code>true</code>, if the given key exists in the cache; <code>false</code>, otherwise.
    */
   public boolean containsKey(K key) {
@@ -103,11 +89,10 @@ public class Cache<K, V> {
 
   /**
    * Returns the size of this cache.
-   * 
+   *
    * @return the size of this cache.
    */
   public int size() {
     return map.size();
   }
-
 }

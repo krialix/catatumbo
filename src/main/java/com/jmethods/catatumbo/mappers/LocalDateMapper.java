@@ -16,21 +16,19 @@
 
 package com.jmethods.catatumbo.mappers;
 
-import java.time.LocalDate;
-
 import com.google.cloud.datastore.NullValue;
 import com.google.cloud.datastore.StringValue;
 import com.google.cloud.datastore.Value;
 import com.google.cloud.datastore.ValueBuilder;
 import com.jmethods.catatumbo.Mapper;
 import com.jmethods.catatumbo.MappingException;
+import java.time.LocalDate;
 
 /**
- * An implementation of {@link Mapper} for mapping {@link LocalDate} to/from Cloud Datastore.
- * {@link LocalDate} types are mapped to String type in the Cloud Datastore.
- * 
- * @author Sai Pullabhotla
+ * An implementation of {@link Mapper} for mapping {@link LocalDate} to/from Cloud Datastore. {@link
+ * LocalDate} types are mapped to String type in the Cloud Datastore.
  *
+ * @author Sai Pullabhotla
  */
 public class LocalDateMapper implements Mapper {
 
@@ -55,5 +53,4 @@ public class LocalDateMapper implements Mapper {
           String.format(pattern, input.getClass().getName(), LocalDate.class.getName()), exp);
     }
   }
-
 }

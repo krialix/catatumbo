@@ -38,41 +38,28 @@ public interface QueryResponseMetadata {
    * @author Matthew Tso
    */
   enum QueryState {
-    /**
-     * Possibly unspecified enum value.
-     */
+    /** Possibly unspecified enum value. */
     MORE_RESULTS_TYPE_UNSPECIFIED,
 
-    /**
-     * Query execution is not finished.
-     */
+    /** Query execution is not finished. */
     NOT_FINISHED,
 
-    /**
-     * There *may* be more results after the specified limit (possibly a false positive).
-     */
+    /** There *may* be more results after the specified limit (possibly a false positive). */
     MORE_RESULTS_AFTER_LIMIT,
 
-    /**
-     * There *may* be more results after the specified end cursor (possibly a false positive).
-     */
+    /** There *may* be more results after the specified end cursor (possibly a false positive). */
     MORE_RESULTS_AFTER_CURSOR,
 
-    /**
-     * There are no more results left to query for.
-     */
+    /** There are no more results left to query for. */
     NO_MORE_RESULTS,
 
-    /**
-     * Unrecognized state.
-     */
+    /** Unrecognized state. */
     UNRECOGNIZED;
 
     /**
      * Initialize a QueryState from a Datastore QueryResultBatch.MoreResultsType enum value.
      *
-     * @param moreResultsType
-     *          original enum value.
+     * @param moreResultsType original enum value.
      * @return query state enum
      */
     public static QueryState forMoreResultsType(QueryResultBatch.MoreResultsType moreResultsType) {

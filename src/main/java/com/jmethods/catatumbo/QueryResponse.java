@@ -21,24 +21,22 @@ import java.util.List;
 /**
  * Response to a query execution. When the {@link EntityManager} executes a {@link QueryRequest}, it
  * returns the {@link QueryResponse}.
- * 
- * @param <T>
- *          the expected type of results
- * @author Sai Pullabhotla
  *
+ * @param <T> the expected type of results
+ * @author Sai Pullabhotla
  */
 public interface QueryResponse<T> {
 
   /**
    * Returns the results from the query execution.
-   * 
+   *
    * @return the results from the query execution.
    */
   List<T> getResults();
 
   /**
    * Returns the start cursor of the results.
-   * 
+   *
    * @return the start cursor of the results.
    */
   DatastoreCursor getStartCursor();
@@ -46,7 +44,7 @@ public interface QueryResponse<T> {
   /**
    * Returns the end cursor of the results. This can be used to navigate to the next page of results
    * by setting this as the OFFSET for the next query request.
-   * 
+   *
    * @return the end cursor of the results.
    */
   DatastoreCursor getEndCursor();
@@ -57,5 +55,4 @@ public interface QueryResponse<T> {
    * @return the metadata on the query execution.
    */
   QueryResponseMetadata getQueryResponseMetadata();
-
 }

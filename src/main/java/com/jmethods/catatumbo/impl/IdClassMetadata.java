@@ -16,47 +16,36 @@
 
 package com.jmethods.catatumbo.impl;
 
+import com.jmethods.catatumbo.EntityManagerException;
+import com.jmethods.catatumbo.impl.IdentifierMetadata.DataType;
 import java.lang.invoke.MethodHandle;
 import java.lang.invoke.MethodHandles;
 import java.lang.invoke.MethodType;
 import java.lang.reflect.Method;
 
-import com.jmethods.catatumbo.EntityManagerException;
-import com.jmethods.catatumbo.impl.IdentifierMetadata.DataType;
-
 /**
  * Objects of this class contain the metadata of an ID Class.
- * 
- * @author Sai Pullabhotla
  *
+ * @author Sai Pullabhotla
  */
 public class IdClassMetadata {
 
-  /**
-   * Name of the method for reading the underlying ID
-   */
+  /** Name of the method for reading the underlying ID */
   private static final String READ_METHOD_NAME = "getValue";
 
-  /**
-   * ID Class
-   */
+  /** ID Class */
   private final Class<?> clazz;
 
-  /**
-   * Method Handle for reading the real ID
-   */
+  /** Method Handle for reading the real ID */
   private final MethodHandle readMethod;
 
-  /**
-   * Method Handle for the constructor to instantiate and setting the real ID.
-   */
+  /** Method Handle for the constructor to instantiate and setting the real ID. */
   private final MethodHandle constructor;
 
   /**
    * Creates a new instance of the <code>IdClassMetadata</code>.
-   * 
-   * @param clazz
-   *          the ID class to which this metadata belongs to.
+   *
+   * @param clazz the ID class to which this metadata belongs to.
    */
   public IdClassMetadata(Class<?> clazz) {
     this.clazz = clazz;
@@ -66,7 +55,7 @@ public class IdClassMetadata {
 
   /**
    * Returns the MethodHandle for reading the underlying ID.
-   * 
+   *
    * @return the MethodHandle for reading the underlying ID.
    */
   public MethodHandle getReadMethod() {
@@ -75,7 +64,7 @@ public class IdClassMetadata {
 
   /**
    * Returns the constructor for instantiating the setting the underlying ID.
-   * 
+   *
    * @return the constructor for instantiating the setting the underlying ID.
    */
   public MethodHandle getConstructor() {
@@ -84,7 +73,7 @@ public class IdClassMetadata {
 
   /**
    * Returns the Class to which this metadata belongs.
-   * 
+   *
    * @return the Class to which this metadata belongs.
    */
   public Class<?> getClazz() {
@@ -93,7 +82,7 @@ public class IdClassMetadata {
 
   /**
    * Returns the underlying type of the ID.
-   * 
+   *
    * @return the underlying type of the ID.
    */
   public Class<?> getIdType() {
@@ -102,7 +91,7 @@ public class IdClassMetadata {
 
   /**
    * Creates and returns the MethodHandle for reading the underlying ID.
-   * 
+   *
    * @return the MethodHandle for reading the underlying ID.
    */
   private MethodHandle findIdReadMethod() {
@@ -117,21 +106,22 @@ public class IdClassMetadata {
       }
       return MethodHandles.lookup().unreflect(readMethod);
     } catch (NoSuchMethodException | SecurityException | IllegalAccessException exp) {
-      String error = String.format("Class %s must have a public %s method", clazz.getName(),
-          READ_METHOD_NAME);
+      String error =
+          String.format("Class %s must have a public %s method", clazz.getName(), READ_METHOD_NAME);
       throw new EntityManagerException(error, exp);
     }
   }
 
   /**
    * Creates and returns the MethodHandle for the constructor.
-   * 
+   *
    * @return the MethodHandle for the constructor.
    */
   private MethodHandle findConstructor() {
     try {
-      MethodHandle mh = MethodHandles.publicLookup().findConstructor(clazz,
-          MethodType.methodType(void.class, getIdType()));
+      MethodHandle mh =
+          MethodHandles.publicLookup()
+              .findConstructor(clazz, MethodType.methodType(void.class, getIdType()));
       return mh;
     } catch (NoSuchMethodException | IllegalAccessException exp) {
       String pattern = "Class %s requires a public constructor with one parameter of type %s";
@@ -139,5 +129,4 @@ public class IdClassMetadata {
       throw new EntityManagerException(error, exp);
     }
   }
-
 }

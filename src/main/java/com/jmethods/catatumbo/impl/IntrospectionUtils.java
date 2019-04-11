@@ -16,6 +16,11 @@
 
 package com.jmethods.catatumbo.impl;
 
+import com.jmethods.catatumbo.EntityManagerException;
+import com.jmethods.catatumbo.Ignore;
+import com.jmethods.catatumbo.NoAccessorMethodException;
+import com.jmethods.catatumbo.NoMutatorMethodException;
+import com.jmethods.catatumbo.Property;
 import java.lang.invoke.MethodHandle;
 import java.lang.invoke.MethodHandles;
 import java.lang.reflect.Constructor;
@@ -27,17 +32,10 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.jmethods.catatumbo.EntityManagerException;
-import com.jmethods.catatumbo.Ignore;
-import com.jmethods.catatumbo.NoAccessorMethodException;
-import com.jmethods.catatumbo.NoMutatorMethodException;
-import com.jmethods.catatumbo.Property;
-
 /**
  * Utility methods for helping with introspection/reflection.
- * 
- * @author Sai Pullabhotla
  *
+ * @author Sai Pullabhotla
  */
 public class IntrospectionUtils {
 
@@ -45,11 +43,9 @@ public class IntrospectionUtils {
    * Valid/Supported prefixes for mutator methods of a Builder class. Methods will be searched in
    * the order.
    */
-  private static final String[] WRITE_METHOD_PREFIXES = { "set", "with", null };
+  private static final String[] WRITE_METHOD_PREFIXES = {"set", "with", null};
 
-  /**
-   * Hide the default constructor.
-   */
+  /** Hide the default constructor. */
   private IntrospectionUtils() {
     // Do nothing
   }
@@ -57,12 +53,10 @@ public class IntrospectionUtils {
   /**
    * Creates and returns a new instance of a persistence class for the given metadata. The returned
    * object will be an instance of the primary persistence class or its Builder.
-   * 
-   * @param metadata
-   *          the metadata of the class
+   *
+   * @param metadata the metadata of the class
    * @return a new instance of the of the Class to which the given metadata belongs.
-   * @throws EntityManagerException
-   *           if any error occurs during instantiation.
+   * @throws EntityManagerException if any error occurs during instantiation.
    */
   public static Object instantiate(MetadataBase metadata) {
     try {
@@ -74,9 +68,8 @@ public class IntrospectionUtils {
 
   /**
    * Returns the metadata for the given field.
-   * 
-   * @param field
-   *          the field whose metadata has to be prepared
+   *
+   * @param field the field whose metadata has to be prepared
    * @return metadata of the given field.
    */
   public static PropertyMetadata getPropertyMetadata(Field field) {
@@ -98,13 +91,10 @@ public class IntrospectionUtils {
   /**
    * Finds and returns a {@link MethodHandle} that can be used to read the field represented by the
    * given metadata.
-   * 
-   * @param field
-   *          the field
-   * 
+   *
+   * @param field the field
    * @return the {@link MethodHandle} for reading the field's value
-   * @throws EntityManagerException
-   *           if no read method exists
+   * @throws EntityManagerException if no read method exists
    */
   public static MethodHandle findReadMethodHandle(Field field) {
     String readMethodName;
@@ -128,24 +118,22 @@ public class IntrospectionUtils {
   /**
    * Finds and returns a {@link MethodHandle} that can be used to update a field represented by the
    * given metadata.
-   * 
-   * @param field
-   *          the field
-   * 
+   *
+   * @param field the field
    * @return the {@link MethodHandle} to update the field
-   * @throws NoMutatorMethodException
-   *           if no matching method exists
+   * @throws NoMutatorMethodException if no matching method exists
    */
   public static MethodHandle findWriteMethodHandle(Field field) {
-    ConstructorMetadata constructorMetadata = ConstructorIntrospector
-        .introspect(field.getDeclaringClass());
+    ConstructorMetadata constructorMetadata =
+        ConstructorIntrospector.introspect(field.getDeclaringClass());
     Class<?> containerClass;
     MethodHandle mh = null;
     if (constructorMetadata.isBuilderConstructionStrategy()) {
       containerClass = constructorMetadata.getBuilderClass();
       for (String prefix : WRITE_METHOD_PREFIXES) {
-        mh = findInstanceMethod(containerClass, getWriteMethodName(field, prefix), null,
-            field.getType());
+        mh =
+            findInstanceMethod(
+                containerClass, getWriteMethodName(field, prefix), null, field.getType());
         if (mh != null) {
           break;
         }
@@ -166,9 +154,8 @@ public class IntrospectionUtils {
    * Returns all potentially persistable fields that were declared in the specified class. This
    * method filters out the static fields and any fields that have an annotation of {@link Ignore},
    * and returns the rest of the declared fields.
-   * 
-   * @param clazz
-   *          the class
+   *
+   * @param clazz the class
    * @return all potentially persistable fields that were declared in the specified class.
    */
   public static List<Field> getPersistableFields(Class<?> clazz) {
@@ -185,58 +172,48 @@ public class IntrospectionUtils {
   /**
    * Returns the name of the method that can be used to read the given field.
    *
-   * @param field
-   *          the field
+   * @param field the field
    * @return the name of the read method,
    */
   public static String getReadMethodName(Field field) {
     return "get" + getCapitalizedName(field.getName());
-
   }
 
   /**
    * Returns the name of the method that can be used to read the given boolean field.
    *
-   * @param field
-   *          the field name
+   * @param field the field name
    * @return the name of the read method.
    */
   public static String getReadMethodNameForBoolean(Field field) {
     return "is" + getCapitalizedName(field.getName());
-
   }
 
   /**
    * Returns the name of the method that can be used to write (or set) the given field.
    *
-   * @param field
-   *          the name of the field
+   * @param field the name of the field
    * @return the name of the write method.
    */
   public static String getWriteMethodName(Field field) {
     return "set" + getCapitalizedName(field.getName());
-
   }
 
   /**
    * Returns the name of the method that can be used to write (or set) the given field.
    *
-   * @param field
-   *          the name of the field
-   * @param prefix
-   *          the prefix for the write method (e.g. set, with, etc.).
+   * @param field the name of the field
+   * @param prefix the prefix for the write method (e.g. set, with, etc.).
    * @return the name of the write method.
    */
   public static String getWriteMethodName(Field field, String prefix) {
     return prefix == null ? field.getName() : (prefix + getCapitalizedName(field.getName()));
-
   }
 
   /**
    * Capitalizes the given field name.
    *
-   * @param fieldName
-   *          the field name
+   * @param fieldName the field name
    * @return capitalized field name.
    */
   public static String getCapitalizedName(String fieldName) {
@@ -248,12 +225,10 @@ public class IntrospectionUtils {
 
   /**
    * Creates a new object of given class by invoking the class' default public constructor.
-   * 
-   * @param clazz
-   *          the class whose instance needs to be created
+   *
+   * @param clazz the class whose instance needs to be created
    * @return a new instance of the given class
-   * @throws EntityManagerException
-   *           if any error occurs
+   * @throws EntityManagerException if any error occurs
    */
   public static Object instantiateObject(Class<?> clazz) {
     try {
@@ -262,19 +237,17 @@ public class IntrospectionUtils {
     } catch (Exception exp) {
       throw new EntityManagerException(exp);
     }
-
   }
 
   /**
    * Examines the given Collection type (List and Set) and returns the Class and Parameterized type,
    * if any.
-   * 
-   * @param type
-   *          the Collection type
+   *
+   * @param type the Collection type
    * @return an array of Class objects with two elements. The first element will contain the raw
-   *         type of the collection and the second will contain the parameterized type. If the
-   *         collection declaration is not parameterized, the second element in the array is set to
-   *         <code>null</code>.
+   *     type of the collection and the second will contain the parameterized type. If the
+   *     collection declaration is not parameterized, the second element in the array is set to
+   *     <code>null</code>.
    */
   public static Class<?>[] resolveCollectionType(Type type) {
     Class<?>[] output = new Class[2];
@@ -296,15 +269,14 @@ public class IntrospectionUtils {
 
   /**
    * Examines the given Map type and returns the raw type, type of keys, type of values in the map.
-   * 
-   * @param type
-   *          the type of map
+   *
+   * @param type the type of map
    * @return an array containing three elements:
-   *         <ul>
-   *         <li>Raw type of Map</li>
-   *         <li>Type of Keys, may be <code>null</code></li>
-   *         <li>Type of Values, may be <code>null</code></li>
-   *         </ul>
+   *     <ul>
+   *       <li>Raw type of Map
+   *       <li>Type of Keys, may be <code>null</code>
+   *       <li>Type of Values, may be <code>null</code>
+   *     </ul>
    */
   public static Class<?>[] resolveMapType(Type type) {
     Class<?>[] output = new Class[3];
@@ -330,15 +302,13 @@ public class IntrospectionUtils {
   }
 
   /**
-   * Returns a public constructor of the given class with the given parameter types. Returns
-   * <code>null</code>, if there is no matching constructor.
-   * 
-   * @param clazz
-   *          the class
-   * @param parameterTypes
-   *          expected types of parameters
+   * Returns a public constructor of the given class with the given parameter types. Returns <code>
+   * null</code>, if there is no matching constructor.
+   *
+   * @param clazz the class
+   * @param parameterTypes expected types of parameters
    * @return the matching public constructor or <code>null</code>, if there is no matching
-   *         constructor.
+   *     constructor.
    */
   public static <T> Constructor<T> getConstructor(Class<T> clazz, Class<?>... parameterTypes) {
     try {
@@ -354,9 +324,8 @@ public class IntrospectionUtils {
 
   /**
    * Checks to see if the given field is a static field.
-   * 
-   * @param field
-   *          the field to test
+   *
+   * @param field the field to test
    * @return <code>true</code>, if the given field is static; <code>false</code>, otherwise.
    */
   public static boolean isStatic(Field field) {
@@ -366,11 +335,9 @@ public class IntrospectionUtils {
 
   /**
    * Returns the value of the field represented by the given metadata.
-   * 
-   * @param fieldMetadata
-   *          the metadata of the field
-   * @param target
-   *          the target object to which the field belongs.
+   *
+   * @param fieldMetadata the metadata of the field
+   * @param target the target object to which the field belongs.
    * @return the value of the field.
    */
   public static Object getFieldValue(FieldMetadata fieldMetadata, Object target) {
@@ -384,11 +351,10 @@ public class IntrospectionUtils {
 
   /**
    * Finds and returns a MethodHandle for the default constructor of the given class, {@code clazz}.
-   * 
-   * @param clazz
-   *          the class
+   *
+   * @param clazz the class
    * @return a MethodHandle for the default constructor. Returns {@code null} if the class does not
-   *         have a public no-argument constructor.
+   *     have a public no-argument constructor.
    */
   public static MethodHandle findDefaultConstructor(Class<?> clazz) {
     MethodHandle methodHandle = null;
@@ -403,60 +369,59 @@ public class IntrospectionUtils {
 
   /**
    * Finds and returns a MethodHandle for a public static method.
-   * 
-   * @param clazz
-   *          the class to search
-   * @param methodName
-   *          the name of the method
-   * @param expectedReturnType
-   *          the expected return type. If {@code null}, any return type is treated as valid.
-   * @param expectedParameterTypes
-   *          expected parameter types
+   *
+   * @param clazz the class to search
+   * @param methodName the name of the method
+   * @param expectedReturnType the expected return type. If {@code null}, any return type is treated
+   *     as valid.
+   * @param expectedParameterTypes expected parameter types
    * @return a MethodHandle for the specified criteria. Returns {@code null} if no method exists
-   *         with the specified criteria.
+   *     with the specified criteria.
    */
-  public static MethodHandle findStaticMethod(Class<?> clazz, String methodName,
-      Class<?> expectedReturnType, Class<?>... expectedParameterTypes) {
+  public static MethodHandle findStaticMethod(
+      Class<?> clazz,
+      String methodName,
+      Class<?> expectedReturnType,
+      Class<?>... expectedParameterTypes) {
     return findMethod(clazz, methodName, true, expectedReturnType, expectedParameterTypes);
   }
 
   /**
    * Finds and returns a MethodHandle for a public instance method.
-   * 
-   * @param clazz
-   *          the class to search
-   * @param methodName
-   *          the name of the method
-   * @param expectedReturnType
-   *          the expected return type. If {@code null}, any return type is treated as valid.
-   * @param expectedParameterTypes
-   *          expected parameter types
+   *
+   * @param clazz the class to search
+   * @param methodName the name of the method
+   * @param expectedReturnType the expected return type. If {@code null}, any return type is treated
+   *     as valid.
+   * @param expectedParameterTypes expected parameter types
    * @return a MethodHandle for the specified criteria. Returns {@code null} if no method exists
-   *         with the specified criteria.
+   *     with the specified criteria.
    */
-  public static MethodHandle findInstanceMethod(Class<?> clazz, String methodName,
-      Class<?> expectedReturnType, Class<?>... expectedParameterTypes) {
+  public static MethodHandle findInstanceMethod(
+      Class<?> clazz,
+      String methodName,
+      Class<?> expectedReturnType,
+      Class<?>... expectedParameterTypes) {
     return findMethod(clazz, methodName, false, expectedReturnType, expectedParameterTypes);
   }
 
   /**
    * Finds and returns a method handle for the given criteria.
-   * 
-   * @param clazz
-   *          the class to search
-   * @param methodName
-   *          the name of the method
-   * @param staticMethod
-   *          whether the method is static or not
-   * @param expectedReturnType
-   *          expected return type
-   * @param expectedParameterTypes
-   *          expected parameter types
+   *
+   * @param clazz the class to search
+   * @param methodName the name of the method
+   * @param staticMethod whether the method is static or not
+   * @param expectedReturnType expected return type
+   * @param expectedParameterTypes expected parameter types
    * @return a methodHandle for the specified criteria. Returns {@code null} if no method exists
-   *         with the specified criteria.
+   *     with the specified criteria.
    */
-  private static MethodHandle findMethod(Class<?> clazz, String methodName, boolean staticMethod,
-      Class<?> expectedReturnType, Class<?>... expectedParameterTypes) {
+  private static MethodHandle findMethod(
+      Class<?> clazz,
+      String methodName,
+      boolean staticMethod,
+      Class<?> expectedReturnType,
+      Class<?>... expectedParameterTypes) {
     MethodHandle methodHandle = null;
     try {
       Method method = clazz.getMethod(methodName, expectedParameterTypes);
@@ -473,7 +438,5 @@ public class IntrospectionUtils {
       // Method not found
     }
     return methodHandle;
-
   }
-
 }

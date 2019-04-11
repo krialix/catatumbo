@@ -18,7 +18,5 @@
  * This package contains the implementation classes for the Catatumbo API. All classes in this
  * package are internal to the functioning of the API and you should never use any of these classes
  * directly in your application's code.
- * 
  */
-
 package com.jmethods.catatumbo.impl;

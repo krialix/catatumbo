@@ -18,12 +18,10 @@ package com.jmethods.catatumbo;
 
 /**
  * Interface for Callbacks to run Datastore operations within a Transaction.
- * 
- * @author Sai Pullabhotla
- * @param <T>
- *          the result type of this {@code TransactionalTask}.
- * @see EntityManager#executeInTransaction(TransactionalTask)
  *
+ * @author Sai Pullabhotla
+ * @param <T> the result type of this {@code TransactionalTask}.
+ * @see EntityManager#executeInTransaction(TransactionalTask)
  */
 @FunctionalInterface
 public interface TransactionalTask<T> {
@@ -32,11 +30,9 @@ public interface TransactionalTask<T> {
    * Executes the task. After the execute method finishes normally, the transaction will be
    * committed by the {@link EntityManager}. If the execute method throws any exception, the
    * transaction will be rolled back.
-   * 
-   * @param transaction
-   *          the transaction to read from/write to the Cloud Datastore.
+   *
+   * @param transaction the transaction to read from/write to the Cloud Datastore.
    * @return the result of execution
    */
   T execute(DatastoreTransaction transaction);
-
 }

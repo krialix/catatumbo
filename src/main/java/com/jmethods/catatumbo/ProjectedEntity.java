@@ -23,19 +23,17 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
 
 /**
- * Specifies that a class is a Projected Entity. ProjectedEntity is similar to a regular
- * {@link Entity}, but typically contains a subset of fields of an entity. Projected Entities are
- * useful for mapping the results of a projection query.
- * <p>
- * Note that results of a projection query can be mapped to an {@link Entity}, but having a
+ * Specifies that a class is a Projected Entity. ProjectedEntity is similar to a regular {@link
+ * Entity}, but typically contains a subset of fields of an entity. Projected Entities are useful
+ * for mapping the results of a projection query.
+ *
+ * <p>Note that results of a projection query can be mapped to an {@link Entity}, but having a
  * {@link ProjectedEntity} helps accidental data loss (e.g. persisting an entity mapped from a
  * projection query). The EntityManager restricts persistence of ProjectedEntities. To clarify this
  * further, INSERT, UPDATE and UPSERT operations are not allowed on ProjectedEntities. DELETE
  * operations are still valid on Projected Entities.
- * </p>
- * 
- * @author Sai Pullabhotla
  *
+ * @author Sai Pullabhotla
  */
 @Retention(RUNTIME)
 @Target(ElementType.TYPE)
@@ -43,9 +41,8 @@ public @interface ProjectedEntity {
 
   /**
    * The entity Kind.
-   * 
+   *
    * @return the entity Kind.
    */
   String kind();
-
 }

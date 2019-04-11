@@ -16,51 +16,36 @@
 
 package com.jmethods.catatumbo.impl;
 
-import java.lang.reflect.Field;
-import java.util.List;
-
 import com.jmethods.catatumbo.Embeddable;
 import com.jmethods.catatumbo.Embedded;
 import com.jmethods.catatumbo.EntityManagerException;
 import com.jmethods.catatumbo.Imploded;
 import com.jmethods.catatumbo.Property;
+import java.lang.reflect.Field;
+import java.util.List;
 
 /**
  * Introspects and prepares the metadata of an embedded field. An embedded field is a complex object
  * that is embedded in an entity or another embedded field.
- * 
- * @author Sai Pullabhotla
  *
+ * @author Sai Pullabhotla
  */
 public class EmbeddedIntrospector {
 
-  /**
-   * Embedded field that is being introspected
-   */
+  /** Embedded field that is being introspected */
   private final EmbeddedField field;
-
-  /**
-   * The metadata of the embedded field
-   */
-  private EmbeddedMetadata metadata;
-
-  /**
-   * The type of the embedded field
-   */
+  /** The type of the embedded field */
   private final Class<?> clazz;
-
-  /**
-   * Metadata of the owning entity
-   */
+  /** The metadata of the embedded field */
+  private EmbeddedMetadata metadata;
+  /** Metadata of the owning entity */
   private EntityMetadata entityMetadata;
 
   /**
    * Creates a new instance of <code>EmbeddedIntrospector</code>.
-   * 
-   * @param field
-   *          the embedded field to introspect.
-   * @param entityMetadata
-   *          metadata of the owning entity
+   *
+   * @param field the embedded field to introspect.
+   * @param entityMetadata metadata of the owning entity
    */
   private EmbeddedIntrospector(EmbeddedField field, EntityMetadata entityMetadata) {
     this.field = field;
@@ -70,11 +55,9 @@ public class EmbeddedIntrospector {
 
   /**
    * Introspects the given embedded field and returns its metadata.
-   * 
-   * @param field
-   *          the embedded field to introspect
-   * @param entityMetadata
-   *          metadata of the owning entity
+   *
+   * @param field the embedded field to introspect
+   * @param entityMetadata metadata of the owning entity
    * @return the metadata of the embedded field
    */
   public static EmbeddedMetadata introspect(EmbeddedField field, EntityMetadata entityMetadata) {
@@ -83,16 +66,15 @@ public class EmbeddedIntrospector {
     return introspector.metadata;
   }
 
-  /**
-   * Worker class for introspection.
-   */
+  /** Worker class for introspection. */
   private void process() {
     metadata = new EmbeddedMetadata(field);
 
     // Make sure the class has @Embeddable annotation
     if (!clazz.isAnnotationPresent(Embeddable.class)) {
-      String message = String.format("Class %s must have %s annotation", clazz.getName(),
-          Embeddable.class.getName());
+      String message =
+          String.format(
+              "Class %s must have %s annotation", clazz.getName(), Embeddable.class.getName());
       throw new EntityManagerException(message);
     }
 
@@ -114,9 +96,7 @@ public class EmbeddedIntrospector {
     processFields();
   }
 
-  /**
-   * Processes each field in this embedded object and updates the metadata.
-   */
+  /** Processes each field in this embedded object and updates the metadata. */
   private void processFields() {
     List<Field> children = IntrospectionUtils.getPersistableFields(clazz);
     for (Field child : children) {
@@ -130,9 +110,8 @@ public class EmbeddedIntrospector {
 
   /**
    * Processes the given simple (or primitive) field and updates the metadata.
-   * 
-   * @param child
-   *          the field to process
+   *
+   * @param child the field to process
    */
   private void processSimpleField(Field child) {
     PropertyMetadata propertyMetadata = IntrospectionUtils.getPropertyMetadata(child);
@@ -145,9 +124,8 @@ public class EmbeddedIntrospector {
 
   /**
    * Processes the override, if any, for the given property.
-   * 
-   * @param propertyMetadata
-   *          the metadata of the property
+   *
+   * @param propertyMetadata the metadata of the property
    */
   private void processPropertyOverride(PropertyMetadata propertyMetadata) {
     String qualifiedName = field.getQualifiedName() + "." + propertyMetadata.getField().getName();
@@ -164,14 +142,12 @@ public class EmbeddedIntrospector {
 
   /**
    * Processes a nested embedded field.
-   * 
-   * @param child
-   *          the nested embedded field.
+   *
+   * @param child the nested embedded field.
    */
   private void processEmbeddedField(Field child) {
     EmbeddedField embeddedChild = new EmbeddedField(child, field);
     EmbeddedMetadata childMetadata = EmbeddedIntrospector.introspect(embeddedChild, entityMetadata);
     metadata.putEmbeddedMetadata(childMetadata);
   }
-
 }

@@ -19,29 +19,23 @@ package com.jmethods.catatumbo;
 /**
  * An exception to indicate a model class (Entity, Embeddable, etc.) does not have the required
  * public no-argument constructor.
- * 
- * @author Sai Pullabhotla
  *
+ * @author Sai Pullabhotla
  */
 public class NoDefaultConstructorException extends EntityManagerException {
 
-  /**
-   * Serial version UID
-   */
+  /** Serial version UID */
   private static final long serialVersionUID = -8627001926046445483L;
 
-  /**
-   * Creates a new instance of <code>NoDefaultConstructorException</code>.
-   */
+  /** Creates a new instance of <code>NoDefaultConstructorException</code>. */
   public NoDefaultConstructorException() {
     super();
   }
 
   /**
    * Creates a new instance of <code>NoDefaultConstructorException</code>.
-   * 
-   * @param msg
-   *          the detailed message
+   *
+   * @param msg the detailed message
    */
   public NoDefaultConstructorException(String msg) {
     super(msg);
@@ -49,11 +43,9 @@ public class NoDefaultConstructorException extends EntityManagerException {
 
   /**
    * Creates a new instance of <code>NoDefaultConstructorException</code>.
-   * 
-   * @param message
-   *          the detailed message
-   * @param cause
-   *          the cause
+   *
+   * @param message the detailed message
+   * @param cause the cause
    */
   public NoDefaultConstructorException(String message, Throwable cause) {
     super(message, cause);
@@ -61,12 +53,10 @@ public class NoDefaultConstructorException extends EntityManagerException {
 
   /**
    * Creates a new instance of <code>NoDefaultConstructorException</code>.
-   * 
-   * @param cause
-   *          the cause
+   *
+   * @param cause the cause
    */
   public NoDefaultConstructorException(Throwable cause) {
     super(cause);
   }
-
 }

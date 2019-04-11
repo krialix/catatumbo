@@ -16,94 +16,64 @@
 
 package com.jmethods.catatumbo;
 
+import com.google.auth.http.HttpTransportFactory;
+import com.google.datastore.v1.client.DatastoreFactory;
 import java.io.File;
 import java.io.InputStream;
 
-import com.google.auth.http.HttpTransportFactory;
-import com.google.datastore.v1.client.DatastoreFactory;
-
 /**
  * Objects of this class contain various parameters that are needed for connecting to the Datastore.
- * Instances of this class can be sent to {@link EntityManagerFactory} to create an
- * {@link EntityManager}.
- * 
- * <p>
- * <strong>Note: </strong> <br>
- * Credentials can be specified using one of the <code>setJsonCredentials*</code> methods. If
- * credentials are set using both an <code>InputStream</code> and <code>File</code> or
- * <code>Path</code>, the stream will be used for authentication.
- * </p>
- * 
- * <p>
- * <strong>Connecting to the Datastore Emulator: </strong><br>
- * Call the {@link ConnectionParameters#setServiceURL(String)} method to connect to the Datastore
- * Emulator. For example, to connect to the Datastore Emulator running on port 9999 on
- * <code>localhost</code>, call <code>setServiceURL("http://localhost:9999");</code>.
- * </p>
- * 
- * @author Sai Pullabhotla
+ * Instances of this class can be sent to {@link EntityManagerFactory} to create an {@link
+ * EntityManager}.
  *
+ * <p><strong>Note: </strong> <br>
+ * Credentials can be specified using one of the <code>setJsonCredentials*</code> methods. If
+ * credentials are set using both an <code>InputStream</code> and <code>File</code> or <code>Path
+ * </code>, the stream will be used for authentication.
+ *
+ * <p><strong>Connecting to the Datastore Emulator: </strong><br>
+ * Call the {@link ConnectionParameters#setServiceURL(String)} method to connect to the Datastore
+ * Emulator. For example, to connect to the Datastore Emulator running on port 9999 on <code>
+ * localhost</code>, call <code>setServiceURL("http://localhost:9999");</code>.
+ *
+ * @author Sai Pullabhotla
  */
 public class ConnectionParameters {
 
-  /**
-   * Default Service URL for connecting to Datastore on GCP.
-   */
+  /** Default Service URL for connecting to Datastore on GCP. */
   public static final String DEFAULT_SERVICE_URL = DatastoreFactory.DEFAULT_HOST;
 
-  /**
-   * Default connection timeout
-   */
+  /** Default connection timeout */
   public static final int DEFAULT_CONNECTION_TIMEOUT = 20000;
 
-  /**
-   * Default read timeout
-   */
+  /** Default read timeout */
   public static final int DEFAULT_READ_TIMEOUT = 20000;
 
-  /**
-   * Service URL
-   */
+  /** Service URL */
   private String serviceURL;
 
-  /**
-   * Datastore namespace
-   */
+  /** Datastore namespace */
   private String namespace;
 
-  /**
-   * Project ID
-   */
+  /** Project ID */
   private String projectId;
 
-  /**
-   * JSON credentials file
-   */
+  /** JSON credentials file */
   private File jsonCredentialsFile;
 
-  /**
-   * JSON credentials for authentication
-   */
+  /** JSON credentials for authentication */
   private InputStream jsonCredentialsStream;
 
-  /**
-   * Connection timeout
-   */
+  /** Connection timeout */
   private int connectionTimeout;
 
-  /**
-   * Read timeout
-   */
+  /** Read timeout */
   private int readTimeout;
 
-  /**
-   * HTTP Transport Factory
-   */
+  /** HTTP Transport Factory */
   private HttpTransportFactory httpTransportFactory;
 
-  /**
-   * Creates a new instance of <code>ConnectionParameters</code>.
-   */
+  /** Creates a new instance of <code>ConnectionParameters</code>. */
   public ConnectionParameters() {
     this.serviceURL = DEFAULT_SERVICE_URL;
     this.connectionTimeout = DEFAULT_CONNECTION_TIMEOUT;
@@ -112,7 +82,7 @@ public class ConnectionParameters {
 
   /**
    * Returns the service URL.
-   * 
+   *
    * @return the service URL.
    */
   public String getServiceURL() {
@@ -120,14 +90,12 @@ public class ConnectionParameters {
   }
 
   /**
-   * Sets the service URL. The service URL is typically of the form -
-   * <code>http[s]://host[:port]</code>. A <code>null</code> or empty string would result in
-   * connecting to the default Datastore on GCP. All other values, except
-   * {@link ConnectionParameters#DEFAULT_SERVICE_URL}, would be interpreted as a connection to the
-   * Datastore Emulator.
-   * 
-   * @param serviceURL
-   *          the serviceURL to set.
+   * Sets the service URL. The service URL is typically of the form - <code>http[s]://host[:port]
+   * </code>. A <code>null</code> or empty string would result in connecting to the default
+   * Datastore on GCP. All other values, except {@link ConnectionParameters#DEFAULT_SERVICE_URL},
+   * would be interpreted as a connection to the Datastore Emulator.
+   *
+   * @param serviceURL the serviceURL to set.
    */
   public void setServiceURL(String serviceURL) {
     if (Utility.isNullOrEmpty(serviceURL)) {
@@ -139,7 +107,7 @@ public class ConnectionParameters {
 
   /**
    * Returns the Datastore namespace.
-   * 
+   *
    * @return the Datastore namespace.
    */
   public String getNamespace() {
@@ -149,9 +117,8 @@ public class ConnectionParameters {
   /**
    * Sets the Datastore namespace.A <code>null</code> value would be interpreted as default
    * namespace.
-   * 
-   * @param namespace
-   *          the Datastore namespace.
+   *
+   * @param namespace the Datastore namespace.
    */
   public void setNamespace(String namespace) {
     this.namespace = namespace;
@@ -159,7 +126,7 @@ public class ConnectionParameters {
 
   /**
    * Returns the Project ID.
-   * 
+   *
    * @return the Project ID.
    */
   public String getProjectId() {
@@ -169,9 +136,8 @@ public class ConnectionParameters {
   /**
    * Sets the Project ID.A <code>null</code> value would use the default project ID, if it can be
    * determined from the environment.
-   * 
-   * @param projectId
-   *          the Project ID.
+   *
+   * @param projectId the Project ID.
    */
   public void setProjectId(String projectId) {
     this.projectId = projectId;
@@ -188,9 +154,8 @@ public class ConnectionParameters {
 
   /**
    * Sets the JSON credentials file.
-   * 
-   * @param jsonCredentialsFile
-   *          the JSON credentials file.
+   *
+   * @param jsonCredentialsFile the JSON credentials file.
    */
   public void setJsonCredentialsFile(File jsonCredentialsFile) {
     this.jsonCredentialsFile = jsonCredentialsFile;
@@ -198,9 +163,8 @@ public class ConnectionParameters {
 
   /**
    * Sets the JSON credentials path.
-   * 
-   * @param jsonCredentialsPath
-   *          the JSON credentials path.
+   *
+   * @param jsonCredentialsPath the JSON credentials path.
    */
   public void setJsonCredentialsFile(String jsonCredentialsPath) {
     if (!Utility.isNullOrEmpty(jsonCredentialsPath)) {
@@ -212,7 +176,7 @@ public class ConnectionParameters {
 
   /**
    * Returns an InputStream that contains the JSON credentials.
-   * 
+   *
    * @return an InputStream that contains the JSON credentials.
    */
   public InputStream getJsonCredentialsStream() {
@@ -221,9 +185,8 @@ public class ConnectionParameters {
 
   /**
    * Sets the JSON credentials.
-   * 
-   * @param jsonCredentialsStream
-   *          An {@link InputStream} containing the JSON credentials.
+   *
+   * @param jsonCredentialsStream An {@link InputStream} containing the JSON credentials.
    */
   public void setJsonCredentialsStream(InputStream jsonCredentialsStream) {
     this.jsonCredentialsStream = jsonCredentialsStream;
@@ -231,7 +194,7 @@ public class ConnectionParameters {
 
   /**
    * Returns the connection timeout, in milliseconds.
-   * 
+   *
    * @return the connection timeout, in milliseconds.
    */
   public int getConnectionTimeout() {
@@ -241,9 +204,8 @@ public class ConnectionParameters {
   /**
    * Sets the connection timeout, in milliseconds. A value of zero is interpreted as infinite
    * timeout. A negative value implies to use the default timeout.
-   * 
-   * @param connectionTimeout
-   *          the connection timeout, in milliseconds.
+   *
+   * @param connectionTimeout the connection timeout, in milliseconds.
    */
   public void setConnectionTimeout(int connectionTimeout) {
     this.connectionTimeout = connectionTimeout < 0 ? DEFAULT_CONNECTION_TIMEOUT : connectionTimeout;
@@ -251,7 +213,7 @@ public class ConnectionParameters {
 
   /**
    * Returns the read timeout, in milliseconds.
-   * 
+   *
    * @return the read timeout, in milliseconds.
    */
   public int getReadTimeout() {
@@ -261,9 +223,8 @@ public class ConnectionParameters {
   /**
    * Sets the read timeout, in milliseconds. A value of zero is interpreted as infinite timeout. A
    * negative value implies to use the default timeout.
-   * 
-   * @param readTimeout
-   *          the read timeout, in milliseconds.
+   *
+   * @param readTimeout the read timeout, in milliseconds.
    */
   public void setReadTimeout(int readTimeout) {
     this.readTimeout = readTimeout < 0 ? DEFAULT_READ_TIMEOUT : readTimeout;
@@ -271,7 +232,7 @@ public class ConnectionParameters {
 
   /**
    * Returns the HttpTransportFactory.
-   * 
+   *
    * @return the HttpTransportFactory.
    */
   public HttpTransportFactory getHttpTransportFactory() {
@@ -280,9 +241,8 @@ public class ConnectionParameters {
 
   /**
    * Sets the HttpTransportFactory.
-   * 
-   * @param httpTransportFactory
-   *          the HttpTransportFactory
+   *
+   * @param httpTransportFactory the HttpTransportFactory
    */
   public void setHttpTransportFactory(HttpTransportFactory httpTransportFactory) {
     this.httpTransportFactory = httpTransportFactory;
@@ -290,9 +250,9 @@ public class ConnectionParameters {
 
   /**
    * Tells whether or not these connection parameters indicate a connection to a Datastore Emulator.
-   * 
+   *
    * @return <code>true</code>, if these connection parameters indicate a connection to the
-   *         Datastore Emulator; <code>false</code>, otherwise.
+   *     Datastore Emulator; <code>false</code>, otherwise.
    */
   public boolean isEmulator() {
     return !DEFAULT_SERVICE_URL.equals(serviceURL);
@@ -300,11 +260,24 @@ public class ConnectionParameters {
 
   @Override
   public String toString() {
-    return "ConnectionParameters [serviceURL=" + serviceURL + ", namespace=" + namespace
-        + ", projectId=" + projectId + ", jsonCredentialsFile=" + jsonCredentialsFile
-        + ", jsonCredentialsStream=" + jsonCredentialsStream + ", connectionTimeout="
-        + connectionTimeout + ", readTimeout=" + readTimeout + ", httpTransportFactory="
-        + httpTransportFactory + ", emulator=" + isEmulator() + "]";
+    return "ConnectionParameters [serviceURL="
+        + serviceURL
+        + ", namespace="
+        + namespace
+        + ", projectId="
+        + projectId
+        + ", jsonCredentialsFile="
+        + jsonCredentialsFile
+        + ", jsonCredentialsStream="
+        + jsonCredentialsStream
+        + ", connectionTimeout="
+        + connectionTimeout
+        + ", readTimeout="
+        + readTimeout
+        + ", httpTransportFactory="
+        + httpTransportFactory
+        + ", emulator="
+        + isEmulator()
+        + "]";
   }
-
 }

@@ -16,13 +16,6 @@
 
 package com.jmethods.catatumbo.mappers;
 
-import java.lang.reflect.Modifier;
-import java.lang.reflect.Type;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.SortedMap;
-import java.util.TreeMap;
-
 import com.google.cloud.datastore.EntityValue;
 import com.google.cloud.datastore.FullEntity;
 import com.google.cloud.datastore.IncompleteKey;
@@ -34,46 +27,40 @@ import com.jmethods.catatumbo.MapperFactory;
 import com.jmethods.catatumbo.MappingException;
 import com.jmethods.catatumbo.NoSuitableMapperException;
 import com.jmethods.catatumbo.impl.IntrospectionUtils;
+import java.lang.reflect.Modifier;
+import java.lang.reflect.Type;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.SortedMap;
+import java.util.TreeMap;
 
 /**
  * An implementation of {@link Mapper} interface for mapping {@link Map} types to/from Cloud
  * Datastore.
- * 
- * @author Sai Pullabhotla
  *
+ * @author Sai Pullabhotla
  */
 public class MapMapper implements Mapper {
 
-  /**
-   * Map Type
-   */
+  /** Map Type */
   private Type mapType;
 
-  /**
-   * Class of Map
-   */
+  /** Class of Map */
   private Class<?> mapClass;
 
-  /**
-   * Type of Keys in the map
-   */
+  /** Type of Keys in the map */
   private Class<?> keyClass;
 
-  /**
-   * Type of Values in the Map
-   */
+  /** Type of Values in the Map */
   private Class<?> valueClass;
 
-  /**
-   * A Mapper for mapping the Values of the map
-   */
+  /** A Mapper for mapping the Values of the map */
   private Mapper valueMapper;
 
   /**
    * Creates a new instance of <code>MapMapper</code>.
-   * 
-   * @param type
-   *          the type of Map
+   *
+   * @param type the type of Map
    */
   public MapMapper(Type type) {
     this.mapType = type;
@@ -82,17 +69,15 @@ public class MapMapper implements Mapper {
     keyClass = classArray[1] == null ? String.class : classArray[1];
     if (!(keyClass.equals(String.class))) {
       throw new MappingException(
-          String.format("Unsupported type %s for Map's key. Keys must be of type %s",
+          String.format(
+              "Unsupported type %s for Map's key. Keys must be of type %s",
               keyClass.getName(), String.class.getName()));
     }
     valueClass = classArray[2];
     initializeMapper();
-
   }
 
-  /**
-   * Initializes the mapper for values in the Map.
-   */
+  /** Initializes the mapper for values in the Map. */
   private void initializeMapper() {
     if (valueClass == null) {
       valueMapper = CatchAllMapper.getInstance();
@@ -102,7 +87,6 @@ public class MapMapper implements Mapper {
       } catch (NoSuitableMapperException exp) {
         valueMapper = CatchAllMapper.getInstance();
       }
-
     }
   }
 
@@ -144,5 +128,4 @@ public class MapMapper implements Mapper {
     }
     return map;
   }
-
 }

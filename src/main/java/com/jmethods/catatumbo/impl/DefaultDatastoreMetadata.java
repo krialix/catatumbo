@@ -16,9 +16,6 @@
 
 package com.jmethods.catatumbo.impl;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import com.google.cloud.datastore.Cursor;
 import com.google.cloud.datastore.Datastore;
 import com.google.cloud.datastore.DatastoreException;
@@ -36,40 +33,32 @@ import com.jmethods.catatumbo.DefaultQueryResponse;
 import com.jmethods.catatumbo.EntityManagerException;
 import com.jmethods.catatumbo.EntityQueryRequest;
 import com.jmethods.catatumbo.QueryResponse;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Default implementation of {@link DatastoreMetadata}.
- * 
- * @author Sai Pullabhotla
  *
+ * @author Sai Pullabhotla
  */
 public class DefaultDatastoreMetadata implements DatastoreMetadata {
 
-  /**
-   * Name of the System entity that contains the namespaces
-   */
+  /** Name of the System entity that contains the namespaces */
   private static final String ENTITY_NAMESPACES = "__namespace__";
 
-  /**
-   * Name of the System entity that contains the Kinds
-   */
+  /** Name of the System entity that contains the Kinds */
   private static final String ENTITY_KINDS = "__kind__";
 
-  /**
-   * Name of the System entity that contains the Properties of a Kind
-   */
+  /** Name of the System entity that contains the Properties of a Kind */
   private static final String ENTITY_PROPERTIES = "__property__";
 
-  /**
-   * Reference to the entity manager that created this object
-   */
+  /** Reference to the entity manager that created this object */
   private DefaultEntityManager entityManager;
 
   /**
    * Creates a new instance of <code>DefaultDatastoreMetadata</code>.
-   * 
-   * @param entityManager
-   *          the entity manager that created this metadata object.
+   *
+   * @param entityManager the entity manager that created this metadata object.
    */
   public DefaultDatastoreMetadata(DefaultEntityManager entityManager) {
     this.entityManager = entityManager;
@@ -78,7 +67,6 @@ public class DefaultDatastoreMetadata implements DatastoreMetadata {
   @Override
   public List<String> getNamespaces() {
     return getNamespaces(0).getResults();
-
   }
 
   @Override
@@ -151,16 +139,15 @@ public class DefaultDatastoreMetadata implements DatastoreMetadata {
     try {
       Key nativeKey = entityManager.newNativeKeyFactory().setKind(ENTITY_KINDS).newKey(kind);
       DefaultDatastoreKey key = new DefaultDatastoreKey(nativeKey);
-      String query = "SELECT * FROM " + ENTITY_PROPERTIES
-          + " WHERE __key__ HAS ANCESTOR @1 ORDER BY __key__";
+      String query =
+          "SELECT * FROM " + ENTITY_PROPERTIES + " WHERE __key__ HAS ANCESTOR @1 ORDER BY __key__";
       EntityQueryRequest request = entityManager.createEntityQueryRequest(query);
       request.addPositionalBinding(key);
-      QueryResponse<DatastoreProperty> response = entityManager
-          .executeEntityQueryRequest(DatastoreProperty.class, request);
+      QueryResponse<DatastoreProperty> response =
+          entityManager.executeEntityQueryRequest(DatastoreProperty.class, request);
       return response.getResults();
     } catch (DatastoreException exp) {
       throw new EntityManagerException(exp);
     }
   }
-
 }

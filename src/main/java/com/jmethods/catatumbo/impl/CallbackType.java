@@ -16,8 +16,6 @@
 
 package com.jmethods.catatumbo.impl;
 
-import java.lang.annotation.Annotation;
-
 import com.jmethods.catatumbo.PostDelete;
 import com.jmethods.catatumbo.PostInsert;
 import com.jmethods.catatumbo.PostLoad;
@@ -27,82 +25,60 @@ import com.jmethods.catatumbo.PreDelete;
 import com.jmethods.catatumbo.PreInsert;
 import com.jmethods.catatumbo.PreUpdate;
 import com.jmethods.catatumbo.PreUpsert;
+import java.lang.annotation.Annotation;
 
 /**
  * Enumeration of various callback types.
- * 
- * @author Sai Pullabhotla
  *
+ * @author Sai Pullabhotla
  */
 public enum CallbackType {
 
-  /**
-   * Pre insert
-   */
+  /** Pre insert */
   PRE_INSERT(PreInsert.class),
 
-  /**
-   * Pre update
-   */
+  /** Pre update */
   PRE_UPDATE(PreUpdate.class),
 
-  /**
-   * Pre upsert
-   */
+  /** Pre upsert */
   PRE_UPSERT(PreUpsert.class),
 
-  /**
-   * Pre delete
-   */
+  /** Pre delete */
   PRE_DELETE(PreDelete.class),
 
-  /**
-   * Post load
-   */
+  /** Post load */
   POST_LOAD(PostLoad.class),
 
-  /**
-   * Post insert
-   */
+  /** Post insert */
   POST_INSERT(PostInsert.class),
 
-  /**
-   * Post update
-   */
+  /** Post update */
   POST_UPDATE(PostUpdate.class),
 
-  /**
-   * Post upsert
-   */
+  /** Post upsert */
   POST_UPSERT(PostUpsert.class),
 
-  /**
-   * Post delete
-   */
+  /** Post delete */
   POST_DELETE(PostDelete.class);
 
-  /**
-   * Annotation class for this callback type
-   */
+  /** Annotation class for this callback type */
   private final Class<? extends Annotation> annotationClass;
 
   /**
    * Creates a new instance of <code>CallbackEventType</code>.
-   * 
-   * @param annotationClass
-   *          the annotation for this callback type
+   *
+   * @param annotationClass the annotation for this callback type
    */
-  private CallbackType(Class<? extends Annotation> annotationClass) {
+  CallbackType(Class<? extends Annotation> annotationClass) {
     this.annotationClass = annotationClass;
   }
 
   /**
    * Returns the annotation class for this callback type.
-   * 
+   *
    * @return the annotation class for this callback type.
    */
   public Class<? extends Annotation> getAnnotationClass() {
     return annotationClass;
   }
-
 }

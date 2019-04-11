@@ -16,46 +16,34 @@
 
 package com.jmethods.catatumbo.impl;
 
+import com.jmethods.catatumbo.EntityManagerException;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.jmethods.catatumbo.EntityManagerException;
-
 /**
  * Base class for class metadata.
- * 
- * @author Sai Pullabhotla
  *
+ * @author Sai Pullabhotla
  */
 public abstract class MetadataBase {
 
-  /**
-   * The class
-   */
+  /** The class */
   protected final Class<?> clazz;
-
+  /** Constructor metadata */
+  private final ConstructorMetadata constructorMetadata;
   /**
    * Metadata about various properties. The keys of this map are the property names in the Cloud
    * Datastore.
    */
   protected Map<String, PropertyMetadata> propertyMetadataMap;
-
-  /**
-   * Metadata of embedded fields
-   */
+  /** Metadata of embedded fields */
   protected Map<EmbeddedField, EmbeddedMetadata> embeddedMetadataMap = null;
 
   /**
-   * Constructor metadata
-   */
-  private final ConstructorMetadata constructorMetadata;
-
-  /**
    * Creates a new instance of <code>MetadataBase</code>.
-   * 
-   * @param clazz
-   *          the class to which this metadata belongs (either an Entity or an Embeddable)
+   *
+   * @param clazz the class to which this metadata belongs (either an Entity or an Embeddable)
    */
   public MetadataBase(Class<?> clazz) {
     this.clazz = clazz;
@@ -66,7 +54,7 @@ public abstract class MetadataBase {
 
   /**
    * Returns the class object to which this metadata belongs.
-   * 
+   *
    * @return the class object to which this metadata belongs.
    */
   public Class<?> getClazz() {
@@ -76,9 +64,9 @@ public abstract class MetadataBase {
   /**
    * Returns the {@link ConstructorMetadata} of the persistence class to which this metadata
    * belongs.
-   * 
+   *
    * @return the constructorMetadata the {@link ConstructorMetadata} of the persistence class to
-   *         which this metadata belongs.
+   *     which this metadata belongs.
    */
   public ConstructorMetadata getConstructorMetadata() {
     return constructorMetadata;
@@ -87,17 +75,17 @@ public abstract class MetadataBase {
   /**
    * Puts/adds the given property metadata.
    *
-   * @param propertyMetadata
-   *          the property metadata
+   * @param propertyMetadata the property metadata
    */
   public void putPropertyMetadata(PropertyMetadata propertyMetadata) {
     String mappedName = propertyMetadata.getMappedName();
     PropertyMetadata old = propertyMetadataMap.put(mappedName, propertyMetadata);
     if (old != null) {
-      String format = "Class %s has two fields, %s and %s, both mapped to the same property "
-          + "name, %s";
-      String message = String.format(format, clazz.getName(), old.getName(),
-          propertyMetadata.getName(), mappedName);
+      String format =
+          "Class %s has two fields, %s and %s, both mapped to the same property " + "name, %s";
+      String message =
+          String.format(
+              format, clazz.getName(), old.getName(), propertyMetadata.getName(), mappedName);
       throw new EntityManagerException(message);
     }
   }
@@ -106,8 +94,7 @@ public abstract class MetadataBase {
    * Returns the property metadata for the given property name. The property name is the name used
    * in the Cloud Datastore.
    *
-   * @param mappedName
-   *          the property name in the Cloud Datastore
+   * @param mappedName the property name in the Cloud Datastore
    * @return the property metadata
    */
   public PropertyMetadata getPropertyMetadata(String mappedName) {
@@ -125,7 +112,7 @@ public abstract class MetadataBase {
 
   /**
    * Returns a map of property names and their metadata.
-   * 
+   *
    * @return a map of property names and their metadata.
    */
   public Map<String, PropertyMetadata> getPropertyMetadataMap() {
@@ -134,9 +121,8 @@ public abstract class MetadataBase {
 
   /**
    * Puts/adds the given embedded metadata.
-   * 
-   * @param embeddedMetadata
-   *          the embedded metadata.
+   *
+   * @param embeddedMetadata the embedded metadata.
    */
   public void putEmbeddedMetadata(EmbeddedMetadata embeddedMetadata) {
     embeddedMetadataMap.put(embeddedMetadata.getField(), embeddedMetadata);
@@ -144,18 +130,15 @@ public abstract class MetadataBase {
 
   /**
    * Returns a collection of the embedded metadata.
-   * 
+   *
    * @return a collection of the embedded metadata.
    */
   public Collection<EmbeddedMetadata> getEmbeddedMetadataCollection() {
     return embeddedMetadataMap.values();
   }
 
-  /**
-   * @return the embeddedMetadataMap
-   */
+  /** @return the embeddedMetadataMap */
   public Map<EmbeddedField, EmbeddedMetadata> getEmbeddedMetadataMap() {
     return embeddedMetadataMap;
   }
-
 }

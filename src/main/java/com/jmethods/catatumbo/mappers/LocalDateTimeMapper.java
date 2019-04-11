@@ -16,34 +16,30 @@
 
 package com.jmethods.catatumbo.mappers;
 
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-import java.time.format.DateTimeParseException;
-import java.util.Locale;
-
 import com.google.cloud.datastore.NullValue;
 import com.google.cloud.datastore.StringValue;
 import com.google.cloud.datastore.Value;
 import com.google.cloud.datastore.ValueBuilder;
 import com.jmethods.catatumbo.Mapper;
 import com.jmethods.catatumbo.MappingException;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
+import java.util.Locale;
 
 /**
  * An implementation of {@link Mapper} for mapping {@link LocalDateTime} to/from Cloud Datastore.
- * {@link LocalDateTime} types are mapped to String type in the Cloud Datastore.
- * {@link LocalDateTime} objects are persisted into the datastore with a nano-second precision in
- * the <code>uuuu-MM-dd'T'HH:mm:ss.nnnnnnnnn</code> format.
- * 
- * @author Sai Pullabhotla
+ * {@link LocalDateTime} types are mapped to String type in the Cloud Datastore. {@link
+ * LocalDateTime} objects are persisted into the datastore with a nano-second precision in the
+ * <code>uuuu-MM-dd'T'HH:mm:ss.nnnnnnnnn</code> format.
  *
+ * @author Sai Pullabhotla
  */
 public class LocalDateTimeMapper implements Mapper {
 
-  /**
-   * The formatter to use for converting LocalTime to String and vice versa.
-   */
-  public static final DateTimeFormatter FORMATTER = DateTimeFormatter
-      .ofPattern("uuuu-MM-dd'T'HH:mm:ss.nnnnnnnnn", Locale.ENGLISH);
+  /** The formatter to use for converting LocalTime to String and vice versa. */
+  public static final DateTimeFormatter FORMATTER =
+      DateTimeFormatter.ofPattern("uuuu-MM-dd'T'HH:mm:ss.nnnnnnnnn", Locale.ENGLISH);
 
   @Override
   public ValueBuilder<?, ?, ?> toDatastore(Object input) {
@@ -68,5 +64,4 @@ public class LocalDateTimeMapper implements Mapper {
       throw new MappingException(exp);
     }
   }
-
 }

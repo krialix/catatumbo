@@ -16,36 +16,29 @@
 
 package com.jmethods.catatumbo.impl;
 
-import java.lang.reflect.Field;
-import java.util.List;
-
 import com.jmethods.catatumbo.Embeddable;
 import com.jmethods.catatumbo.Embedded;
 import com.jmethods.catatumbo.EntityManagerException;
+import java.lang.reflect.Field;
+import java.util.List;
 
 /**
  * Introspects an {@link Embeddable} class and prepares the metadata for the class.
- * 
- * @author Sai Pullabhotla
  *
+ * @author Sai Pullabhotla
  */
 public class EmbeddableIntrospector {
 
-  /**
-   * Embeddable class.
-   */
+  /** Embeddable class. */
   private final Class<?> embeddableClass;
 
-  /**
-   * Output - the metadata of the Embeddable class.
-   */
+  /** Output - the metadata of the Embeddable class. */
   private EmbeddableMetadata metadata;
 
   /**
    * Creates a new instance if <code>EmbeddableIntrospector</code>.
-   * 
-   * @param embeddableClass
-   *          the Embeddable class to introspect
+   *
+   * @param embeddableClass the Embeddable class to introspect
    */
   private EmbeddableIntrospector(Class<?> embeddableClass) {
     this.embeddableClass = embeddableClass;
@@ -53,9 +46,8 @@ public class EmbeddableIntrospector {
 
   /**
    * Introspects the given Embeddable class and returns the metadata.
-   * 
-   * @param embeddableClass
-   *          the Embeddable class
+   *
+   * @param embeddableClass the Embeddable class
    * @return the metadata of the given class
    */
   public static EmbeddableMetadata introspect(Class<?> embeddableClass) {
@@ -64,23 +56,21 @@ public class EmbeddableIntrospector {
     return introspector.metadata;
   }
 
-  /**
-   * Introspects the Embeddable.
-   */
+  /** Introspects the Embeddable. */
   private void introspect() {
     // Make sure the class is Embeddable
     if (!embeddableClass.isAnnotationPresent(Embeddable.class)) {
-      String message = String.format("Class %s must have %s annotation", embeddableClass.getName(),
-          Embeddable.class.getName());
+      String message =
+          String.format(
+              "Class %s must have %s annotation",
+              embeddableClass.getName(), Embeddable.class.getName());
       throw new EntityManagerException(message);
     }
     metadata = new EmbeddableMetadata(embeddableClass);
     processFields();
   }
 
-  /**
-   * Processes each field in this Embeddable and updates the metadata.
-   */
+  /** Processes each field in this Embeddable and updates the metadata. */
   private void processFields() {
     List<Field> fields = IntrospectionUtils.getPersistableFields(embeddableClass);
     for (Field field : fields) {
@@ -94,9 +84,8 @@ public class EmbeddableIntrospector {
 
   /**
    * Processes the given simple (or primitive) field and updates the metadata.
-   * 
-   * @param field
-   *          the field to process
+   *
+   * @param field the field to process
    */
   private void processSimpleField(Field field) {
     PropertyMetadata propertyMetadata = IntrospectionUtils.getPropertyMetadata(field);
@@ -107,9 +96,8 @@ public class EmbeddableIntrospector {
 
   /**
    * Processes a nested embedded field.
-   * 
-   * @param field
-   *          the embedded field.
+   *
+   * @param field the embedded field.
    */
   private void processEmbeddedField(Field field) {
     // We are creating a PropertyMetadata for the embedded field... The new
@@ -125,5 +113,4 @@ public class EmbeddableIntrospector {
     PropertyMetadata propertyMetadata = new PropertyMetadata(field, name, indexed, optional);
     metadata.putPropertyMetadata(propertyMetadata);
   }
-
 }

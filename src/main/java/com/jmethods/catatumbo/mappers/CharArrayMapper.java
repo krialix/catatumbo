@@ -24,9 +24,8 @@ import com.jmethods.catatumbo.Mapper;
 
 /**
  * An implementation of {@link Mapper} for mapping char arrays to/from Cloud Datastore.
- * 
- * @author Sai Pullabhotla
  *
+ * @author Sai Pullabhotla
  */
 public class CharArrayMapper implements Mapper {
 
@@ -45,5 +44,4 @@ public class CharArrayMapper implements Mapper {
     }
     return ((StringValue) input).get().toCharArray();
   }
-
 }

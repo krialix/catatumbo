@@ -21,28 +21,22 @@ import java.util.Objects;
 
 /**
  * Default implementation of {@link DatastoreCursor} interface.
- * 
- * @author Sai Pullabhotla
  *
+ * @author Sai Pullabhotla
  */
 public class DefaultDatastoreCursor implements DatastoreCursor, Serializable {
 
-  /**
-   * Serial version UID
-   */
+  /** Serial version UID */
   private static final long serialVersionUID = -6434001816829294681L;
 
-  /**
-   * Cursor data in URL-safe format
-   */
+  /** Cursor data in URL-safe format */
   private String encoded = null;
 
   /**
    * Creates a new instance of <code>DefaultDatastoreCursor</code>.
-   * 
-   * @param encoded
-   *          cursor data, in URL-safe format. A <code>null</code> value will be converted to an
-   *          empty string.
+   *
+   * @param encoded cursor data, in URL-safe format. A <code>null</code> value will be converted to
+   *     an empty string.
    */
   public DefaultDatastoreCursor(String encoded) {
     this.encoded = encoded != null ? encoded : "";
@@ -50,7 +44,7 @@ public class DefaultDatastoreCursor implements DatastoreCursor, Serializable {
 
   /**
    * Returns the encoded value of this cursor, in URL-safe format.
-   * 
+   *
    * @return the encoded value of this cursor, in URL-safe format.
    */
   @Override
@@ -76,5 +70,4 @@ public class DefaultDatastoreCursor implements DatastoreCursor, Serializable {
   public String toString() {
     return encoded;
   }
-
 }

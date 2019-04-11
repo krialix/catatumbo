@@ -21,45 +21,32 @@ import java.util.Objects;
 
 /**
  * Objects of this class contain the metadata of a callback event (e.g. PreInsert).
- * 
- * @author Sai Pullabhotla
  *
+ * @author Sai Pullabhotla
  */
 public class CallbackMetadata {
 
-  /**
-   * Listener type
-   */
+  /** Listener type */
   private final EntityListenerType listenerType;
 
-  /**
-   * Callback type
-   */
+  /** Callback type */
   private final CallbackType callbackType;
 
-  /**
-   * Callback method
-   */
+  /** Callback method */
   private final Method callbackMethod;
 
-  /**
-   * Listener class
-   */
+  /** Listener class */
   private final Class<?> listenerClass;
 
   /**
    * Creates a new instance of <code>CallbackMetadata</code>.
-   * 
-   * @param listenerType
-   *          the listener type
-   * @param callbackType
-   *          the callback type
-   * @param callbackMethod
-   *          the callback method
-   * 
+   *
+   * @param listenerType the listener type
+   * @param callbackType the callback type
+   * @param callbackMethod the callback method
    */
-  public CallbackMetadata(EntityListenerType listenerType, CallbackType callbackType,
-      Method callbackMethod) {
+  public CallbackMetadata(
+      EntityListenerType listenerType, CallbackType callbackType, Method callbackMethod) {
     this.listenerType = listenerType;
     this.callbackType = callbackType;
     this.callbackMethod = callbackMethod;
@@ -68,7 +55,7 @@ public class CallbackMetadata {
 
   /**
    * Returns the listener type.
-   * 
+   *
    * @return the listener type.
    */
   public EntityListenerType getListenerType() {
@@ -77,7 +64,7 @@ public class CallbackMetadata {
 
   /**
    * Returns the callback type.
-   * 
+   *
    * @return the callback type.
    */
   public CallbackType getCallbackType() {
@@ -86,7 +73,7 @@ public class CallbackMetadata {
 
   /**
    * Returns the callback method.
-   * 
+   *
    * @return the callback method.
    */
   public Method getCallbackMethod() {
@@ -95,7 +82,7 @@ public class CallbackMetadata {
 
   /**
    * Returns the listener class.
-   * 
+   *
    * @return the listener class.
    */
   public Class<?> getListenerClass() {
@@ -111,7 +98,8 @@ public class CallbackMetadata {
       return false;
     }
     CallbackMetadata that = (CallbackMetadata) obj;
-    return this.listenerType == that.listenerType && this.callbackType == that.callbackType
+    return this.listenerType == that.listenerType
+        && this.callbackType == that.callbackType
         && this.callbackMethod.equals(that.callbackMethod);
   }
 
@@ -124,5 +112,4 @@ public class CallbackMetadata {
   public String toString() {
     return callbackType + "->" + callbackMethod;
   }
-
 }

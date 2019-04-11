@@ -16,39 +16,28 @@
 
 package com.jmethods.catatumbo.impl;
 
+import com.jmethods.catatumbo.EntityManagerException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 
-import com.jmethods.catatumbo.EntityManagerException;
-
 /**
  * Introspector for listeners defined within the entity or mapped super class.
- * 
- * @author Sai Pullabhotla
  *
+ * @author Sai Pullabhotla
  */
 public class InternalListenerIntrospector {
 
-  /**
-   * EntityListener class
-   */
+  /** A cache of previously processed listener classes */
+  private static Cache<Class<?>, InternalListenerMetadata> cache = new Cache<>();
+  /** EntityListener class */
   private Class<?> listenerClass;
-
-  /**
-   * Metadata of the listener class
-   */
+  /** Metadata of the listener class */
   private InternalListenerMetadata metadata;
 
   /**
-   * A cache of previously processed listener classes
-   */
-  private static Cache<Class<?>, InternalListenerMetadata> cache = new Cache<>();
-
-  /**
    * Creates a new instance of <code>InternalListenerIntrospector</code>.
-   * 
-   * @param listenerClass
-   *          the listener class to introspect
+   *
+   * @param listenerClass the listener class to introspect
    */
   private InternalListenerIntrospector(Class<?> listenerClass) {
     this.listenerClass = listenerClass;
@@ -56,9 +45,8 @@ public class InternalListenerIntrospector {
 
   /**
    * Introspects the given class for any defined listeners and returns the metadata.
-   * 
-   * @param listenerClass
-   *          the entity listener class
+   *
+   * @param listenerClass the entity listener class
    * @return the entity listener metadata
    */
   public static InternalListenerMetadata introspect(Class<?> listenerClass) {
@@ -78,9 +66,7 @@ public class InternalListenerIntrospector {
     }
   }
 
-  /**
-   * Introspects the listener class and creates the metadata.
-   */
+  /** Introspects the listener class and creates the metadata. */
   private void introspect() {
     metadata = new InternalListenerMetadata(listenerClass);
     processMethods();
@@ -104,42 +90,49 @@ public class InternalListenerIntrospector {
 
   /**
    * Validates the given method to ensure if it is a valid callback method for the given event type.
-   * 
-   * @param method
-   *          the method to validate
-   * @param callbackType
-   *          the callback type
+   *
+   * @param method the method to validate
+   * @param callbackType the callback type
    */
   private void validateMethod(Method method, CallbackType callbackType) {
     int modifiers = method.getModifiers();
     if (!Modifier.isPublic(modifiers)) {
-      String message = String.format("Method %s in class %s must be public", method.getName(),
-          method.getDeclaringClass().getName());
+      String message =
+          String.format(
+              "Method %s in class %s must be public",
+              method.getName(), method.getDeclaringClass().getName());
       throw new EntityManagerException(message);
     }
     if (Modifier.isStatic(modifiers)) {
-      String message = String.format("Method %s in class %s must not be static", method.getName(),
-          method.getDeclaringClass().getName());
+      String message =
+          String.format(
+              "Method %s in class %s must not be static",
+              method.getName(), method.getDeclaringClass().getName());
       throw new EntityManagerException(message);
     }
     if (Modifier.isAbstract(modifiers)) {
-      String message = String.format("Method %s in class %s must not be abstract", method.getName(),
-          method.getDeclaringClass().getName());
+      String message =
+          String.format(
+              "Method %s in class %s must not be abstract",
+              method.getName(), method.getDeclaringClass().getName());
       throw new EntityManagerException(message);
     }
     Class<?>[] parameters = method.getParameterTypes();
     if (parameters.length != 0) {
-      String pattern = "Method %s in class %s is not a valid %s callback method. Method must not "
-          + "have any parameters. ";
-      String message = String.format(pattern, method.getName(),
-          method.getDeclaringClass().getName(), callbackType);
+      String pattern =
+          "Method %s in class %s is not a valid %s callback method. Method must not "
+              + "have any parameters. ";
+      String message =
+          String.format(
+              pattern, method.getName(), method.getDeclaringClass().getName(), callbackType);
       throw new EntityManagerException(message);
     }
     if (method.getReturnType() != void.class) {
-      String message = String.format("Method %s in class %s must have a return type of %s",
-          method.getName(), method.getDeclaringClass().getName(), void.class.getName());
+      String message =
+          String.format(
+              "Method %s in class %s must have a return type of %s",
+              method.getName(), method.getDeclaringClass().getName(), void.class.getName());
       throw new EntityManagerException(message);
     }
   }
-
 }

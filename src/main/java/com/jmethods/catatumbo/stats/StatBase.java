@@ -16,54 +16,41 @@
 
 package com.jmethods.catatumbo.stats;
 
-import java.io.Serializable;
-import java.util.Date;
-
 import com.jmethods.catatumbo.DatastoreKey;
 import com.jmethods.catatumbo.Key;
 import com.jmethods.catatumbo.MappedSuperClass;
 import com.jmethods.catatumbo.Property;
+import java.io.Serializable;
+import java.util.Date;
 
 /**
  * A base class for various statistics entities.
- * 
- * @author Sai Pullabhotla
  *
+ * @author Sai Pullabhotla
  */
 @MappedSuperClass
 public abstract class StatBase implements Serializable {
-  /**
-   * Serial version UID
-   */
+  /** Serial version UID */
   private static final long serialVersionUID = 6745596308816079953L;
 
-  /**
-   * Key of this Statistic entity
-   */
-  @Key
-  private DatastoreKey key;
+  /** Key of this Statistic entity */
+  @Key private DatastoreKey key;
 
-  /**
-   * number of items, typically entities
-   */
+  /** number of items, typically entities */
   @Property(name = StatConstants.PROP_COUNT)
   private long count;
 
-  /**
-   * Size of items
-   */
+  /** Size of items */
   @Property(name = StatConstants.PROP_BYTES)
   private long bytes;
 
-  /**
-   * Timestamp when the statistics were generated
-   */
+  /** Timestamp when the statistics were generated */
   @Property(name = StatConstants.PROP_TIMESTAMP)
   private Date timestamp;
 
   /**
    * Returns the full key of this Statistic entity.
-   * 
+   *
    * @return the full key of this Statistic entity.
    */
   public DatastoreKey getKey() {
@@ -72,9 +59,8 @@ public abstract class StatBase implements Serializable {
 
   /**
    * Sets the full key of this Statistic entity.
-   * 
-   * @param key
-   *          the full key of this Statistic entity.
+   *
+   * @param key the full key of this Statistic entity.
    */
   public void setKey(DatastoreKey key) {
     this.key = key;
@@ -82,9 +68,9 @@ public abstract class StatBase implements Serializable {
 
   /**
    * Returns the number of items (typically number of entities) considered by the statistic.
-   * 
+   *
    * @return the count the number of items (typically number of entities) considered by the
-   *         statistic.
+   *     statistic.
    */
   public long getCount() {
     return count;
@@ -92,10 +78,8 @@ public abstract class StatBase implements Serializable {
 
   /**
    * Sets the number of items (typically number of entities) considered by the statistic.
-   * 
-   * @param count
-   *          the number of items (typically number of entities) considered by the statistic.
-   * 
+   *
+   * @param count the number of items (typically number of entities) considered by the statistic.
    */
   public void setCount(long count) {
     this.count = count;
@@ -103,7 +87,7 @@ public abstract class StatBase implements Serializable {
 
   /**
    * Returns the total size of the items for this statistic.
-   * 
+   *
    * @return the total size of the items for this statistic.
    */
   public long getBytes() {
@@ -112,9 +96,8 @@ public abstract class StatBase implements Serializable {
 
   /**
    * Sets the total size of the items for this statistics.
-   * 
-   * @param bytes
-   *          the total size of the items for this statistic.
+   *
+   * @param bytes the total size of the items for this statistic.
    */
   public void setBytes(long bytes) {
     this.bytes = bytes;
@@ -122,7 +105,7 @@ public abstract class StatBase implements Serializable {
 
   /**
    * Returns the time of the most recent update to the statistic.
-   * 
+   *
    * @return the time of the most recent update to the statistic.
    */
   public Date getTimestamp() {
@@ -131,12 +114,10 @@ public abstract class StatBase implements Serializable {
 
   /**
    * Sets the time of the most recent update to the statistic.
-   * 
-   * @param timestamp
-   *          the time of the most recent update to the statistic.
+   *
+   * @param timestamp the time of the most recent update to the statistic.
    */
   public void setTimestamp(Date timestamp) {
     this.timestamp = timestamp;
   }
-
 }

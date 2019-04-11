@@ -16,33 +16,26 @@
 
 package com.jmethods.catatumbo;
 
-import java.io.Serializable;
-
 import com.google.cloud.datastore.Key;
+import java.io.Serializable;
 
 /**
  * Default implementation of {@link DatastoreKey} interface.
- * 
- * @author Sai Pullabhotla
  *
+ * @author Sai Pullabhotla
  */
 public class DefaultDatastoreKey implements DatastoreKey, Serializable {
 
-  /**
-   * Serial version UID
-   */
+  /** Serial version UID */
   private static final long serialVersionUID = -5298686524012987642L;
 
-  /**
-   * Native key from gcloud API
-   */
+  /** Native key from gcloud API */
   private Key key;
 
   /**
    * Creates a new instance of <code>DefaultDatastoreKey</code>.
-   * 
-   * @param encoded
-   *          the encoded string from which the key should be constructed.
+   *
+   * @param encoded the encoded string from which the key should be constructed.
    */
   public DefaultDatastoreKey(String encoded) {
     this(Key.fromUrlSafe(encoded));
@@ -50,9 +43,8 @@ public class DefaultDatastoreKey implements DatastoreKey, Serializable {
 
   /**
    * Creates a new instance of <code>DefaultDatastoreKey</code>.
-   * 
-   * @param key
-   *          the native key.
+   *
+   * @param key the native key.
    */
   public DefaultDatastoreKey(Key key) {
     this.key = key;
@@ -138,5 +130,4 @@ public class DefaultDatastoreKey implements DatastoreKey, Serializable {
   public String toString() {
     return key.toUrlSafe();
   }
-
 }

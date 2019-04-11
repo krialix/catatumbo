@@ -16,14 +16,13 @@
 
 package com.jmethods.catatumbo.mappers;
 
-import java.math.BigDecimal;
-
 import com.google.cloud.datastore.LongValue;
 import com.google.cloud.datastore.NullValue;
 import com.google.cloud.datastore.Value;
 import com.google.cloud.datastore.ValueBuilder;
 import com.jmethods.catatumbo.Mapper;
 import com.jmethods.catatumbo.MappingException;
+import java.math.BigDecimal;
 
 /**
  * An implementation of {@link Mapper} to map BigDecimal types to Integer fields to/from the Cloud
@@ -31,35 +30,26 @@ import com.jmethods.catatumbo.MappingException;
  * type in Cloud Datastore. Cloud Datastore does support Integer and Floating Point numbers, but
  * storing decimal data (e.g. Currency) as floating point would result in loss of precision. This
  * Mapper takes care of this issue by mapping decimal data to an integer field.
- * 
- * @author Sai Pullabhotla
  *
+ * @author Sai Pullabhotla
  */
 public class DecimalMapper implements Mapper {
 
-  /**
-   * Max precision
-   */
+  /** Max precision */
   private static final int MAX_PRECISION = 18;
 
-  /**
-   * Precision
-   */
+  /** Precision */
   private final int precision;
 
-  /**
-   * Scale
-   */
+  /** Scale */
   private final int scale;
 
   /**
    * Creates a new instance of <code>DecimalMapper</code> to map decimal values of given precision
    * and scale.
-   * 
-   * @param precision
-   *          the precision (total number of digits before and after the decimal)
-   * @param scale
-   *          the scale (number of digits after the decimal)
+   *
+   * @param precision the precision (total number of digits before and after the decimal)
+   * @param scale the scale (number of digits after the decimal)
    */
   public DecimalMapper(int precision, int scale) {
     if (precision <= 0 || precision > MAX_PRECISION) {
@@ -76,7 +66,7 @@ public class DecimalMapper implements Mapper {
 
   /**
    * Returns the precision.
-   * 
+   *
    * @return the precision
    */
   public int getPrecision() {
@@ -85,7 +75,7 @@ public class DecimalMapper implements Mapper {
 
   /**
    * Returns the scale.
-   * 
+   *
    * @return the scale
    */
   public int getScale() {
@@ -107,8 +97,10 @@ public class DecimalMapper implements Mapper {
       // that the number is within the expected bounds. Any better ways?
       BigDecimal n = original.setScale(scale);
       if (n.precision() > precision) {
-        throw new MappingException(String.format("Value %s is not a valid Decimal(%d, %d)",
-            original.toPlainString(), precision, scale));
+        throw new MappingException(
+            String.format(
+                "Value %s is not a valid Decimal(%d, %d)",
+                original.toPlainString(), precision, scale));
       }
       n = n.movePointRight(scale);
       return LongValue.newBuilder(n.longValueExact());
@@ -129,9 +121,10 @@ public class DecimalMapper implements Mapper {
     try {
       BigDecimal n = new BigDecimal(((LongValue) input).get());
       if (n.precision() > precision) {
-        throw new MappingException(String.format(
-            "Cannot map %s to Decimal(%d, %d). Value is larger than the defined precision. ",
-            n.toPlainString(), precision, scale));
+        throw new MappingException(
+            String.format(
+                "Cannot map %s to Decimal(%d, %d). Value is larger than the defined precision. ",
+                n.toPlainString(), precision, scale));
       }
       return n.movePointLeft(scale);
     } catch (MappingException exp) {
@@ -141,5 +134,4 @@ public class DecimalMapper implements Mapper {
           String.format("Cannot map %s to Decimal(%d, %d", input, precision, scale), exp);
     }
   }
-
 }

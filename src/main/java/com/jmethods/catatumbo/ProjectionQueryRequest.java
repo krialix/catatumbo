@@ -19,20 +19,17 @@ package com.jmethods.catatumbo;
 /**
  * An implementation of {@link QueryRequest} to execute projection queries. Projection queries are
  * used for retrieving a subset of entity's properties instead of retrieving all of them.
- * 
- * @author Sai Pullabhotla
  *
+ * @author Sai Pullabhotla
  */
 public class ProjectionQueryRequest extends BaseQueryRequest {
 
   /**
    * Creates a new instance of <code>ProjectionQueryRequest</code>.
-   * 
-   * @param query
-   *          the GQL projection query
+   *
+   * @param query the GQL projection query
    */
   public ProjectionQueryRequest(String query) {
     super(query);
   }
-
 }

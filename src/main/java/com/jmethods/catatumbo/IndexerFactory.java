@@ -16,46 +16,38 @@
 
 package com.jmethods.catatumbo;
 
+import com.jmethods.catatumbo.impl.Cache;
+import com.jmethods.catatumbo.impl.IntrospectionUtils;
+import com.jmethods.catatumbo.indexers.LowerCaseStringIndexer;
+import com.jmethods.catatumbo.indexers.LowerCaseStringListIndexer;
 import java.lang.reflect.Field;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.util.List;
 import java.util.Set;
 
-import com.jmethods.catatumbo.impl.Cache;
-import com.jmethods.catatumbo.impl.IntrospectionUtils;
-import com.jmethods.catatumbo.indexers.LowerCaseStringIndexer;
-import com.jmethods.catatumbo.indexers.LowerCaseStringListIndexer;
-
 /**
  * A factory for producing indexers. This factory ensures there is at most one instance of a given
  * Indexer implementation.
- * 
- * @author Sai Pullabhotla
  *
+ * @author Sai Pullabhotla
  */
 public class IndexerFactory {
 
-  /**
-   * Singleton instance
-   */
+  /** Singleton instance */
   private static final IndexerFactory INSTANCE = new IndexerFactory();
 
-  /**
-   * Cache of previously produced indexers
-   */
+  /** Cache of previously produced indexers */
   private Cache<Class<? extends Indexer>, Indexer> cache = null;
 
-  /**
-   * Creates a new instance of <code>IndexerFactory</code>.
-   */
+  /** Creates a new instance of <code>IndexerFactory</code>. */
   private IndexerFactory() {
     cache = new Cache<>();
   }
 
   /**
    * Returns the singleton instance of this class.
-   * 
+   *
    * @return the singleton instance of this class.
    */
   public static IndexerFactory getInstance() {
@@ -66,9 +58,8 @@ public class IndexerFactory {
    * Gets the {@link Indexer} for the given field. If the field has a {@link PropertyIndexer}
    * annotation, the specified indexer will be returned. Otherwise, a default indexer will be
    * returned based on the field's type.
-   * 
-   * @param field
-   *          the field
+   *
+   * @param field the field
    * @return the indexer for the specified field.
    */
   public Indexer getIndexer(Field field) {
@@ -82,9 +73,8 @@ public class IndexerFactory {
 
   /**
    * Returns the {@link Indexer} of the given implementation class.
-   * 
-   * @param indexerClass
-   *          the implementation class of the Indexer interface
+   *
+   * @param indexerClass the implementation class of the Indexer interface
    * @return the Indexer
    */
   @SuppressWarnings("unchecked")
@@ -98,9 +88,8 @@ public class IndexerFactory {
 
   /**
    * Creates the Indexer of the given class.
-   * 
-   * @param indexerClass
-   *          the indexer implementation class
+   *
+   * @param indexerClass the indexer implementation class
    * @return the Indexer.
    */
   @SuppressWarnings("unchecked")
@@ -117,9 +106,8 @@ public class IndexerFactory {
 
   /**
    * Returns the default indexer for the given field.
-   * 
-   * @param field
-   *          the field.
+   *
+   * @param field the field.
    * @return the default indexer.
    */
   private Indexer getDefaultIndexer(Field field) {
@@ -136,9 +124,10 @@ public class IndexerFactory {
         }
       }
     }
-    String message = String.format("No default indexer found for field %s in class %s",
-        field.getName(), field.getDeclaringClass().getName());
+    String message =
+        String.format(
+            "No default indexer found for field %s in class %s",
+            field.getName(), field.getDeclaringClass().getName());
     throw new NoSuitableIndexerException(message);
   }
-
 }

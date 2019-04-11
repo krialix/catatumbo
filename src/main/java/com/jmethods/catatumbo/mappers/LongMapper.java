@@ -25,9 +25,8 @@ import com.jmethods.catatumbo.Mapper;
 /**
  * An implementation of {@link Mapper} for mapping primitive and wrapper and Long types to/from the
  * Cloud Datastore.
- * 
- * @author Sai Pullabhotla
  *
+ * @author Sai Pullabhotla
  */
 public class LongMapper implements Mapper {
 
@@ -46,5 +45,4 @@ public class LongMapper implements Mapper {
     }
     return ((LongValue) input).get();
   }
-
 }

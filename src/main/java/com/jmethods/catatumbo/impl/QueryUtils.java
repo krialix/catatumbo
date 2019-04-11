@@ -16,6 +16,15 @@
 
 package com.jmethods.catatumbo.impl;
 
+import com.google.cloud.Timestamp;
+import com.google.cloud.datastore.Blob;
+import com.google.cloud.datastore.Cursor;
+import com.google.cloud.datastore.GqlQuery;
+import com.jmethods.catatumbo.DatastoreCursor;
+import com.jmethods.catatumbo.DatastoreKey;
+import com.jmethods.catatumbo.GeoLocation;
+import com.jmethods.catatumbo.mappers.LocalDateTimeMapper;
+import com.jmethods.catatumbo.mappers.LocalTimeMapper;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -27,41 +36,26 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
-import com.google.cloud.Timestamp;
-import com.google.cloud.datastore.Blob;
-import com.google.cloud.datastore.Cursor;
-import com.google.cloud.datastore.GqlQuery;
-import com.jmethods.catatumbo.DatastoreCursor;
-import com.jmethods.catatumbo.DatastoreKey;
-import com.jmethods.catatumbo.GeoLocation;
-import com.jmethods.catatumbo.mappers.LocalDateTimeMapper;
-import com.jmethods.catatumbo.mappers.LocalTimeMapper;
-
 /**
  * Utility methods for GQL Queries.
- * 
- * @author Sai Pullabhotla
  *
+ * @author Sai Pullabhotla
  */
 public class QueryUtils {
 
-  /**
-   * Hide the default constructor.
-   */
+  /** Hide the default constructor. */
   private QueryUtils() {
     // Do nothing
   }
 
   /**
    * Applies the given positional bindings to the given query builder.
-   * 
-   * @param queryBuilder
-   *          the query builder
-   * @param positionalBindings
-   *          the positional bindings.
+   *
+   * @param queryBuilder the query builder
+   * @param positionalBindings the positional bindings.
    */
-  static void applyPositionalBindings(GqlQuery.Builder<?> queryBuilder,
-      Object... positionalBindings) {
+  static void applyPositionalBindings(
+      GqlQuery.Builder<?> queryBuilder, Object... positionalBindings) {
     if (positionalBindings != null) {
       for (Object binding : positionalBindings) {
         addPositionalBinding(queryBuilder, binding);
@@ -71,14 +65,12 @@ public class QueryUtils {
 
   /**
    * Applies the given positional bindings to the given query builder.
-   * 
-   * @param queryBuilder
-   *          the query builder
-   * @param positionalBindings
-   *          the positional bindings.
+   *
+   * @param queryBuilder the query builder
+   * @param positionalBindings the positional bindings.
    */
-  static void applyPositionalBindings(GqlQuery.Builder<?> queryBuilder,
-      List<Object> positionalBindings) {
+  static void applyPositionalBindings(
+      GqlQuery.Builder<?> queryBuilder, List<Object> positionalBindings) {
     if (positionalBindings != null) {
       for (Object binding : positionalBindings) {
         addPositionalBinding(queryBuilder, binding);
@@ -88,11 +80,9 @@ public class QueryUtils {
 
   /**
    * Adds the given binding to the given query builder's to the list of positional bindings.
-   * 
-   * @param queryBuilder
-   *          the query builder
-   * @param binding
-   *          the positional binding to add
+   *
+   * @param queryBuilder the query builder
+   * @param binding the positional binding to add
    */
   static void addPositionalBinding(GqlQuery.Builder<?> queryBuilder, Object binding) {
     if (binding == null) {
@@ -141,14 +131,12 @@ public class QueryUtils {
 
   /**
    * Applies the given positional bindings to the given query builder.
-   * 
-   * @param queryBuilder
-   *          the query builder
-   * @param namedBindings
-   *          the named bindings to apply
+   *
+   * @param queryBuilder the query builder
+   * @param namedBindings the named bindings to apply
    */
-  static void applyNamedBindings(GqlQuery.Builder<?> queryBuilder,
-      Map<String, Object> namedBindings) {
+  static void applyNamedBindings(
+      GqlQuery.Builder<?> queryBuilder, Map<String, Object> namedBindings) {
     if (namedBindings != null) {
       for (Map.Entry<String, Object> entry : namedBindings.entrySet()) {
         String bindingName = entry.getKey();
@@ -174,11 +162,11 @@ public class QueryUtils {
         } else if (bindingValue instanceof LocalDate) {
           queryBuilder.setBinding(bindingName, ((LocalDate) bindingValue).toString());
         } else if (bindingValue instanceof LocalTime) {
-          queryBuilder.setBinding(bindingName,
-              ((LocalTime) bindingValue).format(LocalTimeMapper.FORMATTER));
+          queryBuilder.setBinding(
+              bindingName, ((LocalTime) bindingValue).format(LocalTimeMapper.FORMATTER));
         } else if (bindingValue instanceof LocalDateTime) {
-          queryBuilder.setBinding(bindingName,
-              ((LocalDateTime) bindingValue).format(LocalDateTimeMapper.FORMATTER));
+          queryBuilder.setBinding(
+              bindingName, ((LocalDateTime) bindingValue).format(LocalDateTimeMapper.FORMATTER));
         } else if (bindingValue instanceof OffsetDateTime) {
           queryBuilder.setBinding(bindingName, toTimestamp((OffsetDateTime) bindingValue));
         } else if (bindingValue instanceof ZonedDateTime) {
@@ -188,8 +176,8 @@ public class QueryUtils {
         } else if (bindingValue instanceof DatastoreKey) {
           queryBuilder.setBinding(bindingName, ((DatastoreKey) bindingValue).nativeKey());
         } else if (bindingValue instanceof DatastoreCursor) {
-          queryBuilder.setBinding(bindingName,
-              Cursor.fromUrlSafe(((DatastoreCursor) bindingValue).getEncoded()));
+          queryBuilder.setBinding(
+              bindingName, Cursor.fromUrlSafe(((DatastoreCursor) bindingValue).getEncoded()));
         } else if (bindingValue instanceof GeoLocation) {
           // TODO no support for GeoLocation in the gcloud API
         }
@@ -199,9 +187,8 @@ public class QueryUtils {
 
   /**
    * Converts the given Calendar to a Timestamp.
-   * 
-   * @param calendar
-   *          the Calendar to convert
+   *
+   * @param calendar the Calendar to convert
    * @return Timestamp object that is equivalent to the given Calendar.
    */
   private static Timestamp toTimestamp(Calendar calendar) {
@@ -210,9 +197,8 @@ public class QueryUtils {
 
   /**
    * Converts the given Date to a Timestamp.
-   * 
-   * @param date
-   *          the Date to convert
+   *
+   * @param date the Date to convert
    * @return Timestamp object that is equivalent to the given Date.
    */
   private static Timestamp toTimestamp(Date date) {
@@ -221,9 +207,8 @@ public class QueryUtils {
 
   /**
    * Converts the given OffsetDateTime to a Timestamp.
-   * 
-   * @param offsetDateTime
-   *          the OffsetDateTime to convert
+   *
+   * @param offsetDateTime the OffsetDateTime to convert
    * @return Timestamp object that is equivalent to the given OffsetDateTime.
    */
   private static Timestamp toTimestamp(OffsetDateTime offsetDateTime) {
@@ -235,9 +220,8 @@ public class QueryUtils {
 
   /**
    * Converts the given OffsetDateTime to a Timestamp.
-   * 
-   * @param zonedDateTime
-   *          the {@link ZonedDateTime} to convert
+   *
+   * @param zonedDateTime the {@link ZonedDateTime} to convert
    * @return Timestamp object that is equivalent to the given OffsetDateTime.
    */
   private static Timestamp toTimestamp(ZonedDateTime zonedDateTime) {
@@ -246,5 +230,4 @@ public class QueryUtils {
     long microseconds = TimeUnit.SECONDS.toMicros(seconds) + TimeUnit.NANOSECONDS.toMicros(nanos);
     return Timestamp.ofTimeMicroseconds(microseconds);
   }
-
 }

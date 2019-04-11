@@ -18,20 +18,17 @@ package com.jmethods.catatumbo.impl;
 
 /**
  * Metadata of listeners defined in an entity or mapped super class.
- * 
- * @author Sai Pullabhotla
  *
+ * @author Sai Pullabhotla
  */
 public class InternalListenerMetadata extends AbstractListenerMetadata {
 
   /**
    * Creates a new instance of <code>InternalListenerMetadata</code>.
-   * 
-   * @param listenerClass
-   *          the listener class to which this metadata belongs.
+   *
+   * @param listenerClass the listener class to which this metadata belongs.
    */
   public InternalListenerMetadata(Class<?> listenerClass) {
     super(listenerClass);
   }
-
 }

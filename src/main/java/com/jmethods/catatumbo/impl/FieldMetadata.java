@@ -27,27 +27,19 @@ import java.lang.reflect.Field;
  */
 public abstract class FieldMetadata {
 
-  /**
-   * Reference to the field
-   */
+  /** Reference to the field */
   protected final Field field;
 
-  /**
-   * Read method (or getter method) for this field
-   */
+  /** Read method (or getter method) for this field */
   protected final MethodHandle readMethod;
 
-  /**
-   * Write method (or setter method) for this field
-   */
+  /** Write method (or setter method) for this field */
   protected final MethodHandle writeMethod;
 
   /**
    * Creates a new instance of <code>FieldMetadata</code>.
-   * 
-   * @param field
-   *          the field
    *
+   * @param field the field
    */
   public FieldMetadata(Field field) {
     this.field = field;
@@ -57,7 +49,7 @@ public abstract class FieldMetadata {
 
   /**
    * Returns the field.
-   * 
+   *
    * @return the field.
    */
   public Field getField() {
@@ -93,12 +85,11 @@ public abstract class FieldMetadata {
 
   /**
    * Returns the declared type of the field to which this metadata belongs.
-   * 
+   *
    * @return the declared type of the field to which this metadata belongs.
    */
   @SuppressWarnings("rawtypes")
   public Class getDeclaredType() {
     return field.getType();
   }
-
 }

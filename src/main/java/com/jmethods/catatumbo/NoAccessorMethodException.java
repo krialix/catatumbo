@@ -19,28 +19,21 @@ package com.jmethods.catatumbo;
 /**
  * An Exception to indicate that a model class (e.g. Entity, Embeddable, etc.) is missing a required
  * public accessor method.
- * 
- * @author Sai Pullabhotla
  *
+ * @author Sai Pullabhotla
  */
 public class NoAccessorMethodException extends EntityManagerException {
 
-  /**
-   * Serial version UID
-   */
+  /** Serial version UID */
   private static final long serialVersionUID = 5714470702079334554L;
 
-  /**
-   * Creates a new instance of <code>NoAccessorMethodException</code>.
-   */
-  public NoAccessorMethodException() {
-  }
+  /** Creates a new instance of <code>NoAccessorMethodException</code>. */
+  public NoAccessorMethodException() {}
 
   /**
    * Creates a new instance of <code>NoAccessorMethodException</code>.
-   * 
-   * @param msg
-   *          the detailed message.
+   *
+   * @param msg the detailed message.
    */
   public NoAccessorMethodException(String msg) {
     super(msg);
@@ -48,11 +41,9 @@ public class NoAccessorMethodException extends EntityManagerException {
 
   /**
    * Creates a new instance of <code>NoAccessorMethodException</code>.
-   * 
-   * @param message
-   *          the detailed message
-   * @param cause
-   *          the cause
+   *
+   * @param message the detailed message
+   * @param cause the cause
    */
   public NoAccessorMethodException(String message, Throwable cause) {
     super(message, cause);
@@ -60,12 +51,10 @@ public class NoAccessorMethodException extends EntityManagerException {
 
   /**
    * Creates a new instance of <code>NoAccessorMethodException</code>.
-   * 
-   * @param cause
-   *          the cause.
+   *
+   * @param cause the cause.
    */
   public NoAccessorMethodException(Throwable cause) {
     super(cause);
   }
-
 }

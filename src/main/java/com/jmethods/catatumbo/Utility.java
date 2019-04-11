@@ -21,9 +21,8 @@ import java.io.IOException;
 
 /**
  * Utility methods.
- * 
- * @author Sai Pullabhotla
  *
+ * @author Sai Pullabhotla
  */
 public class Utility {
 
@@ -37,9 +36,8 @@ public class Utility {
 
   /**
    * Closes the given Closeable.
-   * 
-   * @param closeable
-   *          the Closeable (e.g. InputStream, OutputStream, etc.) to close.
+   *
+   * @param closeable the Closeable (e.g. InputStream, OutputStream, etc.) to close.
    */
   public static void close(Closeable closeable) {
     if (closeable != null) {
@@ -53,9 +51,8 @@ public class Utility {
 
   /**
    * Tells whether or not the given input String is null or empty.
-   * 
-   * @param input
-   *          the input string to check
+   *
+   * @param input the input string to check
    * @return <code>true</code>, if the given input is null or empty; otherwise, <code>false</code>.
    */
   public static boolean isNullOrEmpty(String input) {
@@ -64,9 +61,8 @@ public class Utility {
 
   /**
    * Throws a {@link NullPointerException} if the given input is <code>null</code>.
-   * 
-   * @param input
-   *          the input to check
+   *
+   * @param input the input to check
    */
   public static void ensureNotNull(Object input) {
     if (input == null) {
@@ -75,11 +71,10 @@ public class Utility {
   }
 
   /**
-   * Throws a {@link NullPointerException} if the input is null. If the input is empty
-   * )<code>input.trim().length() == 0</code>, an {@link IllegalArgumentException} is thrown.
-   * 
-   * @param input
-   *          the input String to validate
+   * Throws a {@link NullPointerException} if the input is null. If the input is empty )<code>
+   * input.trim().length() == 0</code>, an {@link IllegalArgumentException} is thrown.
+   *
+   * @param input the input String to validate
    */
   public static void ensureNotEmpty(String input) {
     ensureNotNull(input);
@@ -87,5 +82,4 @@ public class Utility {
       throw new IllegalArgumentException();
     }
   }
-
 }

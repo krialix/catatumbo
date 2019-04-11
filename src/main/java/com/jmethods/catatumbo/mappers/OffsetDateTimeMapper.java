@@ -16,11 +16,6 @@
 
 package com.jmethods.catatumbo.mappers;
 
-import java.time.Instant;
-import java.time.OffsetDateTime;
-import java.time.ZoneId;
-import java.util.concurrent.TimeUnit;
-
 import com.google.cloud.Timestamp;
 import com.google.cloud.datastore.NullValue;
 import com.google.cloud.datastore.TimestampValue;
@@ -28,14 +23,17 @@ import com.google.cloud.datastore.Value;
 import com.google.cloud.datastore.ValueBuilder;
 import com.jmethods.catatumbo.Mapper;
 import com.jmethods.catatumbo.MappingException;
+import java.time.Instant;
+import java.time.OffsetDateTime;
+import java.time.ZoneId;
+import java.util.concurrent.TimeUnit;
 
 /**
  * An implementation of {@link Mapper} for mapping {@link OffsetDateTime} to/from Cloud Datastore.
  * {@link OffsetDateTime} types are mapped to DateTime type in the Cloud Datastore. This maximum
  * precision is capped to Microseconds to match with what the Datastore supports.
- * 
- * @author Sai Pullabhotla
  *
+ * @author Sai Pullabhotla
  */
 public class OffsetDateTimeMapper implements Mapper {
 
@@ -60,13 +58,12 @@ public class OffsetDateTimeMapper implements Mapper {
       Timestamp ts = ((TimestampValue) input).get();
       long seconds = ts.getSeconds();
       int nanos = ts.getNanos();
-      return OffsetDateTime.ofInstant(Instant.ofEpochSecond(seconds, nanos),
-          ZoneId.systemDefault());
+      return OffsetDateTime.ofInstant(
+          Instant.ofEpochSecond(seconds, nanos), ZoneId.systemDefault());
     } catch (ClassCastException exp) {
       String pattern = "Expecting %s, but found %s";
       throw new MappingException(
           String.format(pattern, TimestampValue.class.getName(), input.getClass().getName()), exp);
     }
   }
-
 }
